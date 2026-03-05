@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aayush — Creative Technologist</title>
+  <style>
+    @font-face {
+      font-family: 'Kalice Trial';
+      src: url('fonts/KaliceTrial-Regular.otf') format('opentype');
+      font-weight: 400;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Kalice Trial';
+      src: url('fonts/KaliceTrial-Bold.otf') format('opentype');
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Kalice Trial', serif;
+      background: #FFFFFF;
+      color: #000000;
+      -webkit-font-smoothing: antialiased;
+      max-width: 100vw;
+      overflow-x: hidden;
+    }
+
+    /* ===== INTRO SECTION ===== */
+    .intro-section {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      height: 100vh;
+      background: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5;
+    }
+
+    .intro-text {
+      font-family: 'Kalice Trial', serif;
+      font-size: 7.2vw;
+      font-weight: 400;
+      line-height: 1.2;
+      letter-spacing: -0.005em;
+      color: #000000;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    /* ===== CONTACT NAV ===== */
+    .contact-nav {
+      position: fixed;
+      top: 0.625vw;
+      right: 0.625vw;
+      z-index: 100;
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.18;
+      letter-spacing: -0.005em;
+    }
+
+    .contact-nav a {
+      text-decoration: none;
+      color: #000000;
+    }
+
+    /* ===== HORSE IMAGE SECTION ===== */
+    .horse-scroll {
+      position: relative;
+      height: 400vh;
+    }
+
+    .horse-fixed {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      z-index: 10;
+      opacity: 0;
+    }
+
+    .horse-fixed img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      will-change: transform;
+    }
+
+    /* ===== MAIN CONTENT ===== */
+    .wrapper {
+      max-width: 100vw;
+      padding: 25px;
+      position: relative;
+      z-index: 20;
+      background: #FFFFFF;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(14, 1fr);
+      grid-column-gap: 16px;
+      grid-row-gap: 16px;
+    }
+
+    .full-width {
+      grid-column: 1 / 15;
+    }
+
+    .headline {
+      grid-column: 1 / 12;
+      font-size: 4.8vw;
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -0.1vw;
+      margin-bottom: 14vw;
+      position: relative;
+    }
+
+    #headline-visible {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+    }
+
+    .left-bio {
+      grid-column: 1 / 7;
+      font-size: 26px;
+      line-height: 28px;
+      font-weight: 400;
+      letter-spacing: -0.005em;
+    }
+
+    .left-bio strong { font-weight: 700; }
+
+    .right-bio {
+      grid-column: 7 / 13;
+      font-size: 26px;
+      line-height: 28px;
+      font-weight: 400;
+      letter-spacing: -0.005em;
+    }
+
+    .links {
+      grid-column: 13 / 15;
+      font-size: 26px;
+      line-height: 28px;
+    }
+
+    .links a {
+      display: block;
+      text-decoration: none;
+      color: #000000;
+      margin-bottom: 4px;
+    }
+
+    .section-heading {
+      grid-column: 1 / 15;
+      font-size: 4.8vw;
+      font-weight: 400;
+      line-height: 5vw;
+      letter-spacing: -0.1vw;
+      margin-top: 2vw;
+    }
+
+    hr {
+      grid-column: 1 / 15;
+      border: none;
+      height: 2px;
+      background: #000000;
+      margin-top: 1vw;
+    }
+
+    hr.light { background: #CECECE; }
+
+    .project-title {
+      grid-column: 1 / 5;
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.18;
+      letter-spacing: -0.005em;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .project-categories {
+      grid-column: 5 / 8;
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.18;
+      letter-spacing: -0.005em;
+    }
+
+    .project-description {
+      grid-column: 8 / 15;
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.18;
+      letter-spacing: -0.005em;
+    }
+
+    .project-description a {
+      color: #000000;
+      text-decoration: none;
+    }
+
+    .footer { margin-top: 20vh; }
+
+    .footer h2 {
+      font-size: 4.8vw;
+      line-height: 5.2vw;
+      letter-spacing: -0.1vw;
+      font-weight: 400;
+    }
+
+    .footer h2 a {
+      text-decoration: none;
+      color: #000000;
+    }
+
+    /* ===== REVEAL ANIMATIONS ===== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s cubic-bezier(0.25, 0.1, 0.25, 1),
+                  transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    /* ===== MOBILE RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .headline {
+        grid-column: 1 / 15;
+        font-size: 10vw;
+        min-height: auto;
+        margin-bottom: 8vw;
+      }
+
+      .left-bio,
+      .right-bio {
+        grid-column: 1 / 15;
+        font-size: 18px;
+        line-height: 22px;
+      }
+
+      .links {
+        grid-column: 1 / 15;
+        margin-bottom: 4vw;
+      }
+
+      .section-heading {
+        font-size: 10vw;
+        line-height: 10.5vw;
+      }
+
+      .project-title,
+      .project-categories,
+      .project-description {
+        grid-column: 1 / 15;
+      }
+
+      .project-title {
+        margin-top: 8px;
+      }
+
+      .project-categories {
+        font-weight: 400;
+        margin-top: 4px;
+      }
+
+      .project-description {
+        margin-top: 4px;
+        margin-bottom: 8px;
+      }
+
+      .footer h2 {
+        font-size: 8vw;
+        line-height: 9vw;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="contact-nav"><a href="contact.html">{contact}</a></nav>
+
+  <section class="horse-scroll" id="horse-scroll">
+    <div class="intro-section" id="intro-section">
+      <div class="intro-text" id="intro-text">[a/j]</div>
+    </div>
+    <div class="horse-fixed" id="horse-fixed">
+      <img src="assets/contact-image.png" alt="" id="horse-img">
+    </div>
+  </section>
+
+  <div class="wrapper" id="main-content">
+    <div class="grid">
+
+      <h1 class="headline" id="headline"><span id="headline-visible"></span><span id="headline-placeholder" style="visibility:hidden"></span></h1>
+
+      <p class="left-bio reveal">
+        Hi, I am Aayush, a creative technologist. I build products that democratize access to personalized expertise through intelligent interfaces. Currently an undergraduate student at Stanford, I've previously made stops at <strong>Arcade, Glean, Apple, AutoZone, St. Jude Children's Research Hospital,</strong> and the <strong>University of Memphis.</strong>
+      </p>
+      <p class="right-bio reveal reveal-delay-1">
+        My work spans zero-to-one product development, user research, and cross-functional execution. I care most about the early stages — finding the insight that changes how a team thinks about the problem, then moving fast enough to learn before assumptions calcify. Some of the products I've built and shipped can be found below.
+      </p>
+      <div class="links reveal reveal-delay-2">
+        <a href="mailto:aayush2@stanford.edu">&#x2197; Email</a>
+        <a href="#">&#x2197; CV</a>
+        <a href="#">&#x2197; LinkedIn</a>
+      </div>
+
+      <h2 class="section-heading reveal">Projects and roles I'm currently working on</h2>
+
+      <hr class="full-width">
+
+      <div class="project-title reveal">Apple:&nbsp; Luxury consumer goods, human craft and excellence</div>
+      <p class="project-categories reveal reveal-delay-1">Trabit: Social habit tracking through peer accountability</p>
+      <p class="project-description reveal reveal-delay-2">View work.</p>
+
+      <hr class="full-width light">
+
+      <div class="project-title reveal">Arcade AI:&nbsp; Luxury consumer goods, human craft and excellence</div>
+      <p class="project-categories reveal reveal-delay-1">Trabit: Social habit tracking through peer accountability</p>
+      <p class="project-description reveal reveal-delay-2">View work.</p>
+
+      <hr class="full-width light">
+
+      <div class="project-title reveal">Arcade AI:&nbsp; Luxury consumer goods, human craft and excellence</div>
+      <p class="project-categories reveal reveal-delay-1">Human-Computer Interaction, Social Computing, Mobile Development</p>
+      <p class="project-description reveal reveal-delay-2">Habit tracking fails in isolation, not from lack of desire, but lack of witness. We designed Trabit around the insight that consistency is easier to maintain when it is visible to people you care about. Users pick one habit, post a daily photo proving they did it, and face a "Yesterday's Report" naming anyone who slipped. We piloted with 16 Stanford students across two close friend groups, achieved 75% daily posting rates, and watched the app spread through word of mouth beyond the initial cohorts before the pilot had even ended.&nbsp;<a href="#">&#x2197; Read more at GitHub</a></p>
+
+      <hr class="full-width light">
+
+      <div class="project-title reveal">Trabit: Social habit tracking through peer accountability</div>
+      <p class="project-categories reveal reveal-delay-1">Trabit: Social habit tracking through peer accountability</p>
+      <p class="project-description reveal reveal-delay-2">Habit tracking fails in isolation, not from lack of desire, but lack of witness. We designed Trabit around the insight that consistency is easier to maintain when it is visible to people you care about. Users pick one habit, post a daily photo proving they did it, and face a "Yesterday's Report" naming anyone who slipped. We piloted with 16 Stanford students across two close friend groups, achieved 75% daily posting rates, and watched the app spread through word of mouth beyond the initial cohorts before the pilot had even ended.&nbsp;<a href="#">&#x2197; Read more at GitHub</a></p>
+
+      <hr class="full-width light">
+
+      <div class="project-title reveal">Aora: Identity-driven fragrance generation from natural language</div>
+      <p class="project-categories reveal reveal-delay-1">Generative AI, Consumer Products, Human-Computer Interaction</p>
+      <p class="project-description reveal reveal-delay-2">The fragrance industry sells catalogs. People want signatures. We built Aora to explore whether AI could translate subjective identity signals — memories, moods, places, aesthetics — into structured fragrance compositions of top, middle, and base notes. We validated the system inside a real custom perfume store, mixing AI-generated formulations into physical scents. In one case, a customer's AI-generated formula produced a perfume closer to what they had imagined than the one they mixed by hand.</p>
+
+      <hr class="full-width light">
+
+      <div class="project-title reveal">Foresight: Autonomous UX testing through AI browser agents</div>
+      <p class="project-categories reveal reveal-delay-1">Artificial Intelligence, Human-Computer Interaction, Full Stack Dev</p>
+      <p class="project-description reveal reveal-delay-2">Software development has never moved faster. Understanding how users experience that software has not kept up. I built Foresight with some of my closest friends — three random roommates drawn into the same Stanford triple junior year who never expected much from it — to close that gap by deploying AI agents that navigate live product interfaces like real users, clicking, scrolling, and completing workflows autonomously to surface usability failures and regressions before they reach production. We started with a broader vision around synthetic user simulation, learned quickly that teams wanted automation of repetitive testing work rather than a replacement for real research, and rebuilt the entire system from scratch around that insight. Early pilots converted into paying customers.</p>
+
+      <hr class="full-width light">
+
+      <div class="project-title reveal">Phytochemicals in Chemoprevention: A Cost-Effective Complementary Approach</div>
+      <p class="project-categories reveal reveal-delay-1">Cancer Biology, Biochemistry, Translational Medicine</p>
+      <p class="project-description reveal reveal-delay-2">Conventional chemotherapy kills indiscriminately, targeting tumor cells but producing dose-limiting side effects that can halt treatment entirely. I saw dietary phytochemicals as an underexplored answer: compounds found in everyday foods that exert cytotoxic effects on cancerous cells while protecting healthy tissue from chemotherapy-induced damage. This review examines five of them — quercetin, isoflavones, curcumin, catechins, and hesperidin — across their mechanisms, clinical evidence, and bioavailability. Published in the Journal of Cancer.&nbsp;<a href="#">&#x2197; Read the paper</a></p>
+
+    </div>
+
+    <div class="footer">
+      <h2><a href="mailto:aayush2@stanford.edu">&#x2197; aayush2@stanford.edu</a></h2>
+      <h2>2026</h2>
+    </div>
+  </div>
+
+  <script>
+    // Heavy scroll feel — lerp-based smooth scrolling
+    (function() {
+      let targetY = 0;
+      let currentY = 0;
+      const ease = 0.12; // lower = heavier
+
+      window.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        targetY += e.deltaY;
+        targetY = Math.max(0, Math.min(targetY, document.body.scrollHeight - window.innerHeight));
+      }, { passive: false });
+
+      // Touch support
+      let touchY = 0;
+      window.addEventListener('touchstart', (e) => {
+        touchY = e.touches[0].clientY;
+      }, { passive: true });
+      window.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        const dy = touchY - e.touches[0].clientY;
+        touchY = e.touches[0].clientY;
+        targetY += dy;
+        targetY = Math.max(0, Math.min(targetY, document.body.scrollHeight - window.innerHeight));
+      }, { passive: false });
+
+      function tick() {
+        currentY += (targetY - currentY) * ease;
+        if (Math.abs(currentY - targetY) > 0.5) {
+          window.scrollTo(0, currentY);
+        } else {
+          currentY = targetY;
+          window.scrollTo(0, currentY);
+        }
+        requestAnimationFrame(tick);
+      }
+
+      requestAnimationFrame(tick);
+    })();
+  </script>
+
+  <script>
+    // Intro typewriter animation
+    (function() {
+      const el = document.getElementById('intro-text');
+      const wait = ms => new Promise(r => setTimeout(r, ms));
+
+      async function run() {
+        // Start: [a/j]
+        el.textContent = '[a/j]';
+        await wait(1000);
+
+        // Backspace to []
+        // [a/j] → [a/j → [a/ → [a → [
+        const steps = ['[a/j', '[a/', '[a', '['];
+        for (const s of steps) {
+          el.textContent = s + ']';
+          await wait(120);
+        }
+
+        // Brackets push together: []
+        el.textContent = '[]';
+        await wait(400);
+
+        // Type out Aayush Jain inside brackets
+        const fullText = 'Aayush Jain';
+        for (let i = 1; i <= fullText.length; i++) {
+          el.textContent = '[' + fullText.slice(0, i) + ']';
+          await wait(90);
+        }
+      }
+
+      run();
+    })();
+  </script>
+
+  <script>
+    (function() {
+      const section = document.getElementById('horse-scroll');
+      const fixed = document.getElementById('horse-fixed');
+      const img = document.getElementById('horse-img');
+      const introText = document.getElementById('intro-text');
+
+      function update() {
+        const vh = window.innerHeight;
+        const sectionH = section.offsetHeight;
+        const scrolled = window.scrollY;
+        const scrollRange = sectionH - vh;
+
+        if (scrolled <= 0 || scrolled > scrollRange) {
+          fixed.style.opacity = '0';
+          introText.style.opacity = scrolled <= 0 ? '1' : '0';
+          return;
+        }
+
+        const progress = scrolled / scrollRange; // 0 → 1
+
+        // Fade out [Aayush Jain] quickly as image enters
+        introText.style.opacity = Math.max(0, 1 - progress * 5);
+
+        // Phase 1 (0 → 0.35): rise from below viewport, scale 0.3 → 1, fade in
+        // Phase 2 (0.35 → 0.65): hold at full size
+        // Phase 3 (0.65 → 1): shrink toward top, scale 1 → 0.3, fade out
+        let scale, translateY, opacity;
+
+        if (progress <= 0.35) {
+          const p = progress / 0.35;
+          const e = p * p * (3 - 2 * p);
+          scale = 0.3 + 0.7 * e;
+          translateY = (1 - e) * 100;
+          opacity = Math.min(1, p * 2.5);
+        } else if (progress <= 0.65) {
+          scale = 1;
+          translateY = 0;
+          opacity = 1;
+        } else {
+          const p = (progress - 0.65) / 0.35;
+          const e = p * p * (3 - 2 * p);
+          scale = 1 - 0.7 * e;
+          translateY = -e * 50;
+          opacity = 1 - e;
+        }
+
+        fixed.style.opacity = opacity;
+        img.style.transform = `translateY(${translateY}vh) scale(${scale})`;
+      }
+
+      window.addEventListener('scroll', update, { passive: true });
+      update();
+    })();
+  </script>
+
+  <script>
+    // Headline typewriter
+    (function() {
+      const visible = document.getElementById('headline-visible');
+      const placeholder = document.getElementById('headline-placeholder');
+      const text = 'Building interfaces for new forms of computation. Making the most complex tasks accessible to everyday people.';
+      let started = false;
+
+      // Set full text as invisible placeholder to reserve height
+      placeholder.textContent = text;
+
+      const obs = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && !started) {
+          started = true;
+          obs.unobserve(visible.parentElement);
+          let i = 0;
+          function type() {
+            if (i <= text.length) {
+              visible.textContent = text.slice(0, i);
+              i++;
+              setTimeout(type, 30);
+            }
+          }
+          type();
+        }
+      }, { threshold: 0.1 });
+
+      obs.observe(visible.parentElement);
+    })();
+
+    // Reveal on scroll
+    (function() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15 });
+
+      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    })();
+  </script>
+</body>
+</html>
