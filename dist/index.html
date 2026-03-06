@@ -181,7 +181,7 @@
     }
 
     .left-bio {
-      grid-column: 1 / 7;
+      grid-column: 1 / 6;
       font-size: 26px;
       line-height: 28px;
       font-weight: 400;
@@ -367,7 +367,7 @@
       }
     }
   </style>
-  <script type="module" crossorigin src="/assets/main-sgy_412X.js"></script>
+  <script type="module" crossorigin src="/assets/main-l9LBTT9x.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/content-DGHf9uUI.js">
 </head>
 <body>
@@ -377,6 +377,19 @@
     <a href="contact.html">{contact}</a>
   </nav>
   <audio id="bg-audio" src="/song.mp3" loop></audio>
+  <script>
+    function togglePlay() {
+      var audio = document.getElementById('bg-audio');
+      var btn = document.getElementById('play-btn');
+      if (audio.paused) {
+        audio.play();
+        btn.textContent = '{pause}';
+      } else {
+        audio.pause();
+        btn.textContent = '{play}';
+      }
+    }
+  </script>
 
   <section class="horse-scroll" id="horse-scroll">
     <div class="intro-section" id="intro-section">

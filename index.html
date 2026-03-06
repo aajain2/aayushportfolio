@@ -181,7 +181,7 @@
     }
 
     .left-bio {
-      grid-column: 1 / 7;
+      grid-column: 1 / 6;
       font-size: 26px;
       line-height: 28px;
       font-weight: 400;
@@ -375,6 +375,19 @@
     <a href="contact.html">{contact}</a>
   </nav>
   <audio id="bg-audio" src="/song.mp3" loop></audio>
+  <script>
+    function togglePlay() {
+      var audio = document.getElementById('bg-audio');
+      var btn = document.getElementById('play-btn');
+      if (audio.paused) {
+        audio.play();
+        btn.textContent = '{pause}';
+      } else {
+        audio.pause();
+        btn.textContent = '{play}';
+      }
+    }
+  </script>
 
   <section class="horse-scroll" id="horse-scroll">
     <div class="intro-section" id="intro-section">
@@ -691,19 +704,6 @@
     }, { threshold: 0.1 });
 
     obs.observe(visible.parentElement);
-
-    // Play/Pause toggle
-    window.togglePlay = function() {
-      const audio = document.getElementById('bg-audio');
-      const btn = document.getElementById('play-btn');
-      if (audio.paused) {
-        audio.play();
-        btn.textContent = '{pause}';
-      } else {
-        audio.pause();
-        btn.textContent = '{play}';
-      }
-    };
 
     // Reveal on scroll
     const observer = new IntersectionObserver((entries) => {
