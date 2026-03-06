@@ -350,6 +350,13 @@
         font-size: 8vw;
         line-height: 9vw;
       }
+
+      .top-nav {
+        position: fixed;
+        top: auto;
+        bottom: 25px;
+        right: 25px;
+      }
     }
   </style>
 </head>
@@ -413,7 +420,7 @@
     C.links.forEach(link => {
       const a = document.createElement('a');
       a.href = link.url;
-      a.innerHTML = '&#x2197; ' + link.label;
+      a.innerHTML = '&#x2197;&#xFE0E; ' + link.label;
       linksEl.appendChild(a);
     });
 
@@ -447,7 +454,7 @@
         desc.appendChild(document.createTextNode('\u00A0'));
         const a = document.createElement('a');
         a.href = proj.link.url;
-        a.innerHTML = '&#x2197; ' + proj.link.label;
+        a.innerHTML = '&#x2197;&#xFE0E; ' + proj.link.label;
         desc.appendChild(a);
       }
       grid.insertBefore(desc, container);
@@ -459,7 +466,7 @@
     const h2a = document.createElement('h2');
     const emailLink = document.createElement('a');
     emailLink.href = 'mailto:' + C.email;
-    emailLink.innerHTML = '&#x2197; ' + C.email;
+    emailLink.innerHTML = '&#x2197;&#xFE0E; ' + C.email;
     h2a.appendChild(emailLink);
     footer.appendChild(h2a);
     const h2b = document.createElement('h2');
@@ -472,8 +479,11 @@
     window.scrollLocked = false;
     window.scrollLockY = 0;
 
-    // Heavy scroll feel — lerp-based smooth scrolling
+    // Heavy scroll feel — lerp-based smooth scrolling (desktop only)
     (function() {
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      if (isTouchDevice) return; // Use native scroll on mobile
+
       let targetY = 0;
       let currentY = 0;
       const ease = 0.12; // lower = heavier
@@ -485,23 +495,6 @@
           return;
         }
         targetY += e.deltaY;
-        targetY = Math.max(0, Math.min(targetY, document.body.scrollHeight - window.innerHeight));
-      }, { passive: false });
-
-      // Touch support
-      let touchY = 0;
-      window.addEventListener('touchstart', (e) => {
-        touchY = e.touches[0].clientY;
-      }, { passive: true });
-      window.addEventListener('touchmove', (e) => {
-        e.preventDefault();
-        if (window.scrollLocked) {
-          targetY = window.scrollLockY;
-          return;
-        }
-        const dy = touchY - e.touches[0].clientY;
-        touchY = e.touches[0].clientY;
-        targetY += dy;
         targetY = Math.max(0, Math.min(targetY, document.body.scrollHeight - window.innerHeight));
       }, { passive: false });
 

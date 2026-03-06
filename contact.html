@@ -92,7 +92,7 @@
     C.links.forEach(link => {
       const a = document.createElement('a');
       a.href = link.url;
-      a.innerHTML = '&#x2197; ' + link.label;
+      a.innerHTML = '&#x2197;&#xFE0E; ' + link.label;
       linksEl.appendChild(a);
     });
 
@@ -108,7 +108,7 @@
     h2a.className = 'reveal reveal-delay-3';
     const emailLink = document.createElement('a');
     emailLink.href = 'mailto:' + C.email;
-    emailLink.innerHTML = '&#x2197; ' + C.email;
+    emailLink.innerHTML = '&#x2197;&#xFE0E; ' + C.email;
     h2a.appendChild(emailLink);
     footer.appendChild(h2a);
 
