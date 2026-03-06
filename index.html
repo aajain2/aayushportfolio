@@ -376,17 +376,45 @@
   </nav>
   <audio id="bg-audio" src="/song.mp3" loop></audio>
   <script>
-    function togglePlay() {
+    (function() {
       var audio = document.getElementById('bg-audio');
       var btn = document.getElementById('play-btn');
-      if (audio.paused) {
-        audio.play();
-        btn.textContent = '{pause}';
-      } else {
-        audio.pause();
-        btn.textContent = '{play}';
+
+      // Restore state from localStorage
+      var saved = localStorage.getItem('audioPlaying');
+      var savedTime = parseFloat(localStorage.getItem('audioTime')) || 0;
+      if (saved === 'true') {
+        audio.currentTime = savedTime;
+        audio.play().then(function() {
+          btn.textContent = '{pause}';
+        }).catch(function() {});
       }
-    }
+
+      // Save state periodically
+      setInterval(function() {
+        if (!audio.paused) {
+          localStorage.setItem('audioTime', audio.currentTime);
+        }
+      }, 500);
+
+      // Save state before leaving page
+      window.addEventListener('beforeunload', function() {
+        localStorage.setItem('audioPlaying', !audio.paused);
+        localStorage.setItem('audioTime', audio.currentTime);
+      });
+
+      window.togglePlay = function() {
+        if (audio.paused) {
+          audio.play();
+          btn.textContent = '{pause}';
+          localStorage.setItem('audioPlaying', 'true');
+        } else {
+          audio.pause();
+          btn.textContent = '{play}';
+          localStorage.setItem('audioPlaying', 'false');
+        }
+      };
+    })();
   </script>
 
   <section class="horse-scroll" id="horse-scroll">
