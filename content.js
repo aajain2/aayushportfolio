@@ -19,18 +19,20 @@ const CONTENT = {
   // --- Bio (left column) ---
   // Use { text, bold } objects. Bold items get hover-to-grey effect.
   leftBio: [
-    { text: 'Hi, I am Aayush, a creative technologist. I build products that democratize access to personalized expertise through intelligent interfaces. Currently an undergraduate student at Stanford, I\'ve previously made stops at ' },
-    { text: 'Arcade,', bold: true },
+    { text: 'Hi, I am Aayush, a creative technologist. I build products that democratize access to personalized expertise through intelligent interfaces. Currently an undergraduate student at ' },
+    { text: 'Stanford,', bold: true, url: 'https://www.stanford.edu/' },
+    { text: ' I\'ve previously made stops at ' },
+    { text: 'Arcade,', bold: true, url: 'https://wwd.com/business-news/technology/arcade-ai-maia-custom-design-platform-1238339735/' },
     { text: ' ' },
-    { text: 'Glean,', bold: true },
+    { text: 'Glean,', bold: true, url: 'https://www.glean.com/connectors' },
     { text: ' ' },
-    { text: 'Apple,', bold: true },
+    { text: 'Apple,', bold: true, url: 'https://ads.apple.com/app-store' },
     { text: ' ' },
-    { text: 'AutoZone,', bold: true },
+    { text: 'AutoZone,', bold: true, url: 'https://www.autozone.com/' },
     { text: ' ' },
-    { text: 'St. Jude Children\'s Research Hospital,', bold: true },
+    { text: 'St. Jude Children\'s Research Hospital,', bold: true, url: 'https://www.stjude.org/research/labs/yu-lab.html' },
     { text: ' and the ' },
-    { text: 'University of Memphis.', bold: true },
+    { text: 'University of Memphis.', bold: true, url: 'https://www.memphis.edu/' },
   ],
 
   // --- Bio (right column) ---
@@ -39,8 +41,8 @@ const CONTENT = {
   // --- Links ---
   links: [
     { label: 'Email', url: 'mailto:aayush2@stanford.edu' },
-    { label: 'CV', url: '#' },
-    { label: 'LinkedIn', url: '#' },
+    { label: 'CV', url: 'assets/Aayush_Jain_Resume.pdf' },
+    { label: 'LinkedIn', url: 'https://www.linkedin.com/in/aajain2/' },
   ],
 
   // --- Section Heading ---
