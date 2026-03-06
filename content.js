@@ -51,6 +51,7 @@ const CONTENT = {
   // --- Projects ---
   projects: [
     {
+      
       title: 'Foresight',
       categories: 'UX and QA TestingAutomation, Browser Use Agents',
       description: 'Software development has never moved faster. Understanding how users experience that software has not kept up. I built Foresight with some of my closest friends \u2014 three random roommates drawn into the same Stanford triple junior year who never expected much from it \u2014 to close that gap by deploying AI agents that navigate live product interfaces like real users, clicking, scrolling, and completing workflows autonomously to surface usability failures and regressions before they reach production. We started with a broader vision around synthetic user simulation, learned quickly that teams wanted automation of repetitive testing work rather than a replacement for real research, and rebuilt the entire system from scratch around that insight. Early pilots converted into paying customers.',

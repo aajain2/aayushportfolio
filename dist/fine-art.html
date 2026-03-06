@@ -25,58 +25,43 @@
 
     body {
       font-family: 'Kalice Trial', serif;
-      background: #080808;
-      color: #c8b895;
+      background: #FFFFFF;
+      color: #000000;
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
       overflow: hidden;
       width: 100vw;
       height: 100vh;
     }
 
-    .gallery-nav {
+    /* Same back-nav as contact page */
+    .back-nav {
       position: fixed;
-      top: 0; left: 0; right: 0;
+      top: 0.625vw;
+      right: 0.625vw;
       z-index: 200;
-      padding: 22px 28px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      pointer-events: none;
+      font-size: 26px;
+      line-height: 28px;
     }
-    .gallery-nav a {
-      pointer-events: all;
+    .back-nav a {
       text-decoration: none;
-      color: #c8b895;
-      font-family: 'Kalice Trial', serif;
-      font-size: 15px;
-      font-weight: 400;
-      letter-spacing: 0.02em;
-      opacity: 0.6;
-      transition: opacity 0.5s ease;
+      color: #000000;
     }
-    .gallery-nav a:hover { opacity: 1; }
 
-    .gallery-footer {
+    /* Scroll counter bottom-right */
+    .scroll-ui {
       position: fixed;
-      bottom: 0; left: 0; right: 0;
+      bottom: 22px;
+      right: 28px;
       z-index: 200;
-      padding: 22px 28px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 12px;
-      letter-spacing: 0.06em;
-      color: #c8b895;
+      font-size: 14px;
+      letter-spacing: 0.02em;
+      color: #000000;
       opacity: 0.4;
-      pointer-events: none;
-      text-transform: uppercase;
-    }
-    .scroll-pct {
       font-variant-numeric: tabular-nums;
-      font-size: 13px;
+      pointer-events: none;
     }
 
+    /* Viewport */
     .gallery-viewport {
       position: fixed;
       top: 0; left: 0;
@@ -84,92 +69,62 @@
       overflow: hidden;
     }
 
+    /* Art piece container */
     .art-piece {
       position: absolute;
+      top: 50%;
+      left: 50%;
       opacity: 0;
       will-change: transform, opacity;
       overflow: hidden;
-      box-shadow: 0 8px 60px rgba(0,0,0,0.6);
+      transform-origin: center center;
     }
     .art-piece img {
-      width: 100%; height: 100%;
+      width: 100%;
+      height: 100%;
       object-fit: cover;
       display: block;
+      user-select: none;
+      -webkit-user-drag: none;
     }
 
+    /* Label */
     .art-label {
       position: absolute;
       opacity: 0;
       will-change: opacity, transform;
       pointer-events: none;
+      text-align: center;
     }
     .art-label .label-name {
       font-style: italic;
-      font-size: 20px;
+      font-size: 22px;
       line-height: 1.3;
       display: block;
       margin-bottom: 3px;
-      letter-spacing: 0.01em;
     }
     .art-label .label-meta {
-      font-size: 11px;
-      opacity: 0.5;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      line-height: 1.4;
-    }
-
-    .final-wrap {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      opacity: 0;
-      will-change: opacity, transform;
-      overflow: hidden;
-    }
-    .final-wrap img {
-      width: 100%; height: 100%;
-      object-fit: cover;
-    }
-    .final-label {
-      position: absolute;
-      bottom: 70px; left: 28px;
-      z-index: 10;
-      opacity: 0;
-      will-change: opacity;
-    }
-    .final-label .label-name {
-      font-style: italic;
-      font-size: 28px;
-      display: block;
-      margin-bottom: 4px;
-    }
-    .final-label .label-meta {
       font-size: 12px;
-      opacity: 0.5;
+      opacity: 0.45;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.08em;
     }
 
     @media (max-width: 768px) {
-      .gallery-nav { padding: 16px 18px; }
-      .gallery-footer { padding: 16px 18px; }
-      .art-label .label-name { font-size: 16px; }
-      .final-label .label-name { font-size: 22px; }
-      .final-label { bottom: 60px; left: 18px; }
+      .back-nav { top: auto; bottom: 25px; right: 25px; }
+      .scroll-ui { bottom: 25px; left: 28px; right: auto; }
+      .art-label .label-name { font-size: 17px; }
     }
   </style>
 </head>
 <body>
 
-  <nav class="gallery-nav">
+  <nav class="back-nav">
     <a href="index.html">&larr; Back</a>
-    <a href="contact.html">Contact</a>
   </nav>
 
-  <div class="gallery-footer">
-    <span>&copy; All rights reserved.</span>
-    <span class="scroll-pct">Scroll &mdash; <span id="pct">0</span>%</span>
+  <div class="scroll-ui">
+    Scroll &mdash; <span id="pct">0</span>%
   </div>
 
   <div class="gallery-viewport" id="gv"></div>
@@ -179,124 +134,55 @@
     'use strict';
 
     // =============================================
-    // PIECE DATA — 6 actual works
-    // Aspect ratios from source files:
-    //   1. Emergence: portrait  ~0.61:1
-    //   2. Egotism II: landscape ~1.61:1
-    //   3. Flux: landscape ~1.38:1
-    //   4. Stranger Within: landscape ~1.30:1
-    //   5. Masked: portrait ~0.75:1
-    //   6. Prayer for Hunger: portrait ~0.77:1 (FINAL)
+    // PIECES — in order, one at a time
+    // Each piece: fades in small → grows to fill → exits to a side
+    // Alternating exit direction (right, left, right, left...)
+    // Last piece stays and fills viewport at 100%
     // =============================================
 
     const pieces = [
-      // --- Scene 1: Emergence from void (0% – 22%) ---
       {
         name: 'Emergence',
         medium: 'Charcoal & origami on paper',
-        year: '',
         src: '/art/art-1-emergence.jpg',
-        in: 0.01, peak: 0.08, out: 0.21,
-        // Portrait piece, appears center-left, medium size
-        x: 20, y: 18, w: 18, h: 50,
-        drift: { x: 1.5, y: -2.5 }, depth: 0.3,
-        labelOff: { x: 0, y: 53 },
+        aspect: 1554 / 2562, // ~0.61 (portrait)
       },
-
-      // --- Scene 2: Egotism II (18% – 42%) ---
       {
         name: 'Egotism II',
         medium: 'Charcoal & mixed media',
-        year: '',
         src: '/art/art-2-egotism.jpg',
-        in: 0.17, peak: 0.26, out: 0.41,
-        // Wide landscape, takes center stage
-        x: 10, y: 18, w: 48, h: 38,
-        drift: { x: 2, y: -3 }, depth: 0.1,
-        labelOff: { x: 0, y: 41 },
+        aspect: 4698 / 2925, // ~1.61 (landscape)
       },
-      // Small echo of Emergence visible alongside
-      {
-        name: '',
-        medium: '',
-        year: '',
-        src: '/art/art-1-emergence.jpg',
-        in: 0.20, peak: 0.28, out: 0.38,
-        x: 68, y: 30, w: 9, h: 24,
-        drift: { x: -1, y: -1 }, depth: 0.8,
-        labelOff: { x: 0, y: 26 },
-        noLabel: true,
-      },
-
-      // --- Scene 3: Flux diptych (38% – 60%) ---
       {
         name: 'Flux',
         medium: 'Mixed media',
-        year: '',
         src: '/art/art-3-flux.jpeg',
-        in: 0.37, peak: 0.46, out: 0.59,
-        // Landscape diptych, wide center
-        x: 15, y: 22, w: 42, h: 38,
-        drift: { x: 0, y: -3 }, depth: 0.1,
-        labelOff: { x: 0, y: 41 },
+        aspect: 691 / 500, // ~1.38 (landscape)
       },
-      // Small companion — Egotism thumbnail
-      {
-        name: '',
-        medium: '',
-        year: '',
-        src: '/art/art-2-egotism.jpg',
-        in: 0.40, peak: 0.48, out: 0.56,
-        x: 65, y: 42, w: 14, h: 11,
-        drift: { x: -1.5, y: -1 }, depth: 0.7,
-        labelOff: { x: 0, y: 13 },
-        noLabel: true,
-      },
-
-      // --- Scene 4: Stranger Within + Masked (56% – 80%) ---
       {
         name: 'Herself a Stranger Within',
         medium: 'Charcoal & mixed media',
-        year: '',
         src: '/art/art-4-stranger.jpg',
-        in: 0.55, peak: 0.64, out: 0.79,
-        // Landscape, left side
-        x: 3, y: 14, w: 34, h: 32,
-        drift: { x: 3, y: -2.5 }, depth: 0.15,
-        labelOff: { x: 0, y: 35 },
+        aspect: 3128 / 2398, // ~1.30 (landscape)
       },
       {
         name: 'Masked',
         medium: 'Charcoal & collage',
-        year: '',
         src: '/art/art-5-masked.jpg',
-        in: 0.58, peak: 0.67, out: 0.79,
-        // Portrait, right side
-        x: 55, y: 10, w: 20, h: 42,
-        drift: { x: -2, y: -2 }, depth: 0.3,
-        labelOff: { x: 0, y: 44 },
+        aspect: 2549 / 3389, // ~0.75 (portrait)
       },
-      // Tiny Flux echo
       {
-        name: '',
-        medium: '',
-        year: '',
-        src: '/art/art-3-flux.jpeg',
-        in: 0.60, peak: 0.68, out: 0.76,
-        x: 44, y: 55, w: 10, h: 9,
-        drift: { x: -1, y: -1 }, depth: 0.85,
-        labelOff: { x: 0, y: 11 },
-        noLabel: true,
+        name: 'Prayer for Hunger',
+        medium: 'Charcoal, watercolor & collage',
+        src: '/art/art-6-prayer.jpg',
+        aspect: 3226 / 4188, // ~0.77 (portrait)
       },
     ];
 
-    const finale = {
-      name: 'Prayer for Hunger',
-      medium: 'Charcoal, watercolor & collage',
-      year: '',
-      src: '/art/art-6-prayer.jpg',
-      in: 0.77, full: 0.92,
-    };
+    const N = pieces.length;
+    // Each piece gets an equal share of scroll, with overlap for transitions
+    // Last piece stays at 100%
+    const SEGMENT = 1 / N;
 
     // =============================================
     // DOM
@@ -306,61 +192,39 @@
     const pctEl = document.getElementById('pct');
     const els = [];
 
-    pieces.forEach(p => {
+    pieces.forEach((p, i) => {
       const wrap = document.createElement('div');
       wrap.className = 'art-piece';
       const img = document.createElement('img');
       img.src = p.src;
-      img.alt = p.name || '';
+      img.alt = p.name;
       img.loading = 'eager';
-      img.draggable = false;
       wrap.appendChild(img);
       gv.appendChild(wrap);
 
-      let lbl = null;
-      if (!p.noLabel) {
-        lbl = document.createElement('div');
-        lbl.className = 'art-label';
-        lbl.innerHTML =
-          `<span class="label-name">${p.name}</span>` +
-          (p.medium ? `<span class="label-meta">${p.medium}${p.year ? ', ' + p.year : ''}</span>` : '');
-        gv.appendChild(lbl);
-      }
+      const lbl = document.createElement('div');
+      lbl.className = 'art-label';
+      lbl.innerHTML =
+        `<span class="label-name">${p.name}</span>` +
+        `<span class="label-meta">${p.medium}</span>`;
+      gv.appendChild(lbl);
 
       els.push({ wrap, lbl });
     });
 
-    // Final piece
-    const fWrap = document.createElement('div');
-    fWrap.className = 'final-wrap';
-    const fImg = document.createElement('img');
-    fImg.src = finale.src;
-    fImg.alt = finale.name;
-    fImg.loading = 'eager';
-    fImg.draggable = false;
-    fWrap.appendChild(fImg);
-    gv.appendChild(fWrap);
-
-    const fLbl = document.createElement('div');
-    fLbl.className = 'final-label';
-    fLbl.innerHTML =
-      `<span class="label-name">${finale.name}</span>` +
-      `<span class="label-meta">${finale.medium}${finale.year ? ', ' + finale.year : ''}</span>`;
-    gv.appendChild(fLbl);
-
     // =============================================
-    // SCROLL ENGINE
+    // SCROLL ENGINE — lerp
     // =============================================
 
     let target = 0;
     let current = 0;
-    const SPEED = 0.00028;
-    const EASE = 0.055;
+    const SPEED = 0.00022;
+    const EASE = 0.045;
 
     window.addEventListener('wheel', e => {
       e.preventDefault();
       target += e.deltaY * SPEED;
-      target = clamp(target);
+      target = Math.max(0, Math.min(1, target));
     }, { passive: false });
 
     let tY = 0;
@@ -368,29 +232,31 @@
     window.addEventListener('touchmove', e => {
       e.preventDefault();
       const y = e.touches[0].clientY;
-      target += (tY - y) * 0.0018;
-      target = clamp(target);
+      target += (tY - y) * 0.0015;
+      target = Math.max(0, Math.min(1, target));
       tY = y;
     }, { passive: false });
 
     window.addEventListener('keydown', e => {
-      if (e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); target = clamp(target + 0.025); }
-      if (e.key === 'ArrowUp') { e.preventDefault(); target = clamp(target - 0.025); }
+      if (e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); target = Math.min(1, target + 0.02); }
+      if (e.key === 'ArrowUp') { e.preventDefault(); target = Math.max(0, target - 0.02); }
     });
-
-    function clamp(v) { return Math.max(0, Math.min(1, v)); }
 
     // =============================================
     // MATH
     // =============================================
 
     function smoothstep(edge0, edge1, x) {
-      const t = clamp((x - edge0) / (edge1 - edge0));
+      const t = Math.max(0, Math.min(1, (x - edge0) / (edge1 - edge0)));
       return t * t * (3 - 2 * t);
     }
 
-    function map(v, inMin, inMax, outMin, outMax) {
-      return outMin + (outMax - outMin) * clamp((v - inMin) / (inMax - inMin));
+    function lerp(a, b, t) { return a + (b - a) * t; }
+
+    // Quintic ease for ultra-smooth scale
+    function ease5(t) {
+      t = Math.max(0, Math.min(1, t));
+      return t * t * t * (t * (t * 6 - 15) + 10);
     }
 
     // =============================================
@@ -399,7 +265,7 @@
 
     function render() {
       const diff = target - current;
-      if (Math.abs(diff) > 0.00005) {
+      if (Math.abs(diff) > 0.00003) {
         current += diff * EASE;
       } else {
         current = target;
@@ -408,85 +274,104 @@
       const p = current;
       pctEl.textContent = Math.round(p * 100);
 
-      // Background: black → warm dark
-      const br = Math.round(8 + p * 12);
-      const bg = Math.round(8 + p * 8);
-      const bb = Math.round(8 + p * 5);
-      document.body.style.backgroundColor = `rgb(${br},${bg},${bb})`;
-
       const W = window.innerWidth;
       const H = window.innerHeight;
 
-      // --- Pieces ---
-      for (let i = 0; i < pieces.length; i++) {
-        const pc = pieces[i];
+      for (let i = 0; i < N; i++) {
+        const piece = pieces[i];
         const el = els[i];
+        const isLast = (i === N - 1);
+        const exitsRight = (i % 2 === 0); // alternate: right, left, right...
 
-        const fadeInDur = 0.04;
-        const fadeOutDur = 0.04;
-        let opacity = 0;
+        // This piece's scroll range
+        const start = i * SEGMENT;
+        const end = isLast ? 1.0 : (i + 1) * SEGMENT;
+        const range = end - start;
 
-        if (p >= pc.in && p <= pc.out) {
-          const fadeIn = smoothstep(pc.in, pc.in + fadeInDur, p);
-          const fadeOut = 1 - smoothstep(pc.out - fadeOutDur, pc.out, p);
+        // Local progress 0→1 within this piece's range
+        const local = Math.max(0, Math.min(1, (p - start) / range));
+
+        // Skip if not in range at all (with slight buffer)
+        if (p < start - 0.02 || (!isLast && p > end + 0.02)) {
+          el.wrap.style.opacity = 0;
+          el.lbl.style.opacity = 0;
+          continue;
+        }
+
+        // ---- LIFECYCLE PHASES ----
+        // Phase 1: 0.00 → 0.30  — Fade in, start small, centered
+        // Phase 2: 0.30 → 0.65  — Grow large toward filling viewport
+        // Phase 3: 0.65 → 1.00  — Exit: slide off to side (unless last piece)
+
+        let opacity, scale, translateX, translateY;
+
+        if (isLast) {
+          // Last piece: fade in and grow to fill, then STAY at 100%
+          // Phase 1: 0→0.4 fade in + grow
+          // Phase 2: 0.4→1.0 fill viewport
+          const fadeIn = smoothstep(0, 0.35, local);
+          opacity = fadeIn;
+          // Scale from small to covering viewport
+          const growT = ease5(Math.max(0, Math.min(1, local / 0.9)));
+          scale = lerp(0.15, 1.15, growT);
+          translateX = 0;
+          translateY = 0;
+        } else {
+          // Fade in (very gradual)
+          const fadeIn = smoothstep(0, 0.30, local);
+          // Fade out during exit
+          const fadeOut = 1 - smoothstep(0.75, 1.0, local);
           opacity = Math.min(fadeIn, fadeOut);
+
+          // Scale: small → large
+          const growT = ease5(Math.max(0, Math.min(1, local / 0.70)));
+          scale = lerp(0.12, 1.1, growT);
+
+          // Exit slide
+          const exitT = smoothstep(0.60, 1.0, local);
+          const exitDir = exitsRight ? 1 : -1;
+          translateX = exitT * exitDir * W * 0.6;
+          translateY = 0;
         }
 
-        // Parallax drift
-        const midP = (pc.in + pc.out) / 2;
-        const rangeFactor = (p - midP) / ((pc.out - pc.in) / 2);
-        const driftX = pc.drift.x * rangeFactor;
-        const driftY = pc.drift.y * rangeFactor;
-
-        // Scale breathing
-        const scaleIn = map(p, pc.in, pc.peak, 0.92, 1);
-        const scaleOut = map(p, pc.peak, pc.out, 1, 0.97);
-        const scale = p <= pc.peak ? scaleIn : scaleOut;
-
-        const px = (pc.x + driftX) / 100 * W;
-        const py = (pc.y + driftY) / 100 * H;
-        const pw = pc.w / 100 * W;
-        const ph = pc.h / 100 * H;
-
-        const blur = pc.depth * 1.5;
-
-        const wrap = el.wrap;
-        wrap.style.opacity = opacity;
-        wrap.style.left = px + 'px';
-        wrap.style.top = py + 'px';
-        wrap.style.width = pw + 'px';
-        wrap.style.height = ph + 'px';
-        wrap.style.transform = `scale(${scale})`;
-        wrap.style.filter = opacity > 0 ? `blur(${blur * (1 - opacity * 0.7)}px)` : '';
-
-        // Label
-        if (el.lbl) {
-          const lblIn = pc.in + fadeInDur + 0.02;
-          const lblOut = pc.out - fadeOutDur - 0.01;
-          let lblOpacity = 0;
-          if (p >= lblIn && p <= lblOut) {
-            const fi = smoothstep(lblIn, lblIn + 0.03, p);
-            const fo = 1 - smoothstep(lblOut - 0.02, lblOut, p);
-            lblOpacity = Math.min(fi, fo) * 0.8;
-          }
-          el.lbl.style.opacity = lblOpacity;
-          el.lbl.style.left = ((pc.x + pc.labelOff.x + driftX) / 100 * W) + 'px';
-          el.lbl.style.top = ((pc.y + pc.labelOff.y + driftY) / 100 * H) + 'px';
-          el.lbl.style.transform = `translateY(${(1 - lblOpacity) * 8}px)`;
+        // Compute pixel dimensions from scale
+        // At scale=1.0 the image should be ~70% of viewport (large but framed)
+        // At scale=1.1+ it overflows (nearly fills)
+        const baseH = H * 0.70;
+        const baseW = baseH * piece.aspect;
+        // If too wide, constrain
+        const maxW = W * 0.75;
+        let finalW, finalH;
+        if (baseW > maxW) {
+          finalW = maxW;
+          finalH = maxW / piece.aspect;
+        } else {
+          finalW = baseW;
+          finalH = baseH;
         }
-      }
 
-      // --- Final piece ---
-      let fOp = 0, fScale = 1, fLblOp = 0;
-      if (p >= finale.in) {
-        fOp = smoothstep(finale.in, finale.full, p);
-        fScale = 0.82 + 0.18 * smoothstep(finale.in, finale.full, p);
-        fLblOp = smoothstep(finale.in + 0.1, finale.full, p) * 0.85;
+        const pixelW = finalW * scale;
+        const pixelH = finalH * scale;
+
+        el.wrap.style.opacity = opacity;
+        el.wrap.style.width = pixelW + 'px';
+        el.wrap.style.height = pixelH + 'px';
+        el.wrap.style.transform =
+          `translate(${-pixelW/2 + translateX}px, ${-pixelH/2 + translateY}px)`;
+
+        // Label — centered below piece
+        // Show during mid-phase (0.15 → 0.55)
+        const lblFadeIn = smoothstep(0.12, 0.25, local);
+        const lblFadeOut = isLast
+          ? 1
+          : (1 - smoothstep(0.50, 0.65, local));
+        const lblOpacity = Math.min(lblFadeIn, lblFadeOut) * 0.9;
+
+        el.lbl.style.opacity = lblOpacity;
+        el.lbl.style.left = (W / 2 + translateX) + 'px';
+        el.lbl.style.top = (H / 2 + pixelH / 2 + 20) + 'px';
+        el.lbl.style.transform = `translate(-50%, ${(1 - lblOpacity) * 10}px)`;
       }
-      fWrap.style.opacity = fOp;
-      fWrap.style.transform = `scale(${fScale})`;
-      fLbl.style.opacity = fLblOp;
-      fLbl.style.transform = `translateY(${(1 - fLblOp) * 12}px)`;
 
       requestAnimationFrame(render);
     }
