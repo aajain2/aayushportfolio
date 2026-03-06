@@ -79,7 +79,7 @@ const CONTENT = {
       title: 'Fine Art',
       categories: 'Charcoal, Mixed Media, Installations',
       description: 'Exhibited at Pratt Manhattan Gallery, Memphis International Airport, and Brooks Museum of Art, and sold to Gus\'s Fried Chicken and private buyers.',
-      link: { label: 'See work', url: 'fine-art.html' },
+      link: { label: 'See selected works', url: 'fine-art.html' },
     },
   ],
 

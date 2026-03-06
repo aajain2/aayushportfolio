@@ -148,6 +148,7 @@
       { name: 'Herself a Stranger Within', medium: 'Charcoal & Mixed Media', src: '/art/art-4-stranger.jpg' },
       { name: 'Masked', medium: 'Charcoal & Collage', src: '/art/art-5-masked.jpg' },
       { name: 'Prayer for Hunger', medium: 'Charcoal, Watercolor & Collage', src: '/art/art-6-prayer.jpg' },
+      { name: 'Pot of Fatigue', medium: 'Ceramics', src: '/art/art-7-ceramics.jpg' },
     ];
 
     const N = pieces.length;
@@ -204,10 +205,10 @@
     });
 
     // ===== RENDER =====
-    // First piece visible immediately at scroll 0.
-    // Each piece gets equal scroll range. Crossfade between them.
-    // Scroll range starts at 0 so first piece shows on load.
-    const SEGMENT = 1 / (N - 1 + 0.001); // Give first piece a head start
+    // Clean cut: one piece at a time. Each piece gets a segment of scroll.
+    // Within each segment: fade in (first 15%), hold, fade out (last 15%).
+    // No overlap — piece fully disappears before next appears.
+    // First piece is visible at scroll=0.
 
     function smoothstep(a, b, x) {
       const t = Math.max(0, Math.min(1, (x - a) / (b - a)));
@@ -224,36 +225,40 @@
 
       pctEl.textContent = Math.round(current * 100);
 
-      // Map scroll 0→1 to piece index with crossfade
-      // At scroll=0, piece 0 is fully visible
-      // Each scroll step transitions to next piece
-      const totalRange = N - 1; // transitions between N pieces
-      const pos = current * totalRange; // 0 to N-1
+      // Each piece owns a segment: piece i is at scroll [i/N, (i+1)/N]
+      // But piece 0 starts fully visible (no fade-in needed at scroll=0)
+      const seg = 1 / N;
 
       for (let i = 0; i < N; i++) {
-        const dist = pos - i; // negative = hasn't appeared yet, 0 = centered, positive = passed
+        const start = i * seg;
+        const end = (i + 1) * seg;
+        const isFirst = (i === 0);
+        const isLast = (i === N - 1);
 
         let opacity = 0;
 
-        if (dist >= -1 && dist <= 1) {
-          // Crossfade window: piece is fully visible at dist=0,
-          // fades in from dist=-1→0, fades out from dist=0→1
-          if (dist <= 0) {
-            // Fading in
-            opacity = smoothstep(-1, -0.15, dist);
+        if (current >= start && current <= end) {
+          // Fade-in zone: first 15% of segment (skip for first piece)
+          const fadeInEnd = start + seg * 0.15;
+          // Fade-out zone: last 15% of segment (skip for last piece)
+          const fadeOutStart = end - seg * 0.15;
+
+          if (isFirst) {
+            // No fade-in, just hold then fade out
+            opacity = isLast ? 1 : (1 - smoothstep(fadeOutStart, end, current));
+          } else if (isLast) {
+            // Fade in, then hold forever
+            opacity = smoothstep(start, fadeInEnd, current);
           } else {
-            // Fading out
-            opacity = 1 - smoothstep(0.15, 1, dist);
+            // Fade in, hold, fade out
+            const fadeIn = smoothstep(start, fadeInEnd, current);
+            const fadeOut = 1 - smoothstep(fadeOutStart, end, current);
+            opacity = Math.min(fadeIn, fadeOut);
           }
         }
 
-        // Last piece: don't fade out
-        if (i === N - 1 && dist >= 0) {
-          opacity = smoothstep(-1, -0.15, dist);
-        }
-
         els[i].style.opacity = opacity;
-        els[i].style.pointerEvents = opacity > 0.3 ? 'auto' : 'none';
+        els[i].style.pointerEvents = opacity > 0.5 ? 'auto' : 'none';
       }
 
       requestAnimationFrame(render);
