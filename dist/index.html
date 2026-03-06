@@ -99,7 +99,7 @@
     .top-nav a,
     .top-nav button {
       text-decoration: none;
-      color: #000000;
+      color: inherit;
       font-family: 'Kalice Trial', serif;
       font-size: 18px;
       font-weight: 400;
@@ -112,7 +112,7 @@
       transition: color 0.3s ease;
     }
     .top-nav a:hover,
-    .top-nav button:hover { color: #999999; }
+    .top-nav button:hover { opacity: 0.5; }
 
     /* ===== HORSE IMAGE SECTION ===== */
     .horse-scroll {
@@ -455,6 +455,7 @@
       const fixed = document.getElementById('horse-fixed');
       const img = document.getElementById('horse-img');
       const introText = document.getElementById('intro-text');
+      const topNav = document.getElementById('top-nav');
 
       function update() {
         const vh = window.innerHeight;
@@ -465,6 +466,7 @@
         if (scrolled <= 0 || scrolled > scrollRange) {
           fixed.style.opacity = '0';
           introText.style.opacity = scrolled <= 0 ? '1' : '0';
+          topNav.style.color = '';
           return;
         }
 
@@ -498,6 +500,7 @@
 
         fixed.style.opacity = opacity;
         img.style.transform = `translateY(${translateY}vh) scale(${scale})`;
+        topNav.style.color = opacity > 0.4 ? '#FFFFFF' : '';
       }
 
       window.addEventListener('scroll', update, { passive: true });
