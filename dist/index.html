@@ -401,6 +401,10 @@
 
 
   <script>
+    // Always start from top on main page load
+    window.scrollTo(0, 0);
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+
     // Global scroll lock state
     window.scrollLocked = false;
     window.scrollLockY = 0;
