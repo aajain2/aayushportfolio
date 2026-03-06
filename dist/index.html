@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aayush — Creative Technologist</title>
+  <title>Aayush Jain</title>
+  <link rel="icon" type="image/png" href="/assets/favicon-DSqbWA3t.png">
+  <link rel="apple-touch-icon" href="/assets/favicon-DSqbWA3t.png">
   <style>
     @font-face {
       font-family: 'Kalice Trial';
@@ -57,21 +59,62 @@
       white-space: nowrap;
     }
 
+    .scroll-hint {
+      position: absolute;
+      bottom: 3vh;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Kalice Trial', serif;
+      font-size: 18px;
+      font-weight: 400;
+      color: #000000;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+
+    .scroll-hint.show {
+      opacity: 1;
+      animation: nudge 2s ease-in-out infinite;
+    }
+
+    @keyframes nudge {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(6px); }
+    }
+
     /* ===== CONTACT NAV ===== */
-    .contact-nav {
+    .top-nav {
       position: fixed;
-      top: 0.625vw;
-      right: 0.625vw;
+      top: 25px;
+      right: 25px;
       z-index: 100;
       font-size: 18px;
       font-weight: 400;
       line-height: 1.18;
       letter-spacing: -0.005em;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+      display: flex;
+      gap: 10px;
     }
 
-    .contact-nav a {
+    .top-nav.visible {
+      opacity: 1;
+    }
+
+    .top-nav a,
+    .top-nav button {
       text-decoration: none;
       color: #000000;
+      font-family: 'Kalice Trial', serif;
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.18;
+      letter-spacing: -0.005em;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
     }
 
     /* ===== HORSE IMAGE SECTION ===== */
@@ -108,6 +151,7 @@
       position: relative;
       z-index: 20;
       background: #FFFFFF;
+      margin-top: -100vh;
     }
 
     .grid {
@@ -146,7 +190,17 @@
       letter-spacing: -0.005em;
     }
 
-    .left-bio strong { font-weight: 700; }
+    .left-bio strong {
+      font-weight: 700;
+      transition: color 0.3s ease;
+      cursor: default;
+    }
+    .left-bio strong:hover { color: #999999; }
+    .left-bio strong a {
+      color: inherit;
+      text-decoration: none;
+      cursor: pointer;
+    }
 
     .right-bio {
       grid-column: 7 / 13;
@@ -191,7 +245,7 @@
     .project-title {
       grid-column: 1 / 4;
       font-size: 18px;
-      font-weight: 500;
+      font-weight: 700;
       line-height: 1.18;
       letter-spacing: -0.005em;
       display: flex;
@@ -301,16 +355,30 @@
         font-size: 8vw;
         line-height: 9vw;
       }
+
+      .top-nav {
+        position: fixed;
+        top: auto;
+        bottom: 25px;
+        right: 25px;
+      }
     }
   </style>
+  <script type="module" crossorigin src="/assets/main-C4SuFLgy.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/content-C_TwMxh2.js">
 </head>
 <body>
 
-  <nav class="contact-nav"><a href="contact.html">{contact}</a></nav>
+  <nav class="top-nav" id="top-nav">
+    <button id="play-btn" onclick="togglePlay()">{play}</button>
+    <a href="contact.html">{contact}</a>
+  </nav>
+  <audio id="bg-audio" src="assets/song.mp3" loop></audio>
 
   <section class="horse-scroll" id="horse-scroll">
     <div class="intro-section" id="intro-section">
-      <div class="intro-text" id="intro-text">[a/j]</div>
+      <div class="intro-text" id="intro-text"></div>
+      <div class="scroll-hint" id="scroll-hint">&darr;</div>
     </div>
     <div class="horse-fixed" id="horse-fixed">
       <img src="/assets/contact-image-CEfT1x4y.png" alt="" id="horse-img">
@@ -319,88 +387,46 @@
 
   <div class="wrapper" id="main-content">
     <div class="grid">
-
       <h1 class="headline" id="headline"><span id="headline-visible"></span><span id="headline-placeholder" style="visibility:hidden"></span></h1>
-
-      <p class="left-bio reveal">
-        Hi, I am Aayush, a creative technologist. I build products that democratize access to personalized expertise through intelligent interfaces. Currently an undergraduate student at Stanford, I've previously made stops at <strong>Arcade, Glean, Apple, AutoZone, St. Jude Children's Research Hospital,</strong> and the <strong>University of Memphis.</strong>
-      </p>
-      <p class="right-bio reveal reveal-delay-1">
-        My work spans zero-to-one product development, user research, and cross-functional execution. I care most about the early stages — finding the insight that changes how a team thinks about the problem, then moving fast enough to learn before assumptions calcify. Some of the products I've built and shipped can be found below.
-      </p>
-      <div class="links reveal reveal-delay-2">
-        <a href="mailto:aayush2@stanford.edu">&#x2197; Email</a>
-        <a href="#">&#x2197; CV</a>
-        <a href="#">&#x2197; LinkedIn</a>
-      </div>
-
-      <h2 class="section-heading reveal">Projects and roles I'm currently working on</h2>
-
+      <p class="left-bio reveal" id="left-bio"></p>
+      <p class="right-bio reveal reveal-delay-1" id="right-bio"></p>
+      <div class="links reveal reveal-delay-2" id="links"></div>
+      <h2 class="section-heading reveal" id="section-heading"></h2>
       <hr class="full-width">
-
-      <div class="project-title reveal">Foresight: Autonomous UX testing through AI browser agents</div>
-      <p class="project-categories reveal reveal-delay-1">Artificial Intelligence, Human-Computer Interaction, Full Stack Dev</p>
-      <p class="project-description reveal reveal-delay-2">Software development has never moved faster. Understanding how users experience that software has not kept up. I built Foresight with some of my closest friends — three random roommates drawn into the same Stanford triple junior year who never expected much from it — to close that gap by deploying AI agents that navigate live product interfaces like real users, clicking, scrolling, and completing workflows autonomously to surface usability failures and regressions before they reach production. We started with a broader vision around synthetic user simulation, learned quickly that teams wanted automation of repetitive testing work rather than a replacement for real research, and rebuilt the entire system from scratch around that insight. Early pilots converted into paying customers.</p>
-
-      <hr class="full-width light">
-
-      <div class="project-title reveal">Aora: Identity-driven fragrance generation from natural language</div>
-      <p class="project-categories reveal reveal-delay-1">Generative AI, Consumer Products, Human-Computer Interaction</p>
-      <p class="project-description reveal reveal-delay-2">The fragrance industry sells catalogs. People want signatures. We built Aora to explore whether AI could translate subjective identity signals — memories, moods, places, aesthetics — into structured fragrance compositions of top, middle, and base notes. We validated the system inside a real custom perfume store, mixing AI-generated formulations into physical scents. In one case, a customer's AI-generated formula produced a perfume closer to what they had imagined than the one they mixed by hand.</p>
-
-      <hr class="full-width light">
-
-      <div class="project-title reveal">Trabit: Social habit tracking through peer accountability</div>
-      <p class="project-categories reveal reveal-delay-1">Human-Computer Interaction, Social Computing, Mobile Development</p>
-      <p class="project-description reveal reveal-delay-2">Habit tracking fails in isolation, not from lack of desire, but lack of witness. We designed Trabit around the insight that consistency is easier to maintain when it is visible to people you care about. Users pick one habit, post a daily photo proving they did it, and face a "Yesterday's Report" naming anyone who slipped. We piloted with 16 Stanford students across two close friend groups, achieved 75% daily posting rates, and watched the app spread through word of mouth beyond the initial cohorts before the pilot had even ended.&nbsp;<a href="#">&#x2197; Read more at GitHub</a></p>
-
-      <hr class="full-width light">
-
-      <div class="project-title reveal">Phytochemicals in Chemoprevention: A Cost-Effective Complementary Approach</div>
-      <p class="project-categories reveal reveal-delay-1">Cancer Biology, Biochemistry, Translational Medicine</p>
-      <p class="project-description reveal reveal-delay-2">Conventional chemotherapy kills indiscriminately, targeting tumor cells but producing dose-limiting side effects that can halt treatment entirely. I saw dietary phytochemicals as an underexplored answer: compounds found in everyday foods that exert cytotoxic effects on cancerous cells while protecting healthy tissue from chemotherapy-induced damage. This review examines five of them — quercetin, isoflavones, curcumin, catechins, and hesperidin — across their mechanisms, clinical evidence, and bioavailability. Published in the Journal of Cancer.&nbsp;<a href="#">&#x2197; Read the paper</a></p>
-
-      <hr class="full-width light">
-
-      <div class="project-title reveal">Fine Art</div>
-      <p class="project-categories reveal reveal-delay-1">Charcoal, Mixed Media, Installations</p>
-      <p class="project-description reveal reveal-delay-2">Exhibited at Pratt Manhattan Gallery, Memphis International Airport, Brooks Museum of Art, and sold to Gus's Fried Chicken and private buyers.&nbsp;<a href="#">&#x2197; See work</a></p>
-
+      <div id="projects-container"></div>
     </div>
-
-    <div class="footer">
-      <h2><a href="mailto:aayush2@stanford.edu">&#x2197; aayush2@stanford.edu</a></h2>
-      <h2>2026</h2>
-    </div>
+    <div class="footer" id="footer"></div>
   </div>
 
+
   <script>
-    // Heavy scroll feel — lerp-based smooth scrolling
+    // Global scroll lock state
+    window.scrollLocked = false;
+    window.scrollLockY = 0;
+
+    // Heavy scroll feel — lerp-based smooth scrolling (desktop only)
     (function() {
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      if (isTouchDevice) return; // Use native scroll on mobile
+
       let targetY = 0;
       let currentY = 0;
       const ease = 0.12; // lower = heavier
 
       window.addEventListener('wheel', (e) => {
         e.preventDefault();
+        if (window.scrollLocked) {
+          targetY = window.scrollLockY;
+          return;
+        }
         targetY += e.deltaY;
         targetY = Math.max(0, Math.min(targetY, document.body.scrollHeight - window.innerHeight));
       }, { passive: false });
 
-      // Touch support
-      let touchY = 0;
-      window.addEventListener('touchstart', (e) => {
-        touchY = e.touches[0].clientY;
-      }, { passive: true });
-      window.addEventListener('touchmove', (e) => {
-        e.preventDefault();
-        const dy = touchY - e.touches[0].clientY;
-        touchY = e.touches[0].clientY;
-        targetY += dy;
-        targetY = Math.max(0, Math.min(targetY, document.body.scrollHeight - window.innerHeight));
-      }, { passive: false });
-
       function tick() {
+        if (window.scrollLocked) {
+          targetY = window.scrollLockY;
+        }
         currentY += (targetY - currentY) * ease;
         if (Math.abs(currentY - targetY) > 0.5) {
           window.scrollTo(0, currentY);
@@ -415,40 +441,6 @@
     })();
   </script>
 
-  <script>
-    // Intro typewriter animation
-    (function() {
-      const el = document.getElementById('intro-text');
-      const wait = ms => new Promise(r => setTimeout(r, ms));
-
-      async function run() {
-        // Start: [a/j]
-        el.textContent = '[a/j]';
-        await wait(1000);
-
-        // Backspace to []
-        // [a/j] → [a/j → [a/ → [a → [
-        const steps = ['[a/j', '[a/', '[a', '['];
-        for (const s of steps) {
-          el.textContent = s + ']';
-          await wait(120);
-        }
-
-        // Brackets push together: []
-        el.textContent = '[]';
-        await wait(400);
-
-        // Type out Aayush Jain inside brackets
-        const fullText = 'Aayush Jain';
-        for (let i = 1; i <= fullText.length; i++) {
-          el.textContent = '[' + fullText.slice(0, i) + ']';
-          await wait(90);
-        }
-      }
-
-      run();
-    })();
-  </script>
 
   <script>
     (function() {
@@ -506,49 +498,5 @@
     })();
   </script>
 
-  <script>
-    // Headline typewriter
-    (function() {
-      const visible = document.getElementById('headline-visible');
-      const placeholder = document.getElementById('headline-placeholder');
-      const text = 'Building interfaces for new forms of computation. Making the most complex tasks accessible to everyday people.';
-      let started = false;
-
-      // Set full text as invisible placeholder to reserve height
-      placeholder.textContent = text;
-
-      const obs = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && !started) {
-          started = true;
-          obs.unobserve(visible.parentElement);
-          let i = 0;
-          function type() {
-            if (i <= text.length) {
-              visible.textContent = text.slice(0, i);
-              i++;
-              setTimeout(type, 30);
-            }
-          }
-          type();
-        }
-      }, { threshold: 0.1 });
-
-      obs.observe(visible.parentElement);
-    })();
-
-    // Reveal on scroll
-    (function() {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.15 });
-
-      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-    })();
-  </script>
 </body>
 </html>

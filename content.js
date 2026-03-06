@@ -41,7 +41,7 @@ const CONTENT = {
   // --- Links ---
   links: [
     { label: 'Email', url: 'mailto:aayush2@stanford.edu' },
-    { label: 'CV', url: 'assets/Aayush_Jain_Resume.pdf' },
+    { label: 'CV', url: '/Aayush_Jain_Resume.pdf' },
     { label: 'LinkedIn', url: 'https://www.linkedin.com/in/aajain2/' },
   ],
 

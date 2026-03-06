@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aayush — Contact</title>
+  <title>Aayush Jain</title>
+  <link rel="icon" type="image/png" href="/assets/favicon-DSqbWA3t.png">
+  <link rel="apple-touch-icon" href="/assets/favicon-DSqbWA3t.png">
   <style>
     @font-face {
       font-family: 'Kalice Trial';
@@ -65,38 +67,19 @@
     .reveal-delay-3 { transition-delay: 0.3s; }
     .reveal-delay-4 { transition-delay: 0.4s; }
   </style>
+  <script type="module" crossorigin src="/assets/contact-B2c6aQrp.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/content-C_TwMxh2.js">
 </head>
 <body>
-  <nav class="back-nav"><a href="index.html">&larr; Back</a></nav>
+  <nav class="back-nav"><a href="index.html" id="back-link"></a></nav>
   <div class="wrapper">
-    <div class="contact-links reveal">
-      <a href="mailto:aayush2@stanford.edu">&#x2197; Email</a>
-      <a href="#">&#x2197; CV</a>
-      <a href="#">&#x2197; LinkedIn</a>
-    </div>
+    <div class="contact-links reveal" id="contact-links"></div>
     <div class="info-section">
-      <img src="/assets/contact-image-CEfT1x4y.png" alt="Horse" class="contact-image reveal reveal-delay-1">
-      <p class="contact-note reveal reveal-delay-2">I'm always open for interesting opportunities. Feel free to reach out for collaboration, commission, or just a coffee chat.</p>
+      <img src="/assets/contact-image-CEfT1x4y.png" alt="" id="contact-image" class="contact-image reveal reveal-delay-1">
+      <p class="contact-note reveal reveal-delay-2" id="contact-note"></p>
     </div>
-    <div class="footer">
-      <h2 class="reveal reveal-delay-3"><a href="mailto:aayush2@stanford.edu">&#x2197; aayush2@stanford.edu</a></h2>
-      <h2 class="reveal reveal-delay-4">2026</h2>
-    </div>
+    <div class="footer" id="footer"></div>
   </div>
 
-  <script>
-    (function() {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.15 });
-
-      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-    })();
-  </script>
 </body>
 </html>
