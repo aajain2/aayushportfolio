@@ -69,7 +69,6 @@
       justify-content: center;
     }
 
-    /* Each piece wrapper — centered, with hover info */
     .art-piece {
       position: absolute;
       opacity: 0;
@@ -89,7 +88,6 @@
       -webkit-user-drag: none;
     }
 
-    /* Info bar below image — only visible on hover */
     .art-info {
       display: flex;
       justify-content: space-between;
@@ -103,18 +101,13 @@
       opacity: 1;
     }
 
-    .art-info .info-title {
+    .art-info .info-title,
+    .art-info .info-medium {
       font-size: 18px;
       font-weight: 400;
-      font-style: italic;
-      letter-spacing: 0.01em;
-    }
-
-    .art-info .info-medium {
-      font-size: 14px;
-      font-weight: 400;
-      opacity: 0.5;
-      letter-spacing: 0.02em;
+      font-style: normal;
+      color: #000000;
+      letter-spacing: -0.005em;
     }
 
     @media (max-width: 768px) {
@@ -126,12 +119,9 @@
         max-height: 72vh;
       }
 
-      /* Always show info on mobile (no hover) */
-      .art-info {
-        opacity: 1;
-      }
-      .art-info .info-title { font-size: 15px; }
-      .art-info .info-medium { font-size: 12px; }
+      .art-info { opacity: 1; }
+      .art-info .info-title,
+      .art-info .info-medium { font-size: 15px; }
     }
   </style>
 </head>
@@ -186,11 +176,11 @@
       els.push(wrap);
     });
 
-    // ===== SCROLL =====
+    // ===== SCROLL ENGINE — ultra-smooth lerp =====
     let target = 0;
     let current = 0;
-    const SPEED = 0.00025;
-    const EASE = 0.05;
+    const SPEED = 0.00018;  // Slow scroll — luxury heavy feel
+    const EASE = 0.035;     // Very low = very heavy/smooth interpolation
 
     window.addEventListener('wheel', e => {
       e.preventDefault();
@@ -203,20 +193,21 @@
     window.addEventListener('touchmove', e => {
       e.preventDefault();
       const y = e.touches[0].clientY;
-      target += (tY - y) * 0.0015;
+      target += (tY - y) * 0.001;
       target = Math.max(0, Math.min(1, target));
       tY = y;
     }, { passive: false });
 
     window.addEventListener('keydown', e => {
-      if (e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); target = Math.min(1, target + 0.02); }
-      if (e.key === 'ArrowUp') { e.preventDefault(); target = Math.max(0, target - 0.02); }
+      if (e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); target = Math.min(1, target + 0.015); }
+      if (e.key === 'ArrowUp') { e.preventDefault(); target = Math.max(0, target - 0.015); }
     });
 
     // ===== RENDER =====
-    // Each piece gets an equal segment of scroll.
-    // Simple crossfade: fade in, hold, fade out. One at a time.
-    const SEGMENT = 1 / N;
+    // First piece visible immediately at scroll 0.
+    // Each piece gets equal scroll range. Crossfade between them.
+    // Scroll range starts at 0 so first piece shows on load.
+    const SEGMENT = 1 / (N - 1 + 0.001); // Give first piece a head start
 
     function smoothstep(a, b, x) {
       const t = Math.max(0, Math.min(1, (x - a) / (b - a)));
@@ -225,7 +216,7 @@
 
     function render() {
       const diff = target - current;
-      if (Math.abs(diff) > 0.00003) {
+      if (Math.abs(diff) > 0.00002) {
         current += diff * EASE;
       } else {
         current = target;
@@ -233,25 +224,35 @@
 
       pctEl.textContent = Math.round(current * 100);
 
+      // Map scroll 0→1 to piece index with crossfade
+      // At scroll=0, piece 0 is fully visible
+      // Each scroll step transitions to next piece
+      const totalRange = N - 1; // transitions between N pieces
+      const pos = current * totalRange; // 0 to N-1
+
       for (let i = 0; i < N; i++) {
-        const start = i * SEGMENT;
-        const end = (i + 1) * SEGMENT;
-        const mid = (start + end) / 2;
-        const isLast = (i === N - 1);
+        const dist = pos - i; // negative = hasn't appeared yet, 0 = centered, positive = passed
 
         let opacity = 0;
 
-        if (current >= start && current <= end) {
-          // Fade in over first 30% of segment, fade out over last 30%
-          const fadeIn = smoothstep(start, start + SEGMENT * 0.30, current);
-          const fadeOut = isLast
-            ? 1
-            : (1 - smoothstep(end - SEGMENT * 0.30, end, current));
-          opacity = Math.min(fadeIn, fadeOut);
+        if (dist >= -1 && dist <= 1) {
+          // Crossfade window: piece is fully visible at dist=0,
+          // fades in from dist=-1→0, fades out from dist=0→1
+          if (dist <= 0) {
+            // Fading in
+            opacity = smoothstep(-1, -0.15, dist);
+          } else {
+            // Fading out
+            opacity = 1 - smoothstep(0.15, 1, dist);
+          }
+        }
+
+        // Last piece: don't fade out
+        if (i === N - 1 && dist >= 0) {
+          opacity = smoothstep(-1, -0.15, dist);
         }
 
         els[i].style.opacity = opacity;
-        // Only allow hover interaction when piece is visible
         els[i].style.pointerEvents = opacity > 0.3 ? 'auto' : 'none';
       }
 
