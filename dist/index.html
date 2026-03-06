@@ -3,19 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aayush Jain</title>
-  <link rel="icon" type="image/png" href="assets/favicon.png">
-  <link rel="apple-touch-icon" href="assets/favicon.png">
+  <title>Aayush — Creative Technologist</title>
   <style>
     @font-face {
       font-family: 'Kalice Trial';
-      src: url('fonts/KaliceTrial-Regular.otf') format('opentype');
+      src: url('/assets/KaliceTrial-Regular-CfNMi4nZ.otf') format('opentype');
       font-weight: 400;
       font-style: normal;
     }
     @font-face {
       font-family: 'Kalice Trial';
-      src: url('fonts/KaliceTrial-Bold.otf') format('opentype');
+      src: url('/assets/KaliceTrial-Bold-BZPD-ai8.otf') format('opentype');
       font-weight: 700;
       font-style: normal;
     }
@@ -59,62 +57,21 @@
       white-space: nowrap;
     }
 
-    .scroll-hint {
-      position: absolute;
-      bottom: 3vh;
-      left: 50%;
-      transform: translateX(-50%);
-      font-family: 'Kalice Trial', serif;
-      font-size: 18px;
-      font-weight: 400;
-      color: #000000;
-      opacity: 0;
-      transition: opacity 0.8s ease;
-    }
-
-    .scroll-hint.show {
-      opacity: 1;
-      animation: nudge 2s ease-in-out infinite;
-    }
-
-    @keyframes nudge {
-      0%, 100% { transform: translateX(-50%) translateY(0); }
-      50% { transform: translateX(-50%) translateY(6px); }
-    }
-
     /* ===== CONTACT NAV ===== */
-    .top-nav {
+    .contact-nav {
       position: fixed;
-      top: 25px;
-      right: 25px;
+      top: 0.625vw;
+      right: 0.625vw;
       z-index: 100;
       font-size: 18px;
       font-weight: 400;
       line-height: 1.18;
       letter-spacing: -0.005em;
-      opacity: 0;
-      transition: opacity 0.6s ease;
-      display: flex;
-      gap: 16px;
     }
 
-    .top-nav.visible {
-      opacity: 1;
-    }
-
-    .top-nav a,
-    .top-nav button {
+    .contact-nav a {
       text-decoration: none;
       color: #000000;
-      font-family: 'Kalice Trial', serif;
-      font-size: 18px;
-      font-weight: 400;
-      line-height: 1.18;
-      letter-spacing: -0.005em;
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 0;
     }
 
     /* ===== HORSE IMAGE SECTION ===== */
@@ -151,7 +108,6 @@
       position: relative;
       z-index: 20;
       background: #FFFFFF;
-      margin-top: -100vh;
     }
 
     .grid {
@@ -190,12 +146,7 @@
       letter-spacing: -0.005em;
     }
 
-    .left-bio strong {
-      font-weight: 700;
-      transition: color 0.3s ease;
-      cursor: default;
-    }
-    .left-bio strong:hover { color: #999999; }
+    .left-bio strong { font-weight: 700; }
 
     .right-bio {
       grid-column: 7 / 13;
@@ -240,7 +191,7 @@
     .project-title {
       grid-column: 1 / 4;
       font-size: 18px;
-      font-weight: 700;
+      font-weight: 500;
       line-height: 1.18;
       letter-spacing: -0.005em;
       display: flex;
@@ -360,10 +311,9 @@
   <section class="horse-scroll" id="horse-scroll">
     <div class="intro-section" id="intro-section">
       <div class="intro-text" id="intro-text">[a/j]</div>
-      <div class="scroll-hint" id="scroll-hint">&darr;</div>
     </div>
     <div class="horse-fixed" id="horse-fixed">
-      <img src="assets/contact-image.png" alt="" id="horse-img">
+      <img src="/assets/contact-image-CEfT1x4y.png" alt="" id="horse-img">
     </div>
   </section>
 
@@ -373,7 +323,7 @@
       <h1 class="headline" id="headline"><span id="headline-visible"></span><span id="headline-placeholder" style="visibility:hidden"></span></h1>
 
       <p class="left-bio reveal">
-        Hi, I am Aayush, a creative technologist. I build products that democratize access to personalized expertise through intelligent interfaces. Currently an undergraduate student at Stanford, I've previously made stops at <strong>Arcade,</strong> <strong>Glean,</strong> <strong>Apple,</strong> <strong>AutoZone,</strong> <strong>St. Jude Children's Research Hospital,</strong> and the <strong>University of Memphis.</strong>
+        Hi, I am Aayush, a creative technologist. I build products that democratize access to personalized expertise through intelligent interfaces. Currently an undergraduate student at Stanford, I've previously made stops at <strong>Arcade, Glean, Apple, AutoZone, St. Jude Children's Research Hospital,</strong> and the <strong>University of Memphis.</strong>
       </p>
       <p class="right-bio reveal reveal-delay-1">
         My work spans zero-to-one product development, user research, and cross-functional execution. I care most about the early stages — finding the insight that changes how a team thinks about the problem, then moving fast enough to learn before assumptions calcify. Some of the products I've built and shipped can be found below.
@@ -425,10 +375,6 @@
   </div>
 
   <script>
-    // Global scroll lock state
-    window.scrollLocked = false;
-    window.scrollLockY = 0;
-
     // Heavy scroll feel — lerp-based smooth scrolling
     (function() {
       let targetY = 0;
@@ -437,10 +383,6 @@
 
       window.addEventListener('wheel', (e) => {
         e.preventDefault();
-        if (window.scrollLocked) {
-          targetY = window.scrollLockY;
-          return;
-        }
         targetY += e.deltaY;
         targetY = Math.max(0, Math.min(targetY, document.body.scrollHeight - window.innerHeight));
       }, { passive: false });
@@ -452,10 +394,6 @@
       }, { passive: true });
       window.addEventListener('touchmove', (e) => {
         e.preventDefault();
-        if (window.scrollLocked) {
-          targetY = window.scrollLockY;
-          return;
-        }
         const dy = touchY - e.touches[0].clientY;
         touchY = e.touches[0].clientY;
         targetY += dy;
@@ -463,9 +401,6 @@
       }, { passive: false });
 
       function tick() {
-        if (window.scrollLocked) {
-          targetY = window.scrollLockY;
-        }
         currentY += (targetY - currentY) * ease;
         if (Math.abs(currentY - targetY) > 0.5) {
           window.scrollTo(0, currentY);
@@ -509,22 +444,9 @@
           el.textContent = '[' + fullText.slice(0, i) + ']';
           await wait(90);
         }
-
-        // Show scroll hint after typing finishes
-        await wait(600);
-        document.getElementById('scroll-hint').classList.add('show');
       }
 
       run();
-
-      // Fade out scroll hint on first scroll
-      let hintHidden = false;
-      window.addEventListener('scroll', function() {
-        if (!hintHidden && window.scrollY > 10) {
-          hintHidden = true;
-          document.getElementById('scroll-hint').classList.remove('show');
-        }
-      }, { passive: true });
     })();
   </script>
 
@@ -585,40 +507,26 @@
   </script>
 
   <script>
-    // Headline typewriter with scroll lock
+    // Headline typewriter
     (function() {
       const visible = document.getElementById('headline-visible');
       const placeholder = document.getElementById('headline-placeholder');
-      const wrapper = document.getElementById('main-content');
       const text = 'Building interfaces for new forms of computation. Making the most complex tasks accessible to everyday people.';
       let started = false;
 
       // Set full text as invisible placeholder to reserve height
       placeholder.textContent = text;
 
-      const contactNav = document.querySelector('.contact-nav');
       const obs = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && !started) {
           started = true;
           obs.unobserve(visible.parentElement);
-
-          // Lock scroll at wrapper top position
-          const lockPos = wrapper.offsetTop;
-          window.scrollLockY = lockPos;
-          window.scrollLocked = true;
-
-          contactNav.classList.add('visible');
           let i = 0;
           function type() {
             if (i <= text.length) {
               visible.textContent = text.slice(0, i);
               i++;
               setTimeout(type, 30);
-            } else {
-              // Typewriter done — unlock scroll
-              setTimeout(() => {
-                window.scrollLocked = false;
-              }, 400);
             }
           }
           type();
