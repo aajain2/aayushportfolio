@@ -180,8 +180,15 @@
     // ===== SCROLL ENGINE — ultra-smooth lerp =====
     let target = 0;
     let current = 0;
-    const SPEED = 0.00018;  // Slow scroll — luxury heavy feel
-    const EASE = 0.035;     // Very low = very heavy/smooth interpolation
+    const SPEED = 0.00045;  // Faster scroll — less effort per piece
+    const EASE = 0.04;      // Smooth heavy interpolation
+
+    // Helper: snap target to center of nearest piece
+    const seg = 1 / N;
+    function currentPiece() { return Math.round(target / seg - 0.5); }
+    function goTo(i) { target = Math.max(0, Math.min(1, (i + 0.5) * seg)); }
+    function goNext() { goTo(Math.min(N - 1, currentPiece() + 1)); }
+    function goPrev() { goTo(Math.max(0, currentPiece() - 1)); }
 
     window.addEventListener('wheel', e => {
       e.preventDefault();
@@ -194,14 +201,14 @@
     window.addEventListener('touchmove', e => {
       e.preventDefault();
       const y = e.touches[0].clientY;
-      target += (tY - y) * 0.001;
+      target += (tY - y) * 0.002;
       target = Math.max(0, Math.min(1, target));
       tY = y;
     }, { passive: false });
 
     window.addEventListener('keydown', e => {
-      if (e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); target = Math.min(1, target + 0.015); }
-      if (e.key === 'ArrowUp') { e.preventDefault(); target = Math.max(0, target - 0.015); }
+      if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goNext(); }
+      if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { e.preventDefault(); goPrev(); }
     });
 
     // ===== RENDER =====
@@ -224,10 +231,6 @@
       }
 
       pctEl.textContent = Math.round(current * 100);
-
-      // Each piece owns a segment: piece i is at scroll [i/N, (i+1)/N]
-      // But piece 0 starts fully visible (no fade-in needed at scroll=0)
-      const seg = 1 / N;
 
       for (let i = 0; i < N; i++) {
         const start = i * seg;
