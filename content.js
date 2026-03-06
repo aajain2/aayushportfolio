@@ -53,31 +53,31 @@ const CONTENT = {
     {
       
       title: 'Foresight',
-      categories: 'UX and QA TestingAutomation, Browser Use Agents',
+      categories: 'Autonomous QA, Browser Agents, Developer Tools',
       description: 'Software development has never moved faster. Understanding how users experience that software has not kept up. I built Foresight with some of my closest friends \u2014 three random roommates drawn into the same Stanford triple junior year who never expected much from it \u2014 to close that gap by deploying AI agents that navigate live product interfaces like real users, clicking, scrolling, and completing workflows autonomously to surface usability failures and regressions before they reach production. We started with a broader vision around synthetic user simulation, learned quickly that teams wanted automation of repetitive testing work rather than a replacement for real research, and rebuilt the entire system from scratch around that insight. Early pilots converted into paying customers.',
       link: null,
     },
     {
       title: 'Aora',
-      categories: 'Generative AI, Consumer Products, Human-Computer Interaction',
+      categories: 'Generative AI, Sensory Computing, Personalization',
       description: 'The fragrance industry sells catalogs. People want signatures. We built Aora to explore whether AI could translate subjective identity signals \u2014 memories, moods, places, aesthetics \u2014 into structured fragrance compositions of top, middle, and base notes. We validated the system inside a real custom perfume store, mixing AI-generated formulations into physical scents. In one case, a customer\'s AI-generated formula produced a perfume closer to what they had imagined than the one they mixed by hand.',
       link: null,
     },
     {
       title: 'Trabit',
-      categories: 'Human-Computer Interaction, Social Computing, Mobile Development',
+      categories: 'Behavioral Design, Social Accountability, Mobile',
       description: 'Habit tracking fails in isolation, not from lack of desire, but lack of witness. We designed Trabit around the insight that consistency is easier to maintain when it is visible to people you care about. Users pick one habit, post a daily photo proving they did it, and face a \u201cYesterday\'s Report\u201d naming anyone who slipped. We piloted with 16 Stanford students across two close friend groups, achieved 75% daily posting rates, and watched the app spread through word of mouth beyond the initial cohorts before the pilot had even ended.',
       link: { label: 'Read more at GitHub', url: '#' },
     },
     {
       title: 'Phytochemicals in Chemoprevention: A Cost-Effective Complementary Approach',
-      categories: 'Cancer Biology, Biochemistry, Translational Medicine',
+      categories: 'Chemoprevention, Phytochemistry, Translational Oncology',
       description: 'Conventional chemotherapy kills indiscriminately, targeting tumor cells but producing dose-limiting side effects that can halt treatment entirely. I saw dietary phytochemicals as an underexplored answer: compounds found in everyday foods that exert cytotoxic effects on cancerous cells while protecting healthy tissue from chemotherapy-induced damage. This review examines five of them \u2014 quercetin, isoflavones, curcumin, catechins, and hesperidin \u2014 across their mechanisms, clinical evidence, and bioavailability. Published in the Journal of Cancer.',
       link: { label: 'Read the paper', url: '#' },
     },
     {
       title: 'Fine Art',
-      categories: 'Charcoal, Mixed Media, Installations',
+      categories: 'Charcoal, Mixed Media, Exhibition',
       description: 'Exhibited at Pratt Manhattan Gallery, Memphis International Airport, and Brooks Museum of Art, and sold to Gus\'s Fried Chicken and private buyers.',
       link: { label: 'See selected works', url: 'fine-art.html' },
     },

@@ -198,7 +198,7 @@
     }
 
     .right-bio {
-      grid-column: 7 / 13;
+      grid-column: 7 / 12;
       font-size: 26px;
       line-height: 28px;
       font-weight: 400;
@@ -541,24 +541,6 @@
       const short = C.introShort;
       const full = C.introFull;
 
-      // Skip intro if returning from another page
-      if (sessionStorage.getItem('introPlayed')) {
-        el.textContent = '[' + full + ']';
-        // Skip past intro+horse section to content
-        const wrapper = document.getElementById('main-content');
-        requestAnimationFrame(() => {
-          const pos = wrapper.offsetTop;
-          window.scrollTo(0, pos);
-          // Sync lerp scroll target if heavy scroll is active
-          if (typeof window.lerpTargetY !== 'undefined') window.lerpTargetY = pos;
-          if (typeof window.lerpCurrentY !== 'undefined') window.lerpCurrentY = pos;
-          document.getElementById('top-nav').classList.add('visible');
-          document.getElementById('headline-visible').textContent = C.headline;
-          document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
-        });
-        return;
-      }
-
       el.textContent = '[' + short + ']';
       await wait(1000);
 
@@ -579,7 +561,6 @@
 
       await wait(600);
       document.getElementById('scroll-hint').classList.add('show');
-      sessionStorage.setItem('introPlayed', '1');
     }
 
     run();
