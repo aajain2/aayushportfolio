@@ -672,10 +672,6 @@
         started = true;
         obs.unobserve(visible.parentElement);
 
-        const lockPos = wrapper.offsetTop;
-        window.scrollLockY = lockPos;
-        window.scrollLocked = true;
-
         topNav.classList.add('visible');
         let i = 0;
         function type() {
@@ -683,10 +679,6 @@
             visible.textContent = text.slice(0, i);
             i++;
             setTimeout(type, 30);
-          } else {
-            setTimeout(() => {
-              window.scrollLocked = false;
-            }, 400);
           }
         }
         type();

@@ -64,46 +64,74 @@
       top: 0; left: 0;
       width: 100vw; height: 100vh;
       overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
+    /* Each piece wrapper — centered, with hover info */
     .art-piece {
       position: absolute;
       opacity: 0;
-      will-change: transform, opacity;
-      overflow: hidden;
+      will-change: opacity;
+      display: flex;
+      flex-direction: column;
     }
+
     .art-piece img {
-      width: 100%; height: 100%;
-      object-fit: cover;
+      max-width: 75vw;
+      max-height: 80vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
       display: block;
       user-select: none;
       -webkit-user-drag: none;
     }
 
-    .art-label {
-      position: absolute;
+    /* Info bar below image — only visible on hover */
+    .art-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 10px 0 0 0;
       opacity: 0;
-      will-change: opacity, transform;
-      pointer-events: none;
+      transition: opacity 0.4s ease;
     }
-    .art-label .label-name {
+
+    .art-piece:hover .art-info {
+      opacity: 1;
+    }
+
+    .art-info .info-title {
+      font-size: 18px;
+      font-weight: 400;
       font-style: italic;
-      font-size: 22px;
-      line-height: 1.3;
-      display: block;
-      margin-bottom: 3px;
+      letter-spacing: 0.01em;
     }
-    .art-label .label-meta {
-      font-size: 12px;
-      opacity: 0.45;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
+
+    .art-info .info-medium {
+      font-size: 14px;
+      font-weight: 400;
+      opacity: 0.5;
+      letter-spacing: 0.02em;
     }
 
     @media (max-width: 768px) {
       .back-nav { top: auto; bottom: 25px; right: 25px; }
       .scroll-ui { bottom: 25px; left: 28px; right: auto; }
-      .art-label .label-name { font-size: 17px; }
+
+      .art-piece img {
+        max-width: 88vw;
+        max-height: 72vh;
+      }
+
+      /* Always show info on mobile (no hover) */
+      .art-info {
+        opacity: 1;
+      }
+      .art-info .info-title { font-size: 15px; }
+      .art-info .info-medium { font-size: 12px; }
     }
   </style>
 </head>
@@ -123,67 +151,16 @@
   (function() {
     'use strict';
 
-    // =============================================
-    // PIECES
-    //
-    // Flow per piece:
-    //   1. Fades in as small thumbnail, centered
-    //   2. Grows larger, drifts toward one side
-    //   3. Gets SO LARGE it overflows the viewport on that side
-    //      (the zoom IS the exit — no sliding)
-    //   4. Next piece is already fading in small on the opposite side
-    //
-    // Odd index → grows toward LEFT
-    // Even index → grows toward RIGHT
-    // Last piece → grows to fill entire viewport, stays
-    // =============================================
-
     const pieces = [
-      {
-        name: 'Emergence',
-        medium: 'Charcoal & origami on paper',
-        src: '/art/art-1-emergence.jpg',
-        aspect: 1554 / 2562,
-      },
-      {
-        name: 'Egotism II',
-        medium: 'Charcoal & mixed media',
-        src: '/art/art-2-egotism.jpg',
-        aspect: 4698 / 2925,
-      },
-      {
-        name: 'Flux',
-        medium: 'Mixed media',
-        src: '/art/art-3-flux.jpeg',
-        aspect: 691 / 500,
-      },
-      {
-        name: 'Herself a Stranger Within',
-        medium: 'Charcoal & mixed media',
-        src: '/art/art-4-stranger.jpg',
-        aspect: 3128 / 2398,
-      },
-      {
-        name: 'Masked',
-        medium: 'Charcoal & collage',
-        src: '/art/art-5-masked.jpg',
-        aspect: 2549 / 3389,
-      },
-      {
-        name: 'Prayer for Hunger',
-        medium: 'Charcoal, watercolor & collage',
-        src: '/art/art-6-prayer.jpg',
-        aspect: 3226 / 4188,
-      },
+      { name: 'Emergence', medium: 'Mixed Media', src: '/art/art-1-emergence.jpg' },
+      { name: 'Egotism II', medium: 'Charcoal & Mixed Media', src: '/art/art-2-egotism.jpg' },
+      { name: 'Flux', medium: 'Mixed Media', src: '/art/art-3-flux.jpeg' },
+      { name: 'Herself a Stranger Within', medium: 'Charcoal & Mixed Media', src: '/art/art-4-stranger.jpg' },
+      { name: 'Masked', medium: 'Charcoal & Collage', src: '/art/art-5-masked.jpg' },
+      { name: 'Prayer for Hunger', medium: 'Charcoal, Watercolor & Collage', src: '/art/art-6-prayer.jpg' },
     ];
 
     const N = pieces.length;
-    const SEGMENT = 1 / N;
-
-    // =============================================
-    // DOM
-    // =============================================
-
     const gv = document.getElementById('gv');
     const pctEl = document.getElementById('pct');
     const els = [];
@@ -191,31 +168,29 @@
     pieces.forEach(p => {
       const wrap = document.createElement('div');
       wrap.className = 'art-piece';
+
       const img = document.createElement('img');
       img.src = p.src;
       img.alt = p.name;
       img.loading = 'eager';
       wrap.appendChild(img);
+
+      const info = document.createElement('div');
+      info.className = 'art-info';
+      info.innerHTML =
+        `<span class="info-title">${p.name}</span>` +
+        `<span class="info-medium">${p.medium}</span>`;
+      wrap.appendChild(info);
+
       gv.appendChild(wrap);
-
-      const lbl = document.createElement('div');
-      lbl.className = 'art-label';
-      lbl.innerHTML =
-        `<span class="label-name">${p.name}</span>` +
-        `<span class="label-meta">${p.medium}</span>`;
-      gv.appendChild(lbl);
-
-      els.push({ wrap, lbl });
+      els.push(wrap);
     });
 
-    // =============================================
-    // SCROLL ENGINE
-    // =============================================
-
+    // ===== SCROLL =====
     let target = 0;
     let current = 0;
-    const SPEED = 0.00020;
-    const EASE = 0.04;
+    const SPEED = 0.00025;
+    const EASE = 0.05;
 
     window.addEventListener('wheel', e => {
       e.preventDefault();
@@ -228,32 +203,25 @@
     window.addEventListener('touchmove', e => {
       e.preventDefault();
       const y = e.touches[0].clientY;
-      target += (tY - y) * 0.0012;
+      target += (tY - y) * 0.0015;
       target = Math.max(0, Math.min(1, target));
       tY = y;
     }, { passive: false });
 
     window.addEventListener('keydown', e => {
-      if (e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); target = Math.min(1, target + 0.018); }
-      if (e.key === 'ArrowUp') { e.preventDefault(); target = Math.max(0, target - 0.018); }
+      if (e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); target = Math.min(1, target + 0.02); }
+      if (e.key === 'ArrowUp') { e.preventDefault(); target = Math.max(0, target - 0.02); }
     });
 
-    // =============================================
-    // MATH
-    // =============================================
+    // ===== RENDER =====
+    // Each piece gets an equal segment of scroll.
+    // Simple crossfade: fade in, hold, fade out. One at a time.
+    const SEGMENT = 1 / N;
 
-    function clamp01(v) { return Math.max(0, Math.min(1, v)); }
-
-    function smoothstep(edge0, edge1, x) {
-      const t = clamp01((x - edge0) / (edge1 - edge0));
+    function smoothstep(a, b, x) {
+      const t = Math.max(0, Math.min(1, (x - a) / (b - a)));
       return t * t * (3 - 2 * t);
     }
-
-    function lerp(a, b, t) { return a + (b - a) * t; }
-
-    // =============================================
-    // RENDER
-    // =============================================
 
     function render() {
       const diff = target - current;
@@ -263,121 +231,28 @@
         current = target;
       }
 
-      const p = current;
-      pctEl.textContent = Math.round(p * 100);
-
-      const W = window.innerWidth;
-      const H = window.innerHeight;
+      pctEl.textContent = Math.round(current * 100);
 
       for (let i = 0; i < N; i++) {
-        const piece = pieces[i];
-        const el = els[i];
+        const start = i * SEGMENT;
+        const end = (i + 1) * SEGMENT;
+        const mid = (start + end) / 2;
         const isLast = (i === N - 1);
 
-        // Alternate: even index → drifts LEFT, odd → drifts RIGHT
-        const goesLeft = (i % 2 === 0);
+        let opacity = 0;
 
-        const start = i * SEGMENT;
-        const end = isLast ? 1.0 : (i + 1) * SEGMENT;
-        const range = end - start;
-        const local = clamp01((p - start) / range);
-
-        // Not visible at all
-        if (p < start - 0.01 || (!isLast && p > end + 0.01)) {
-          el.wrap.style.opacity = 0;
-          el.lbl.style.opacity = 0;
-          continue;
-        }
-
-        // --- Compute base dimensions at scale=1 (fits ~55% of viewport height) ---
-        const baseH = H * 0.55;
-        const baseW = baseH * piece.aspect;
-        const maxW = W * 0.60;
-        let fitW, fitH;
-        if (baseW > maxW) {
-          fitW = maxW;
-          fitH = maxW / piece.aspect;
-        } else {
-          fitW = baseW;
-          fitH = baseH;
-        }
-
-        let opacity, scale, cx, cy;
-
-        if (isLast) {
-          // --- LAST PIECE: zoom to fill viewport ---
-          // Fade in centered, then grow to cover everything
-          opacity = smoothstep(0, 0.25, local);
-          scale = lerp(0.15, 3.0, smoothstep(0, 0.9, local));
-          cx = W / 2;
-          cy = H / 2;
-        } else {
-          // --- REGULAR PIECE ---
-          // Opacity: very gradual fade in, then fade out as it zooms past
-          const fadeIn = smoothstep(0, 0.20, local);
-          const fadeOut = 1 - smoothstep(0.80, 1.0, local);
+        if (current >= start && current <= end) {
+          // Fade in over first 30% of segment, fade out over last 30%
+          const fadeIn = smoothstep(start, start + SEGMENT * 0.30, current);
+          const fadeOut = isLast
+            ? 1
+            : (1 - smoothstep(end - SEGMENT * 0.30, end, current));
           opacity = Math.min(fadeIn, fadeOut);
-
-          // Scale: small → large → very large (overflows viewport)
-          // 0.08 at start, ~0.5 at middle, ~2.8 at end
-          scale = lerp(0.08, 2.8, smoothstep(0, 0.95, local));
-
-          // Center position: starts near center, drifts to one side
-          // As scale increases, the image naturally overflows the far edge
-          const drift = smoothstep(0.10, 0.85, local);
-          if (goesLeft) {
-            cx = lerp(W * 0.50, W * 0.25, drift);
-          } else {
-            cx = lerp(W * 0.50, W * 0.75, drift);
-          }
-          cy = lerp(H * 0.52, H * 0.48, drift);
         }
 
-        // Apply
-        const pw = fitW * scale;
-        const ph = fitH * scale;
-        const left = cx - pw / 2;
-        const top = cy - ph / 2;
-
-        el.wrap.style.opacity = opacity;
-        el.wrap.style.left = left + 'px';
-        el.wrap.style.top = top + 'px';
-        el.wrap.style.width = pw + 'px';
-        el.wrap.style.height = ph + 'px';
-
-        // --- Label ---
-        // Shows during the mid-phase when piece is readable size
-        const lblIn = smoothstep(0.10, 0.22, local);
-        const lblOut = isLast ? 1 : (1 - smoothstep(0.55, 0.70, local));
-        const lblOpacity = Math.min(lblIn, lblOut) * 0.85;
-
-        // Position label above the piece, aligned to drift side
-        let lblX, lblY, lblAlign;
-        if (isLast) {
-          lblX = W / 2;
-          lblY = cy - ph / 2 - 28;
-          lblAlign = 'center';
-        } else if (goesLeft) {
-          lblX = cx - pw / 2;
-          lblY = cy - ph / 2 - 28;
-          lblAlign = 'left';
-        } else {
-          lblX = cx + pw / 2;
-          lblY = cy - ph / 2 - 28;
-          lblAlign = 'right';
-        }
-
-        el.lbl.style.opacity = lblOpacity;
-        el.lbl.style.left = lblX + 'px';
-        el.lbl.style.top = lblY + 'px';
-        el.lbl.style.textAlign = lblAlign;
-        if (lblAlign === 'right') {
-          el.lbl.style.transform = `translate(-100%, ${(1 - lblOpacity) * 8}px)`;
-        } else if (lblAlign === 'center') {
-          el.lbl.style.transform = `translate(-50%, ${(1 - lblOpacity) * 8}px)`;
-        } else {
-          el.lbl.style.transform = `translateY(${(1 - lblOpacity) * 8}px)`;
-        }
+        els[i].style.opacity = opacity;
+        // Only allow hover interaction when piece is visible
+        els[i].style.pointerEvents = opacity > 0.3 ? 'auto' : 'none';
       }
 
       requestAnimationFrame(render);
