@@ -33,7 +33,6 @@
       height: 100vh;
     }
 
-    /* Same back-nav as contact page */
     .back-nav {
       position: fixed;
       top: 0.625vw;
@@ -47,7 +46,6 @@
       color: #000000;
     }
 
-    /* Scroll counter bottom-right */
     .scroll-ui {
       position: fixed;
       bottom: 22px;
@@ -56,12 +54,11 @@
       font-size: 14px;
       letter-spacing: 0.02em;
       color: #000000;
-      opacity: 0.4;
+      opacity: 0.35;
       font-variant-numeric: tabular-nums;
       pointer-events: none;
     }
 
-    /* Viewport */
     .gallery-viewport {
       position: fixed;
       top: 0; left: 0;
@@ -69,32 +66,25 @@
       overflow: hidden;
     }
 
-    /* Art piece container */
     .art-piece {
       position: absolute;
-      top: 50%;
-      left: 50%;
       opacity: 0;
       will-change: transform, opacity;
       overflow: hidden;
-      transform-origin: center center;
     }
     .art-piece img {
-      width: 100%;
-      height: 100%;
+      width: 100%; height: 100%;
       object-fit: cover;
       display: block;
       user-select: none;
       -webkit-user-drag: none;
     }
 
-    /* Label */
     .art-label {
       position: absolute;
       opacity: 0;
       will-change: opacity, transform;
       pointer-events: none;
-      text-align: center;
     }
     .art-label .label-name {
       font-style: italic;
@@ -134,10 +124,18 @@
     'use strict';
 
     // =============================================
-    // PIECES — in order, one at a time
-    // Each piece: fades in small → grows to fill → exits to a side
-    // Alternating exit direction (right, left, right, left...)
-    // Last piece stays and fills viewport at 100%
+    // PIECES
+    //
+    // Flow per piece:
+    //   1. Fades in as small thumbnail, centered
+    //   2. Grows larger, drifts toward one side
+    //   3. Gets SO LARGE it overflows the viewport on that side
+    //      (the zoom IS the exit — no sliding)
+    //   4. Next piece is already fading in small on the opposite side
+    //
+    // Odd index → grows toward LEFT
+    // Even index → grows toward RIGHT
+    // Last piece → grows to fill entire viewport, stays
     // =============================================
 
     const pieces = [
@@ -145,43 +143,41 @@
         name: 'Emergence',
         medium: 'Charcoal & origami on paper',
         src: '/art/art-1-emergence.jpg',
-        aspect: 1554 / 2562, // ~0.61 (portrait)
+        aspect: 1554 / 2562,
       },
       {
         name: 'Egotism II',
         medium: 'Charcoal & mixed media',
         src: '/art/art-2-egotism.jpg',
-        aspect: 4698 / 2925, // ~1.61 (landscape)
+        aspect: 4698 / 2925,
       },
       {
         name: 'Flux',
         medium: 'Mixed media',
         src: '/art/art-3-flux.jpeg',
-        aspect: 691 / 500, // ~1.38 (landscape)
+        aspect: 691 / 500,
       },
       {
         name: 'Herself a Stranger Within',
         medium: 'Charcoal & mixed media',
         src: '/art/art-4-stranger.jpg',
-        aspect: 3128 / 2398, // ~1.30 (landscape)
+        aspect: 3128 / 2398,
       },
       {
         name: 'Masked',
         medium: 'Charcoal & collage',
         src: '/art/art-5-masked.jpg',
-        aspect: 2549 / 3389, // ~0.75 (portrait)
+        aspect: 2549 / 3389,
       },
       {
         name: 'Prayer for Hunger',
         medium: 'Charcoal, watercolor & collage',
         src: '/art/art-6-prayer.jpg',
-        aspect: 3226 / 4188, // ~0.77 (portrait)
+        aspect: 3226 / 4188,
       },
     ];
 
     const N = pieces.length;
-    // Each piece gets an equal share of scroll, with overlap for transitions
-    // Last piece stays at 100%
     const SEGMENT = 1 / N;
 
     // =============================================
@@ -192,7 +188,7 @@
     const pctEl = document.getElementById('pct');
     const els = [];
 
-    pieces.forEach((p, i) => {
+    pieces.forEach(p => {
       const wrap = document.createElement('div');
       wrap.className = 'art-piece';
       const img = document.createElement('img');
@@ -213,13 +209,13 @@
     });
 
     // =============================================
-    // SCROLL ENGINE — lerp
+    // SCROLL ENGINE
     // =============================================
 
     let target = 0;
     let current = 0;
-    const SPEED = 0.00022;
-    const EASE = 0.045;
+    const SPEED = 0.00020;
+    const EASE = 0.04;
 
     window.addEventListener('wheel', e => {
       e.preventDefault();
@@ -232,32 +228,28 @@
     window.addEventListener('touchmove', e => {
       e.preventDefault();
       const y = e.touches[0].clientY;
-      target += (tY - y) * 0.0015;
+      target += (tY - y) * 0.0012;
       target = Math.max(0, Math.min(1, target));
       tY = y;
     }, { passive: false });
 
     window.addEventListener('keydown', e => {
-      if (e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); target = Math.min(1, target + 0.02); }
-      if (e.key === 'ArrowUp') { e.preventDefault(); target = Math.max(0, target - 0.02); }
+      if (e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); target = Math.min(1, target + 0.018); }
+      if (e.key === 'ArrowUp') { e.preventDefault(); target = Math.max(0, target - 0.018); }
     });
 
     // =============================================
     // MATH
     // =============================================
 
+    function clamp01(v) { return Math.max(0, Math.min(1, v)); }
+
     function smoothstep(edge0, edge1, x) {
-      const t = Math.max(0, Math.min(1, (x - edge0) / (edge1 - edge0)));
+      const t = clamp01((x - edge0) / (edge1 - edge0));
       return t * t * (3 - 2 * t);
     }
 
     function lerp(a, b, t) { return a + (b - a) * t; }
-
-    // Quintic ease for ultra-smooth scale
-    function ease5(t) {
-      t = Math.max(0, Math.min(1, t));
-      return t * t * t * (t * (t * 6 - 15) + 10);
-    }
 
     // =============================================
     // RENDER
@@ -281,96 +273,111 @@
         const piece = pieces[i];
         const el = els[i];
         const isLast = (i === N - 1);
-        const exitsRight = (i % 2 === 0); // alternate: right, left, right...
 
-        // This piece's scroll range
+        // Alternate: even index → drifts LEFT, odd → drifts RIGHT
+        const goesLeft = (i % 2 === 0);
+
         const start = i * SEGMENT;
         const end = isLast ? 1.0 : (i + 1) * SEGMENT;
         const range = end - start;
+        const local = clamp01((p - start) / range);
 
-        // Local progress 0→1 within this piece's range
-        const local = Math.max(0, Math.min(1, (p - start) / range));
-
-        // Skip if not in range at all (with slight buffer)
-        if (p < start - 0.02 || (!isLast && p > end + 0.02)) {
+        // Not visible at all
+        if (p < start - 0.01 || (!isLast && p > end + 0.01)) {
           el.wrap.style.opacity = 0;
           el.lbl.style.opacity = 0;
           continue;
         }
 
-        // ---- LIFECYCLE PHASES ----
-        // Phase 1: 0.00 → 0.30  — Fade in, start small, centered
-        // Phase 2: 0.30 → 0.65  — Grow large toward filling viewport
-        // Phase 3: 0.65 → 1.00  — Exit: slide off to side (unless last piece)
+        // --- Compute base dimensions at scale=1 (fits ~55% of viewport height) ---
+        const baseH = H * 0.55;
+        const baseW = baseH * piece.aspect;
+        const maxW = W * 0.60;
+        let fitW, fitH;
+        if (baseW > maxW) {
+          fitW = maxW;
+          fitH = maxW / piece.aspect;
+        } else {
+          fitW = baseW;
+          fitH = baseH;
+        }
 
-        let opacity, scale, translateX, translateY;
+        let opacity, scale, cx, cy;
 
         if (isLast) {
-          // Last piece: fade in and grow to fill, then STAY at 100%
-          // Phase 1: 0→0.4 fade in + grow
-          // Phase 2: 0.4→1.0 fill viewport
-          const fadeIn = smoothstep(0, 0.35, local);
-          opacity = fadeIn;
-          // Scale from small to covering viewport
-          const growT = ease5(Math.max(0, Math.min(1, local / 0.9)));
-          scale = lerp(0.15, 1.15, growT);
-          translateX = 0;
-          translateY = 0;
+          // --- LAST PIECE: zoom to fill viewport ---
+          // Fade in centered, then grow to cover everything
+          opacity = smoothstep(0, 0.25, local);
+          scale = lerp(0.15, 3.0, smoothstep(0, 0.9, local));
+          cx = W / 2;
+          cy = H / 2;
         } else {
-          // Fade in (very gradual)
-          const fadeIn = smoothstep(0, 0.30, local);
-          // Fade out during exit
-          const fadeOut = 1 - smoothstep(0.75, 1.0, local);
+          // --- REGULAR PIECE ---
+          // Opacity: very gradual fade in, then fade out as it zooms past
+          const fadeIn = smoothstep(0, 0.20, local);
+          const fadeOut = 1 - smoothstep(0.80, 1.0, local);
           opacity = Math.min(fadeIn, fadeOut);
 
-          // Scale: small → large
-          const growT = ease5(Math.max(0, Math.min(1, local / 0.70)));
-          scale = lerp(0.12, 1.1, growT);
+          // Scale: small → large → very large (overflows viewport)
+          // 0.08 at start, ~0.5 at middle, ~2.8 at end
+          scale = lerp(0.08, 2.8, smoothstep(0, 0.95, local));
 
-          // Exit slide
-          const exitT = smoothstep(0.60, 1.0, local);
-          const exitDir = exitsRight ? 1 : -1;
-          translateX = exitT * exitDir * W * 0.6;
-          translateY = 0;
+          // Center position: starts near center, drifts to one side
+          // As scale increases, the image naturally overflows the far edge
+          const drift = smoothstep(0.10, 0.85, local);
+          if (goesLeft) {
+            cx = lerp(W * 0.50, W * 0.25, drift);
+          } else {
+            cx = lerp(W * 0.50, W * 0.75, drift);
+          }
+          cy = lerp(H * 0.52, H * 0.48, drift);
         }
 
-        // Compute pixel dimensions from scale
-        // At scale=1.0 the image should be ~70% of viewport (large but framed)
-        // At scale=1.1+ it overflows (nearly fills)
-        const baseH = H * 0.70;
-        const baseW = baseH * piece.aspect;
-        // If too wide, constrain
-        const maxW = W * 0.75;
-        let finalW, finalH;
-        if (baseW > maxW) {
-          finalW = maxW;
-          finalH = maxW / piece.aspect;
-        } else {
-          finalW = baseW;
-          finalH = baseH;
-        }
-
-        const pixelW = finalW * scale;
-        const pixelH = finalH * scale;
+        // Apply
+        const pw = fitW * scale;
+        const ph = fitH * scale;
+        const left = cx - pw / 2;
+        const top = cy - ph / 2;
 
         el.wrap.style.opacity = opacity;
-        el.wrap.style.width = pixelW + 'px';
-        el.wrap.style.height = pixelH + 'px';
-        el.wrap.style.transform =
-          `translate(${-pixelW/2 + translateX}px, ${-pixelH/2 + translateY}px)`;
+        el.wrap.style.left = left + 'px';
+        el.wrap.style.top = top + 'px';
+        el.wrap.style.width = pw + 'px';
+        el.wrap.style.height = ph + 'px';
 
-        // Label — centered below piece
-        // Show during mid-phase (0.15 → 0.55)
-        const lblFadeIn = smoothstep(0.12, 0.25, local);
-        const lblFadeOut = isLast
-          ? 1
-          : (1 - smoothstep(0.50, 0.65, local));
-        const lblOpacity = Math.min(lblFadeIn, lblFadeOut) * 0.9;
+        // --- Label ---
+        // Shows during the mid-phase when piece is readable size
+        const lblIn = smoothstep(0.10, 0.22, local);
+        const lblOut = isLast ? 1 : (1 - smoothstep(0.55, 0.70, local));
+        const lblOpacity = Math.min(lblIn, lblOut) * 0.85;
+
+        // Position label above the piece, aligned to drift side
+        let lblX, lblY, lblAlign;
+        if (isLast) {
+          lblX = W / 2;
+          lblY = cy - ph / 2 - 28;
+          lblAlign = 'center';
+        } else if (goesLeft) {
+          lblX = cx - pw / 2;
+          lblY = cy - ph / 2 - 28;
+          lblAlign = 'left';
+        } else {
+          lblX = cx + pw / 2;
+          lblY = cy - ph / 2 - 28;
+          lblAlign = 'right';
+        }
 
         el.lbl.style.opacity = lblOpacity;
-        el.lbl.style.left = (W / 2 + translateX) + 'px';
-        el.lbl.style.top = (H / 2 + pixelH / 2 + 20) + 'px';
-        el.lbl.style.transform = `translate(-50%, ${(1 - lblOpacity) * 10}px)`;
+        el.lbl.style.left = lblX + 'px';
+        el.lbl.style.top = lblY + 'px';
+        el.lbl.style.textAlign = lblAlign;
+        if (lblAlign === 'right') {
+          el.lbl.style.transform = `translate(-100%, ${(1 - lblOpacity) * 8}px)`;
+        } else if (lblAlign === 'center') {
+          el.lbl.style.transform = `translate(-50%, ${(1 - lblOpacity) * 8}px)`;
+        } else {
+          el.lbl.style.transform = `translateY(${(1 - lblOpacity) * 8}px)`;
+        }
       }
 
       requestAnimationFrame(render);

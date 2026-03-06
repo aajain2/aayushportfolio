@@ -503,30 +503,30 @@
       const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
       if (isTouchDevice) return; // Use native scroll on mobile
 
-      let targetY = 0;
-      let currentY = 0;
+      window.lerpTargetY = 0;
+      window.lerpCurrentY = 0;
       const ease = 0.12; // lower = heavier
 
       window.addEventListener('wheel', (e) => {
         e.preventDefault();
         if (window.scrollLocked) {
-          targetY = window.scrollLockY;
+          window.lerpTargetY = window.scrollLockY;
           return;
         }
-        targetY += e.deltaY;
-        targetY = Math.max(0, Math.min(targetY, document.body.scrollHeight - window.innerHeight));
+        window.lerpTargetY += e.deltaY;
+        window.lerpTargetY = Math.max(0, Math.min(window.lerpTargetY, document.body.scrollHeight - window.innerHeight));
       }, { passive: false });
 
       function tick() {
         if (window.scrollLocked) {
-          targetY = window.scrollLockY;
+          window.lerpTargetY = window.scrollLockY;
         }
-        currentY += (targetY - currentY) * ease;
-        if (Math.abs(currentY - targetY) > 0.5) {
-          window.scrollTo(0, currentY);
+        window.lerpCurrentY += (window.lerpTargetY - window.lerpCurrentY) * ease;
+        if (Math.abs(window.lerpCurrentY - window.lerpTargetY) > 0.5) {
+          window.scrollTo(0, window.lerpCurrentY);
         } else {
-          currentY = targetY;
-          window.scrollTo(0, currentY);
+          window.lerpCurrentY = window.lerpTargetY;
+          window.scrollTo(0, window.lerpCurrentY);
         }
         requestAnimationFrame(tick);
       }
@@ -545,6 +545,24 @@
     async function run() {
       const short = C.introShort;
       const full = C.introFull;
+
+      // Skip intro if returning from another page
+      if (sessionStorage.getItem('introPlayed')) {
+        el.textContent = '[' + full + ']';
+        // Skip past intro+horse section to content
+        const wrapper = document.getElementById('main-content');
+        requestAnimationFrame(() => {
+          const pos = wrapper.offsetTop;
+          window.scrollTo(0, pos);
+          // Sync lerp scroll target if heavy scroll is active
+          if (typeof window.lerpTargetY !== 'undefined') window.lerpTargetY = pos;
+          if (typeof window.lerpCurrentY !== 'undefined') window.lerpCurrentY = pos;
+          document.getElementById('top-nav').classList.add('visible');
+          document.getElementById('headline-visible').textContent = C.headline;
+          document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+        });
+        return;
+      }
 
       el.textContent = '[' + short + ']';
       await wait(1000);
@@ -566,6 +584,7 @@
 
       await wait(600);
       document.getElementById('scroll-hint').classList.add('show');
+      sessionStorage.setItem('introPlayed', '1');
     }
 
     run();
