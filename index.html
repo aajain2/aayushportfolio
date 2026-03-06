@@ -575,6 +575,7 @@
           if (typeof window.lerpCurrentY !== 'undefined') window.lerpCurrentY = pos;
           document.getElementById('top-nav').classList.add('visible');
           document.getElementById('headline-visible').textContent = C.headline;
+          window._skipHeadlineType = true;
           document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
         });
         return;
@@ -686,7 +687,7 @@
 
     const topNav = document.getElementById('top-nav');
     const obs = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && !started) {
+      if (entries[0].isIntersecting && !started && !window._skipHeadlineType) {
         started = true;
         obs.unobserve(visible.parentElement);
 
