@@ -447,7 +447,7 @@
     document.title = C.siteTitle;
 
     // Intro text (will be animated by typewriter script below)
-    document.getElementById('intro-text').textContent = '[' + C.introShort + ']';
+    document.getElementById('intro-text').textContent = C.introShort;
 
     // Left bio
     const leftBio = document.getElementById('left-bio');
@@ -594,7 +594,7 @@
       // Coming back from another page — skip intro, jump to content
       if (window.location.hash === '#content') {
         history.replaceState(null, '', window.location.pathname);
-        el.textContent = '[' + full + ']';
+        el.textContent = full;
         const wrapper = document.getElementById('main-content');
         requestAnimationFrame(() => {
           const pos = wrapper.offsetTop;
@@ -609,21 +609,21 @@
         return;
       }
 
-      el.textContent = '[' + short + ']';
+      el.textContent = short;
       await wait(1000);
 
       // Backspace short text character by character
       for (let i = short.length - 1; i >= 0; i--) {
-        el.textContent = '[' + short.slice(0, i) + ']';
+        el.textContent = short.slice(0, i);
         await wait(120);
       }
 
-      el.textContent = '[]';
+      el.textContent = '';
       await wait(400);
 
       // Type out full name
       for (let i = 1; i <= full.length; i++) {
-        el.textContent = '[' + full.slice(0, i) + ']';
+        el.textContent = full.slice(0, i);
         await wait(90);
       }
 
@@ -665,7 +665,7 @@
 
         const progress = scrolled / scrollRange; // 0 → 1
 
-        // Fade out [Aayush Jain] quickly as image enters
+        // Fade out intro text quickly as image enters
         introText.style.opacity = Math.max(0, 1 - progress * 5);
 
         // Phase 1 (0 → 0.35): rise from below viewport, scale 0.3 → 1, fade in
