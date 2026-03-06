@@ -20,7 +20,7 @@ const CONTENT = {
   // Use { text, bold } objects. Bold items get hover-to-grey effect.
   leftBio: [
     { text: 'Hi, I am Aayush, a creative technologist. I build products that democratize access to personalized expertise through intelligent interfaces. Currently an undergraduate student at ' },
-    { text: 'Stanford,', bold: true, url: 'https://www.stanford.edu/' },
+    { text: 'Stanford,', bold: true },
     { text: ' I\'ve previously made stops at ' },
     { text: 'Arcade,', bold: true, url: 'https://wwd.com/business-news/technology/arcade-ai-maia-custom-design-platform-1238339735/' },
     { text: ' ' },
@@ -28,11 +28,11 @@ const CONTENT = {
     { text: ' ' },
     { text: 'Apple,', bold: true, url: 'https://ads.apple.com/app-store' },
     { text: ' ' },
-    { text: 'AutoZone,', bold: true, url: 'https://www.autozone.com/' },
+    { text: 'AutoZone,', bold: true },
     { text: ' ' },
     { text: 'St. Jude Children\'s Research Hospital,', bold: true, url: 'https://www.stjude.org/research/labs/yu-lab.html' },
     { text: ' and the ' },
-    { text: 'University of Memphis.', bold: true, url: 'https://www.memphis.edu/' },
+    { text: 'University of Memphis.', bold: true },
   ],
 
   // --- Bio (right column) ---
@@ -104,3 +104,4 @@ const CONTENT = {
 };
 
 export default CONTENT;
+

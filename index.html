@@ -190,10 +190,12 @@
 
     .left-bio strong {
       font-weight: 700;
-      transition: color 0.3s ease;
       cursor: default;
     }
-    .left-bio strong:hover { color: #999999; }
+    .left-bio strong:has(a) {
+      transition: color 0.3s ease;
+    }
+    .left-bio strong:has(a):hover { color: #999999; }
     .left-bio strong a {
       color: inherit;
       text-decoration: none;
