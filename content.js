@@ -61,13 +61,13 @@ const CONTENT = {
       title: 'Aora',
       categories: 'Generative AI, Sensory Computing, Personalization',
       description: 'The fragrance industry sells catalogs. People want signatures. We built Aora to explore whether AI could translate subjective identity signals \u2014 memories, moods, places, aesthetics \u2014 into structured fragrance compositions of top, middle, and base notes. We validated the system inside a real custom perfume store, mixing AI-generated formulations into physical scents. In one case, a customer\'s AI-generated formula produced a perfume closer to what they had imagined than the one they mixed by hand.',
-      link: null,
+      link: { label: 'See project', url: '/Aora_Deck.pdf' },
     },
     {
       title: 'Trabit',
       categories: 'Behavioral Design, Social Accountability, Mobile',
       description: 'Habit tracking fails in isolation, not from lack of desire, but lack of witness. We designed Trabit around the insight that consistency is easier to maintain when it is visible to people you care about. Users pick one habit, post a daily photo proving they did it, and face a \u201cYesterday\'s Report\u201d naming anyone who slipped. We piloted with 16 Stanford students across two close friend groups, achieved 75% daily posting rates, and watched the app spread through word of mouth beyond the initial cohorts before the pilot had even ended.',
-      link: { label: 'Read more at GitHub', url: '#' },
+      link: { label: 'See project', url: 'https://drive.google.com/file/d/1XDSL9Y1UwmU6kG_F22a_fWDos-LalyDh/view?usp=sharing' },
     },
     {
       title: 'Research: Targeted cancer therapy and phytochemicals',
