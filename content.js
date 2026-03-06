@@ -14,7 +14,7 @@ const CONTENT = {
   introFull: 'Aayush Jain',
 
   // --- Headline (typewriter) ---
-  headline: 'Building interfaces for new forms of computation. Making the most complex tasks accessible to everyday people.',
+  headline: 'Building intelligent interfaces that democratize access to personal expertise. From first principles to products people actually use.',
 
   // --- Bio (left column) ---
   // Use { text, bold } objects. Bold items get hover-to-grey effect.
@@ -46,7 +46,7 @@ const CONTENT = {
   ],
 
   // --- Section Heading ---
-  sectionHeading: 'Projects and roles I\'m currently working on',
+  sectionHeading: 'Some projects I\'ve worked on',
 
   // --- Projects ---
   projects: [
@@ -70,7 +70,7 @@ const CONTENT = {
       link: { label: 'See project', url: 'https://drive.google.com/file/d/1XDSL9Y1UwmU6kG_F22a_fWDos-LalyDh/view?usp=sharing' },
     },
     {
-      title: 'Research: Targeted cancer therapy and phytochemicals',
+      title: 'Research',
       categories: 'Cancer Biology, Biochemistry, Translational Medicine',
       description: 'I became interested in a core tension in oncology: conventional chemotherapy is effective at targeting tumor cells but kills indiscriminately, producing dose-limiting side effects that can halt treatment entirely. This led me to targeted cancer therapy and phytochemicals as a complementary answer, compounds found in everyday foods that exert cytotoxic effects on cancerous cells while actively protecting healthy tissue. I conducted research and wrote review papers on the mechanisms, clinical evidence, and bioavailability of these compounds at the University of Memphis and UT Health Science Center.',
       link: { label: 'Read papers', url: 'https://scholar.google.com/citations?user=XtNy-UUAAAAJ&hl=en' },
@@ -86,7 +86,7 @@ const CONTENT = {
   // --- Contact Page ---
   contact: {
     backLabel: '\u2190 Back',
-    note: 'I\'m always open for interesting opportunities. Feel free to reach out for collaboration, commission, or just a coffee chat.',
+    note: 'Whether it\'s a collaboration, a commission, or just a good conversation, my door is always open.',
     imageAlt: 'Horse',
   },
 };
