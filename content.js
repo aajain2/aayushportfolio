@@ -70,10 +70,10 @@ const CONTENT = {
       link: { label: 'Read more at GitHub', url: '#' },
     },
     {
-      title: 'Phytochemicals in Chemoprevention: A Cost-Effective Complementary Approach',
-      categories: 'Chemoprevention, Phytochemistry, Translational Oncology',
-      description: 'Conventional chemotherapy kills indiscriminately, targeting tumor cells but producing dose-limiting side effects that can halt treatment entirely. I saw dietary phytochemicals as an underexplored answer: compounds found in everyday foods that exert cytotoxic effects on cancerous cells while protecting healthy tissue from chemotherapy-induced damage. This review examines five of them \u2014 quercetin, isoflavones, curcumin, catechins, and hesperidin \u2014 across their mechanisms, clinical evidence, and bioavailability. Published in the Journal of Cancer.',
-      link: { label: 'Read the paper', url: '#' },
+      title: 'Research: Targeted cancer therapy and phytochemicals',
+      categories: 'Cancer Biology, Biochemistry, Translational Medicine',
+      description: 'I became interested in a core tension in oncology: conventional chemotherapy is effective at targeting tumor cells but kills indiscriminately, producing dose-limiting side effects that can halt treatment entirely. This led me to targeted cancer therapy and phytochemicals as a complementary answer, compounds found in everyday foods that exert cytotoxic effects on cancerous cells while actively protecting healthy tissue. I conducted research and wrote review papers on the mechanisms, clinical evidence, and bioavailability of these compounds at the University of Memphis and UT Health Science Center.',
+      link: { label: 'Read papers', url: 'https://scholar.google.com/citations?user=XtNy-UUAAAAJ&hl=en' },
     },
     {
       title: 'Fine Art',
