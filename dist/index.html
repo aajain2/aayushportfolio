@@ -74,12 +74,6 @@
 
     .scroll-hint.show {
       opacity: 1;
-      animation: nudge 2s ease-in-out infinite;
-    }
-
-    @keyframes nudge {
-      0%, 100% { transform: translateX(-50%) translateY(0); }
-      50% { transform: translateX(-50%) translateY(6px); }
     }
 
     /* ===== CONTACT NAV ===== */
@@ -148,7 +142,7 @@
     .wrapper {
       max-width: 100vw;
       padding: 25px;
-      padding-top: 12vh;
+      padding-top: 3vh;
       position: relative;
       z-index: 20;
       background: #FFFFFF;
@@ -385,7 +379,7 @@
   <section class="horse-scroll" id="horse-scroll">
     <div class="intro-section" id="intro-section">
       <div class="intro-text" id="intro-text"></div>
-      <div class="scroll-hint" id="scroll-hint">&darr;</div>
+      <div class="scroll-hint" id="scroll-hint">{scroll down}</div>
     </div>
     <div class="horse-fixed" id="horse-fixed">
       <img src="/assets/contact-image-CEfT1x4y.png" alt="" id="horse-img">
