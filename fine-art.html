@@ -107,7 +107,7 @@
 
     .art-info .info-title,
     .art-info .info-medium {
-      font-size: 18px;
+      font-size: 14px;
       font-weight: 400;
       font-style: normal;
       color: #000000;
@@ -125,7 +125,7 @@
 
       .art-info { opacity: 1; }
       .art-info .info-title,
-      .art-info .info-medium { font-size: 15px; }
+      .art-info .info-medium { font-size: 12px; }
     }
   </style>
 </head>
@@ -147,11 +147,15 @@
 
     const pieces = [
       { name: 'Emergence', medium: 'Mixed Media', src: '/art/art-1-emergence.jpg' },
-      { name: 'Egotism II', medium: 'Charcoal & Mixed Media', src: '/art/art-2-egotism.jpg' },
-      { name: 'Flux', medium: 'Mixed Media', src: '/art/art-3-flux.jpeg' },
-      { name: 'Herself a Stranger Within', medium: 'Charcoal & Mixed Media', src: '/art/art-4-stranger.jpg' },
-      { name: 'Masked', medium: 'Charcoal & Collage', src: '/art/art-5-masked.jpg' },
-      { name: 'Prayer for Hunger', medium: 'Charcoal, Watercolor & Collage', src: '/art/art-6-prayer.jpg' },
+      { name: 'Egotism II', medium: 'Charcoal and Printmaking', src: '/art/art-2-egotism.jpg' },
+      { name: 'Flux', medium: 'Brush Pen and Printmaking', src: '/art/art-3-flux.jpeg' },
+      { name: 'Masked', medium: 'Charcoal and Printmaking', src: '/art/art-8-masked-ii.jpg' },
+      { name: 'Herself a Stranger Within', medium: 'Charcoal and Printmaking', src: '/art/art-4-stranger.jpg' },
+      { name: 'Snatched', medium: 'Charcoal and Printmaking', src: '/art/art-9-snatched.jpg' },
+      { name: 'Masked', medium: 'Charcoal and Printmaking', src: '/art/art-5-masked.jpg' },
+      { name: 'Throw Me Back', medium: 'Spices', src: '/art/art-10-throw-me-back.jpg' },
+      { name: 'Work 10.1', medium: 'Acrylic and Yarn', src: '/art/art-11-work.jpg' },
+      { name: 'Prayer for Hunger', medium: 'Charcoal, Watercolor and Collage', src: '/art/art-6-prayer.jpg' },
       { name: 'Pot of Fatigue', medium: 'Ceramics', src: '/art/art-7-ceramics.jpg' },
     ];
 
@@ -184,41 +188,50 @@
     // ===== SCROLL ENGINE =====
     let target = 0;
     let current = 0;
-    let snapMode = false; // true = instant jump (arrow keys), false = smooth scroll
-    const SPEED = 0.00045;
-    const EASE_SCROLL = 0.04;  // Smooth heavy for wheel
-    const EASE_SNAP = 1.0;     // Instant for arrow keys
+    let currentIndex = 0;
+    let snapMode = false;
+    const EASE_SCROLL = 0.08;
+    const EASE_SNAP = 1.0;
 
     const seg = 1 / N;
-    function currentPiece() { return Math.round(target / seg - 0.5); }
-    function goTo(i) {
-      target = Math.max(0, Math.min(1, (i + 0.5) * seg));
-      snapMode = true;
+    function goTo(i, snap) {
+      currentIndex = Math.max(0, Math.min(N - 1, i));
+      target = currentIndex === 0 ? 0 : (currentIndex + 0.5) * seg;
+      target = Math.min(1, target);
+      snapMode = !!snap;
     }
-    function goNext() { goTo(Math.min(N - 1, currentPiece() + 1)); }
-    function goPrev() { goTo(Math.max(0, currentPiece() - 1)); }
+    function goNext(snap) { goTo(currentIndex + 1, snap); }
+    function goPrev(snap) { goTo(currentIndex - 1, snap); }
 
+    // Wheel: one scroll gesture = one piece
+    let wheelCooldown = false;
     window.addEventListener('wheel', e => {
       e.preventDefault();
-      snapMode = false;
-      target += e.deltaY * SPEED;
-      target = Math.max(0, Math.min(1, target));
+      if (wheelCooldown) return;
+      wheelCooldown = true;
+      if (e.deltaY > 0) goNext(false);
+      else if (e.deltaY < 0) goPrev(false);
+      setTimeout(() => { wheelCooldown = false; }, 400);
     }, { passive: false });
 
+    // Touch: swipe snaps to next/prev
     let tY = 0;
-    window.addEventListener('touchstart', e => { tY = e.touches[0].clientY; }, { passive: true });
+    let touchMoved = false;
+    window.addEventListener('touchstart', e => { tY = e.touches[0].clientY; touchMoved = false; }, { passive: true });
     window.addEventListener('touchmove', e => {
       e.preventDefault();
-      snapMode = false;
       const y = e.touches[0].clientY;
-      target += (tY - y) * 0.002;
-      target = Math.max(0, Math.min(1, target));
-      tY = y;
+      const diff = tY - y;
+      if (!touchMoved && Math.abs(diff) > 30) {
+        touchMoved = true;
+        if (diff > 0) goNext(false);
+        else goPrev(false);
+      }
     }, { passive: false });
 
     window.addEventListener('keydown', e => {
-      if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goNext(); }
-      if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { e.preventDefault(); goPrev(); }
+      if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goNext(true); }
+      if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { e.preventDefault(); goPrev(true); }
     });
 
     // ===== RENDER =====
