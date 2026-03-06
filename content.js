@@ -54,14 +54,20 @@ const CONTENT = {
       
       title: 'Foresight',
       categories: 'Autonomous QA, Browser Agents, Developer Tools',
-      description: 'Software development has never moved faster. Understanding how users experience that software has not kept up. I built Foresight with some of my closest friends \u2014 three random roommates drawn into the same Stanford triple junior year who never expected much from it \u2014 to close that gap by deploying AI agents that navigate live product interfaces like real users, clicking, scrolling, and completing workflows autonomously to surface usability failures and regressions before they reach production. We started with a broader vision around synthetic user simulation, learned quickly that teams wanted automation of repetitive testing work rather than a replacement for real research, and rebuilt the entire system from scratch around that insight. Early pilots converted into paying customers.',
+      description: 'Software development has never moved faster. Understanding how users experience that software has not kept up, and Foresight was built to close that gap by deploying AI agents that navigate live product interfaces like real users, clicking, scrolling, and completing workflows autonomously to surface usability failures and regressions before they reach production. We started with a broader vision around synthetic user simulation, learned quickly that teams wanted automation of repetitive testing work rather than a replacement for real user research, and rebuilt the entire system from scratch around that insight. Early pilots converted into paying customers. I built Foresight with some of my closest friends, and what followed were late nights rebuilding codebases, debating product direction, and figuring out how to run a company for the first time together, resulting in one of the best learning experiences we\'ve had.',
       link: null,
     },
     {
       title: 'Aora',
       categories: 'Generative AI, Sensory Computing, Personalization',
-      description: 'The fragrance industry sells catalogs. People want signatures. We built Aora to explore whether AI could translate subjective identity signals \u2014 memories, moods, places, aesthetics \u2014 into structured fragrance compositions of top, middle, and base notes. We validated the system inside a real custom perfume store, mixing AI-generated formulations into physical scents. In one case, a customer\'s AI-generated formula produced a perfume closer to what they had imagined than the one they mixed by hand.',
+      description: 'The fragrance industry sells catalogs. People want one-of-a-kind signatures. We built Aora to explore whether AI could translate subjective identity signals like memories, moods, places, aesthetics into structured fragrance compositions of top, middle, and base notes. This concept was inspired by our experience working at Arcade, where we learned how generative systems can translate creative prompts into real physical products. We validated the system inside a real custom perfume store, mixing AI-generated formulations into physical scents. In one case, a customer\'s AI-generated formula produced a perfume closer to what they had imagined than the one they mixed by hand.',
       link: { label: 'See project', url: '/Aora_Deck.pdf' },
+    },
+    {
+      title: 'Mergen',
+      categories: 'EdTech, RAG Systems, Accessibility',
+      description: 'College admissions advice has always been expensive, opaque, and unevenly distributed. I built Mergen with my brother as a way to help him navigate his own application process, then watched it grow into something larger. The system uses retrieval-augmented generation to deliver personalized guidance, deadline tracking, and essay feedback to students who would otherwise have no access to a counselor. Built on LangChain with an AWS backend and a React and Next.js frontend, Mergen has since served over 2,000 students. We ended up shutting this down after finding a consumer-first approach for high school education technology difficult to monetize.',
+      link: null,
     },
     {
       title: 'Trabit',
@@ -72,14 +78,20 @@ const CONTENT = {
     {
       title: 'Research',
       categories: 'Cancer Biology, Biochemistry, Translational Medicine',
-      description: 'I became interested in a core tension in oncology: conventional chemotherapy is effective at targeting tumor cells but kills indiscriminately, producing dose-limiting side effects that can halt treatment entirely. This led me to targeted cancer therapy and phytochemicals as a complementary answer, compounds found in everyday foods that exert cytotoxic effects on cancerous cells while actively protecting healthy tissue. I conducted research and wrote review papers on the mechanisms, clinical evidence, and bioavailability of these compounds at the University of Memphis and UT Health Science Center.',
+      description: 'I became interested in a core tension in oncology: conventional chemotherapy is effective at targeting tumor cells but kills indiscriminately, producing dose-limiting side effects that can halt treatment entirely. This led me to targeted cancer therapy and phytochemicals as a complementary answer, compounds found in everyday foods that exert cytotoxic effects on cancerous cells while actively protecting healthy tissue. I wrote review papers on these methods alongside my research stint at the University of Memphis.',
       link: { label: 'Read papers', url: 'https://scholar.google.com/citations?user=XtNy-UUAAAAJ&hl=en' },
     },
     {
       title: 'Fine Art',
       categories: 'Charcoal, Mixed Media, Exhibition',
-      description: 'Exhibited at Pratt Manhattan Gallery, Memphis International Airport, and Brooks Museum of Art, and sold to Gus\'s Fried Chicken and private buyers.',
+      description: 'Exhibited at Pratt Manhattan Gallery, Memphis International Airport, and Brooks Museum of Art, among others. Sold to Gus\'s Fried Chicken and private buyers. Recognized by the Scholastic Art Awards and National YoungArts Foundation.',
       link: { label: 'See selected works', url: 'fine-art.html' },
+    },
+    {
+      title: 'Service Jobs',
+      categories: 'Hospitality, Customer Service, Food Industry',
+      description: 'Learned the ins and outs of exceptional customer service while wearing many hats at Panera and waiting tables at Sakura, a sushi restaurant in Memphis.',
+      link: null,
     },
   ],
 
