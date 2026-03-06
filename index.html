@@ -109,7 +109,10 @@
       border: none;
       cursor: pointer;
       padding: 0;
+      transition: color 0.3s ease;
     }
+    .top-nav a:hover,
+    .top-nav button:hover { color: #999999; }
 
     /* ===== HORSE IMAGE SECTION ===== */
     .horse-scroll {
@@ -547,6 +550,23 @@
     async function run() {
       const short = C.introShort;
       const full = C.introFull;
+
+      // Coming back from another page — skip intro, jump to content
+      if (window.location.hash === '#content') {
+        history.replaceState(null, '', window.location.pathname);
+        el.textContent = '[' + full + ']';
+        const wrapper = document.getElementById('main-content');
+        requestAnimationFrame(() => {
+          const pos = wrapper.offsetTop;
+          window.scrollTo(0, pos);
+          if (typeof window.lerpTargetY !== 'undefined') window.lerpTargetY = pos;
+          if (typeof window.lerpCurrentY !== 'undefined') window.lerpCurrentY = pos;
+          document.getElementById('top-nav').classList.add('visible');
+          document.getElementById('headline-visible').textContent = C.headline;
+          document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+        });
+        return;
+      }
 
       el.textContent = '[' + short + ']';
       await wait(1000);
