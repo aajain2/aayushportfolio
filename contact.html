@@ -69,36 +69,65 @@
   </style>
 </head>
 <body>
-  <nav class="back-nav"><a href="index.html">&larr; Back</a></nav>
+  <nav class="back-nav"><a href="index.html" id="back-link"></a></nav>
   <div class="wrapper">
-    <div class="contact-links reveal">
-      <a href="mailto:aayush2@stanford.edu">&#x2197; Email</a>
-      <a href="#">&#x2197; CV</a>
-      <a href="#">&#x2197; LinkedIn</a>
-    </div>
+    <div class="contact-links reveal" id="contact-links"></div>
     <div class="info-section">
-      <img src="assets/contact-image.png" alt="Horse" class="contact-image reveal reveal-delay-1">
-      <p class="contact-note reveal reveal-delay-2">I'm always open for interesting opportunities. Feel free to reach out for collaboration, commission, or just a coffee chat.</p>
+      <img src="assets/contact-image.png" alt="" id="contact-image" class="contact-image reveal reveal-delay-1">
+      <p class="contact-note reveal reveal-delay-2" id="contact-note"></p>
     </div>
-    <div class="footer">
-      <h2 class="reveal reveal-delay-3"><a href="mailto:aayush2@stanford.edu">&#x2197; aayush2@stanford.edu</a></h2>
-      <h2 class="reveal reveal-delay-4">2026</h2>
-    </div>
+    <div class="footer" id="footer"></div>
   </div>
 
-  <script>
-    (function() {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.15 });
+  <script type="module">
+    import C from './content.js';
 
-      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-    })();
+    document.title = C.siteTitle;
+
+    // Back link
+    document.getElementById('back-link').innerHTML = C.contact.backLabel;
+
+    // Contact links
+    const linksEl = document.getElementById('contact-links');
+    C.links.forEach(link => {
+      const a = document.createElement('a');
+      a.href = link.url;
+      a.innerHTML = '&#x2197; ' + link.label;
+      linksEl.appendChild(a);
+    });
+
+    // Image alt
+    document.getElementById('contact-image').alt = C.contact.imageAlt;
+
+    // Note
+    document.getElementById('contact-note').textContent = C.contact.note;
+
+    // Footer
+    const footer = document.getElementById('footer');
+    const h2a = document.createElement('h2');
+    h2a.className = 'reveal reveal-delay-3';
+    const emailLink = document.createElement('a');
+    emailLink.href = 'mailto:' + C.email;
+    emailLink.innerHTML = '&#x2197; ' + C.email;
+    h2a.appendChild(emailLink);
+    footer.appendChild(h2a);
+
+    const h2b = document.createElement('h2');
+    h2b.className = 'reveal reveal-delay-4';
+    h2b.textContent = C.year;
+    footer.appendChild(h2b);
+
+    // Reveal on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
   </script>
 </body>
 </html>
