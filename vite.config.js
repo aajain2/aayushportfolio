@@ -11,6 +11,7 @@ export default defineConfig({
         main: resolve(__dirname, 'index.html'),
         contact: resolve(__dirname, 'contact.html'),
         fineArt: resolve(__dirname, 'fine-art.html'),
+        bloopers: resolve(__dirname, 'bloopers.html'),
       }
     }
   }

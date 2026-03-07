@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bloopers* — Aayush Jain</title>
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="apple-touch-icon" href="assets/favicon.png">
+  <style>
+    @font-face {
+      font-family: 'Kalice Trial';
+      src: url('fonts/KaliceTrial-Regular.otf') format('opentype');
+      font-weight: 400;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Kalice Trial';
+      src: url('fonts/KaliceTrial-Bold.otf') format('opentype');
+      font-weight: 700;
+      font-style: normal;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Kalice Trial', serif;
+      background: #FFFFFF;
+      color: #000000;
+      -webkit-font-smoothing: antialiased;
+      max-width: 100vw;
+      overflow-x: hidden;
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.18;
+    }
+
+    /* Password gate */
+    .password-gate {
+      position: fixed;
+      inset: 0;
+      background: #FFFFFF;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+    .password-gate.hidden { display: none; }
+    .password-gate input {
+      font-family: 'Kalice Trial', serif;
+      font-size: 22px;
+      border: none;
+      border-bottom: 2px solid #000000;
+      outline: none;
+      padding: 8px 0;
+      text-align: center;
+      width: 260px;
+      background: transparent;
+    }
+    .password-gate input::placeholder {
+      color: #999999;
+    }
+    .password-gate .error {
+      color: #999999;
+      font-size: 16px;
+      margin-top: 12px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .password-gate .error.show { opacity: 1; }
+
+    /* Layout */
+    .wrapper {
+      max-width: 100vw;
+      padding: 25px;
+      min-height: 100vh;
+      display: none;
+    }
+    .wrapper.visible { display: block; }
+
+    .back-nav {
+      position: fixed; top: 0.625vw; right: 0.625vw;
+      z-index: 100; font-size: 26px; line-height: 28px;
+    }
+    .back-nav a { text-decoration: none; color: #000000; transition: color 0.3s ease; }
+    .back-nav a:hover { color: #999999; }
+
+    .page-title {
+      font-size: 4.8vw;
+      font-weight: 400;
+      line-height: 5vw;
+      letter-spacing: -0.1vw;
+      margin-bottom: 3vw;
+    }
+
+    /* Feed grid */
+    .feed {
+      columns: 3;
+      column-gap: 16px;
+    }
+
+    .card {
+      break-inside: avoid;
+      margin-bottom: 16px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card img {
+      width: 100%;
+      display: block;
+    }
+
+    /* Expanded overlay */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.95);
+      z-index: 500;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .overlay.open {
+      display: flex;
+    }
+    .overlay-inner {
+      max-width: 800px;
+      width: 90vw;
+      max-height: 90vh;
+      overflow-y: auto;
+      cursor: default;
+    }
+    .overlay-inner img {
+      width: 100%;
+      display: block;
+      margin-bottom: 16px;
+    }
+    .overlay-gallery {
+      position: relative;
+    }
+    .overlay-gallery img {
+      display: none;
+    }
+    .overlay-gallery img.active {
+      display: block;
+    }
+    .overlay-nav {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .overlay-nav button {
+      font-family: 'Kalice Trial', serif;
+      font-size: 16px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #000000;
+      padding: 4px 0;
+      transition: color 0.3s ease;
+    }
+    .overlay-nav button:hover { color: #999999; }
+    .overlay-nav .counter {
+      font-size: 16px;
+      color: #999999;
+    }
+    .overlay-meta {
+      padding: 4px 0;
+    }
+    .overlay-meta .meta-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .overlay-meta .meta-tag {
+      font-size: 14px;
+      color: #999999;
+      margin-bottom: 8px;
+    }
+    .overlay-meta .meta-desc {
+      font-size: 16px;
+      line-height: 1.4;
+      margin-bottom: 6px;
+    }
+    .overlay-meta .meta-year {
+      font-size: 14px;
+      color: #999999;
+    }
+
+    @media (max-width: 768px) {
+      .feed { columns: 2; column-gap: 10px; }
+      .card { margin-bottom: 10px; }
+      .page-title { font-size: 8vw; line-height: 9vw; }
+      .back-nav { top: auto; bottom: 25px; right: 25px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Audio persistence -->
+  <audio id="bg-audio" src="/song.mp3" loop></audio>
+  <script>
+    (function() {
+      var audio = document.getElementById('bg-audio');
+      var saved = localStorage.getItem('audioPlaying');
+      var savedTime = parseFloat(localStorage.getItem('audioTime')) || 0;
+      if (saved === 'true') {
+        audio.currentTime = savedTime;
+        audio.play().catch(function() {});
+      }
+      setInterval(function() {
+        if (!audio.paused) localStorage.setItem('audioTime', audio.currentTime);
+      }, 500);
+      window.addEventListener('beforeunload', function() {
+        localStorage.setItem('audioPlaying', !audio.paused);
+        localStorage.setItem('audioTime', audio.currentTime);
+      });
+    })();
+  </script>
+
+  <!-- Password gate -->
+  <div class="password-gate" id="gate">
+    <input type="password" id="pw-input" placeholder="password" autofocus>
+    <div class="error" id="pw-error">try again</div>
+  </div>
+
+  <!-- Main content -->
+  <div class="wrapper" id="main-wrapper">
+    <nav class="back-nav"><a href="index.html#content">&larr; Back</a></nav>
+    <h1 class="page-title">Bloopers*</h1>
+    <div class="feed" id="feed"></div>
+  </div>
+
+  <!-- Expanded view overlay -->
+  <div class="overlay" id="overlay">
+    <div class="overlay-inner" id="overlay-inner"></div>
+  </div>
+
+  <script>
+    // --- Password gate ---
+    (function() {
+      var gate = document.getElementById('gate');
+      var input = document.getElementById('pw-input');
+      var error = document.getElementById('pw-error');
+      var wrapper = document.getElementById('main-wrapper');
+
+      if (sessionStorage.getItem('bloopersAuth') === 'true') {
+        gate.classList.add('hidden');
+        wrapper.classList.add('visible');
+      }
+
+      input.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          if (input.value.toLowerCase() === 'bloopers') {
+            sessionStorage.setItem('bloopersAuth', 'true');
+            gate.classList.add('hidden');
+            wrapper.classList.add('visible');
+          } else {
+            error.classList.add('show');
+            input.value = '';
+            setTimeout(function() { error.classList.remove('show'); }, 2000);
+          }
+        }
+      });
+    })();
+
+    // --- Bloopers data ---
+    // Each item: { title, tag, description, year, images: ['path1.jpg', ...] }
+    // First image in the array is the cover photo shown in the feed.
+    var BLOOPERS = [
+      // Add your bloopers here. Example:
+      // {
+      //   title: 'Project Name',
+      //   tag: 'Brand Design',
+      //   description: 'A short sentence about this design.',
+      //   year: '2024',
+      //   images: ['/bloopers/cover1.jpg', '/bloopers/detail1a.jpg', '/bloopers/detail1b.jpg']
+      // },
+    ];
+
+    // --- Render feed ---
+    var feed = document.getElementById('feed');
+    var overlay = document.getElementById('overlay');
+    var overlayInner = document.getElementById('overlay-inner');
+
+    BLOOPERS.forEach(function(item, idx) {
+      var card = document.createElement('div');
+      card.className = 'card';
+      var img = document.createElement('img');
+      img.src = item.images[0];
+      img.alt = item.title;
+      img.loading = 'lazy';
+      card.appendChild(img);
+      card.addEventListener('click', function() { openOverlay(idx); });
+      feed.appendChild(card);
+    });
+
+    // --- Overlay ---
+    var currentSlide = 0;
+    var currentItem = null;
+
+    function openOverlay(idx) {
+      currentItem = BLOOPERS[idx];
+      currentSlide = 0;
+      renderOverlay();
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeOverlay() {
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    overlay.addEventListener('click', function(e) {
+      if (e.target === overlay) closeOverlay();
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (!overlay.classList.contains('open')) return;
+      if (e.key === 'Escape') closeOverlay();
+      if (e.key === 'ArrowRight' && currentSlide < currentItem.images.length - 1) {
+        currentSlide++;
+        renderOverlay();
+      }
+      if (e.key === 'ArrowLeft' && currentSlide > 0) {
+        currentSlide--;
+        renderOverlay();
+      }
+    });
+
+    function renderOverlay() {
+      var item = currentItem;
+      var hasMultiple = item.images.length > 1;
+      var html = '';
+
+      // Image(s)
+      html += '<div class="overlay-gallery">';
+      item.images.forEach(function(src, i) {
+        html += '<img src="' + src + '" alt="' + item.title + '"' +
+                (i === currentSlide ? ' class="active"' : '') + '>';
+      });
+      html += '</div>';
+
+      // Nav arrows (only if multiple images)
+      if (hasMultiple) {
+        html += '<div class="overlay-nav">';
+        html += '<button onclick="prevSlide()">&larr; prev</button>';
+        html += '<span class="counter">' + (currentSlide + 1) + ' / ' + item.images.length + '</span>';
+        html += '<button onclick="nextSlide()">next &rarr;</button>';
+        html += '</div>';
+      }
+
+      // Meta
+      html += '<div class="overlay-meta">';
+      html += '<div class="meta-title">' + item.title + '</div>';
+      html += '<div class="meta-tag">' + item.tag + '</div>';
+      html += '<div class="meta-desc">' + item.description + '</div>';
+      html += '<div class="meta-year">' + item.year + '</div>';
+      html += '</div>';
+
+      overlayInner.innerHTML = html;
+    }
+
+    window.prevSlide = function() {
+      if (currentSlide > 0) { currentSlide--; renderOverlay(); }
+    };
+    window.nextSlide = function() {
+      if (currentSlide < currentItem.images.length - 1) { currentSlide++; renderOverlay(); }
+    };
+  </script>
+</body>
+</html>

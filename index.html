@@ -233,6 +233,12 @@
       letter-spacing: -0.1vw;
       margin-top: 2vw;
     }
+    .section-heading .projects-link {
+      color: #000000;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    .section-heading .projects-link:hover { color: #999999; }
 
     hr {
       grid-column: 1 / 15;
@@ -484,8 +490,10 @@
       linksEl.appendChild(a);
     });
 
-    // Section heading
-    document.getElementById('section-heading').textContent = C.sectionHeading;
+    // Section heading — "projects" links to bloopers page
+    var headingText = C.sectionHeading;
+    var headingEl = document.getElementById('section-heading');
+    headingEl.innerHTML = headingText.replace('projects', '<a href="bloopers.html" class="projects-link">projects</a>');
 
     // Projects
     const container = document.getElementById('projects-container');
