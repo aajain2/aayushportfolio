@@ -490,10 +490,9 @@
       linksEl.appendChild(a);
     });
 
-    // Section heading — "projects" links to bloopers page
-    var headingText = C.sectionHeading;
+    // Section heading
     var headingEl = document.getElementById('section-heading');
-    headingEl.innerHTML = headingText.replace('projects', '<a href="bloopers.html" class="projects-link">projects</a>');
+    headingEl.textContent = C.sectionHeading;
 
     // Projects
     const container = document.getElementById('projects-container');
@@ -540,7 +539,12 @@
     h2a.appendChild(emailLink);
     footer.appendChild(h2a);
     const h2b = document.createElement('h2');
-    h2b.textContent = C.year;
+    const yearLink = document.createElement('a');
+    yearLink.href = 'bloopers.html';
+    yearLink.textContent = C.year;
+    yearLink.style.color = '#000000';
+    yearLink.style.textDecoration = 'none';
+    h2b.appendChild(yearLink);
     footer.appendChild(h2b);
   </script>
 

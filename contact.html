@@ -138,7 +138,12 @@
 
     const h2b = document.createElement('h2');
     h2b.className = 'reveal reveal-delay-4';
-    h2b.textContent = C.year;
+    const yearLink = document.createElement('a');
+    yearLink.href = 'bloopers.html';
+    yearLink.textContent = C.year;
+    yearLink.style.color = '#000000';
+    yearLink.style.textDecoration = 'none';
+    h2b.appendChild(yearLink);
     footer.appendChild(h2b);
 
     // Reveal on scroll
