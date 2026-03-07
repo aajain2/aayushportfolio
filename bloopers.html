@@ -103,11 +103,40 @@
       cursor: pointer;
       position: relative;
       overflow: hidden;
+      border-radius: 4px;
     }
 
     .card img {
       width: 100%;
       display: block;
+      object-fit: cover;
+    }
+
+    /* Hover overlay */
+    .card-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0);
+      transition: background 0.3s ease;
+      pointer-events: none;
+    }
+    .card:hover .card-overlay {
+      background: rgba(0, 0, 0, 0.08);
+    }
+
+    /* Multi-image cards icon */
+    .card-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 24px;
+      height: 24px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+    .card:hover .card-badge {
+      opacity: 1;
     }
 
     /* Expanded overlay */
@@ -148,6 +177,7 @@
     .overlay-nav {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       margin-bottom: 12px;
     }
     .overlay-nav button {
@@ -237,6 +267,14 @@
     <div class="overlay-inner" id="overlay-inner"></div>
   </div>
 
+  <!-- Cards icon SVG (two stacked rounded rectangles) -->
+  <svg style="display:none">
+    <symbol id="icon-cards" viewBox="0 0 24 24">
+      <rect x="3" y="5" width="14" height="14" rx="2" fill="none" stroke="#fff" stroke-width="2"/>
+      <rect x="7" y="1" width="14" height="14" rx="2" fill="#fff" stroke="#fff" stroke-width="1.5"/>
+    </symbol>
+  </svg>
+
   <script>
     // --- Password gate ---
     (function() {
@@ -266,17 +304,19 @@
     })();
 
     // --- Bloopers data ---
-    // Each item: { title, tag, description, year, images: ['path1.jpg', ...] }
-    // First image in the array is the cover photo shown in the feed.
+    // cover: image shown in feed (can be same as first image)
+    // coverHeight: optional CSS height for cover crop (e.g. '280px')
+    // images: full images shown in expanded view
     var BLOOPERS = [
-      // Add your bloopers here. Example:
-      // {
-      //   title: 'Project Name',
-      //   tag: 'Brand Design',
-      //   description: 'A short sentence about this design.',
-      //   year: '2024',
-      //   images: ['/bloopers/cover1.jpg', '/bloopers/detail1a.jpg', '/bloopers/detail1b.jpg']
-      // },
+      {
+        title: 'Buzz',
+        tag: 'Product Design',
+        description: 'Concept for a social platform for high schoolers.',
+        year: '2022',
+        cover: '/bloopers/buzz-1.png',
+        coverHeight: '280px',
+        images: ['/bloopers/buzz-1.png', '/bloopers/buzz-2.png']
+      },
     ];
 
     // --- Render feed ---
@@ -287,11 +327,30 @@
     BLOOPERS.forEach(function(item, idx) {
       var card = document.createElement('div');
       card.className = 'card';
+
       var img = document.createElement('img');
-      img.src = item.images[0];
+      img.src = item.cover;
       img.alt = item.title;
       img.loading = 'lazy';
+      if (item.coverHeight) {
+        img.style.height = item.coverHeight;
+      }
       card.appendChild(img);
+
+      // Hover overlay
+      var hoverOverlay = document.createElement('div');
+      hoverOverlay.className = 'card-overlay';
+      card.appendChild(hoverOverlay);
+
+      // Multi-image badge
+      if (item.images.length > 1) {
+        var badge = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        badge.setAttribute('class', 'card-badge');
+        badge.setAttribute('viewBox', '0 0 24 24');
+        badge.innerHTML = '<use href="#icon-cards"/>';
+        card.appendChild(badge);
+      }
+
       card.addEventListener('click', function() { openOverlay(idx); });
       feed.appendChild(card);
     });
