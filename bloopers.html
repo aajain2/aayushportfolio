@@ -93,21 +93,22 @@
 
     /* Feed grid */
     .feed {
-      columns: 3;
-      column-gap: 16px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
     }
 
     .card {
-      break-inside: avoid;
-      margin-bottom: 16px;
       cursor: pointer;
       position: relative;
       overflow: hidden;
       border-radius: 4px;
+      aspect-ratio: 1;
     }
 
     .card img {
       width: 100%;
+      height: 100%;
       display: block;
       object-fit: cover;
     }
@@ -127,10 +128,10 @@
     /* Multi-image cards icon */
     .card-badge {
       position: absolute;
-      top: 10px;
-      right: 10px;
-      width: 24px;
-      height: 24px;
+      top: 8px;
+      right: 8px;
+      width: 18px;
+      height: 18px;
       opacity: 0;
       transition: opacity 0.3s ease;
       pointer-events: none;
@@ -154,75 +155,50 @@
       display: flex;
     }
     .overlay-inner {
-      max-width: 800px;
-      width: 90vw;
-      max-height: 90vh;
+      max-width: 700px;
+      width: 85vw;
+      max-height: 85vh;
       overflow-y: auto;
       cursor: default;
     }
-    .overlay-inner img {
-      width: 100%;
-      display: block;
-      margin-bottom: 16px;
-    }
-    .overlay-gallery {
-      position: relative;
-    }
-    .overlay-gallery img {
-      display: none;
-    }
-    .overlay-gallery img.active {
-      display: block;
-    }
-    .overlay-nav {
+    .overlay-images {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
+      gap: 12px;
+      margin-bottom: 14px;
     }
-    .overlay-nav button {
-      font-family: 'Kalice Trial', serif;
-      font-size: 16px;
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: #000000;
-      padding: 4px 0;
-      transition: color 0.3s ease;
-    }
-    .overlay-nav button:hover { color: #999999; }
-    .overlay-nav .counter {
-      font-size: 16px;
-      color: #999999;
+    .overlay-images img {
+      flex: 1;
+      min-width: 0;
+      height: auto;
+      max-height: 60vh;
+      object-fit: contain;
+      display: block;
+      border-radius: 4px;
     }
     .overlay-meta {
       padding: 4px 0;
     }
     .overlay-meta .meta-title {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 700;
-      margin-bottom: 4px;
-    }
-    .overlay-meta .meta-tag {
-      font-size: 14px;
-      color: #999999;
-      margin-bottom: 8px;
+      margin-bottom: 2px;
     }
     .overlay-meta .meta-desc {
-      font-size: 16px;
+      font-size: 15px;
       line-height: 1.4;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
     .overlay-meta .meta-year {
-      font-size: 14px;
+      font-size: 13px;
       color: #999999;
     }
 
     @media (max-width: 768px) {
-      .feed { columns: 2; column-gap: 10px; }
-      .card { margin-bottom: 10px; }
+      .feed { grid-template-columns: repeat(3, 1fr); gap: 10px; }
       .page-title { font-size: 8vw; line-height: 9vw; }
       .back-nav { top: auto; bottom: 25px; right: 25px; }
+      .overlay-images { flex-direction: column; }
+      .overlay-images img { max-height: 40vh; }
     }
   </style>
 </head>
@@ -314,7 +290,6 @@
         description: 'Concept for a social platform for high schoolers.',
         year: '2022',
         cover: '/bloopers/buzz-1.png',
-        coverHeight: '280px',
         images: ['/bloopers/buzz-1.png', '/bloopers/buzz-2.png']
       },
     ];
@@ -332,9 +307,6 @@
       img.src = item.cover;
       img.alt = item.title;
       img.loading = 'lazy';
-      if (item.coverHeight) {
-        img.style.height = item.coverHeight;
-      }
       card.appendChild(img);
 
       // Hover overlay
@@ -356,13 +328,25 @@
     });
 
     // --- Overlay ---
-    var currentSlide = 0;
-    var currentItem = null;
-
     function openOverlay(idx) {
-      currentItem = BLOOPERS[idx];
-      currentSlide = 0;
-      renderOverlay();
+      var item = BLOOPERS[idx];
+      var html = '';
+
+      // All images side by side
+      html += '<div class="overlay-images">';
+      item.images.forEach(function(src) {
+        html += '<img src="' + src + '" alt="' + item.title + '">';
+      });
+      html += '</div>';
+
+      // Meta
+      html += '<div class="overlay-meta">';
+      html += '<div class="meta-title">' + item.title + '</div>';
+      html += '<div class="meta-desc">' + item.description + '</div>';
+      html += '<div class="meta-year">' + item.year + '</div>';
+      html += '</div>';
+
+      overlayInner.innerHTML = html;
       overlay.classList.add('open');
       document.body.style.overflow = 'hidden';
     }
@@ -377,57 +361,8 @@
     });
 
     document.addEventListener('keydown', function(e) {
-      if (!overlay.classList.contains('open')) return;
       if (e.key === 'Escape') closeOverlay();
-      if (e.key === 'ArrowRight' && currentSlide < currentItem.images.length - 1) {
-        currentSlide++;
-        renderOverlay();
-      }
-      if (e.key === 'ArrowLeft' && currentSlide > 0) {
-        currentSlide--;
-        renderOverlay();
-      }
     });
-
-    function renderOverlay() {
-      var item = currentItem;
-      var hasMultiple = item.images.length > 1;
-      var html = '';
-
-      // Image(s)
-      html += '<div class="overlay-gallery">';
-      item.images.forEach(function(src, i) {
-        html += '<img src="' + src + '" alt="' + item.title + '"' +
-                (i === currentSlide ? ' class="active"' : '') + '>';
-      });
-      html += '</div>';
-
-      // Nav arrows (only if multiple images)
-      if (hasMultiple) {
-        html += '<div class="overlay-nav">';
-        html += '<button onclick="prevSlide()">&larr; prev</button>';
-        html += '<span class="counter">' + (currentSlide + 1) + ' / ' + item.images.length + '</span>';
-        html += '<button onclick="nextSlide()">next &rarr;</button>';
-        html += '</div>';
-      }
-
-      // Meta
-      html += '<div class="overlay-meta">';
-      html += '<div class="meta-title">' + item.title + '</div>';
-      html += '<div class="meta-tag">' + item.tag + '</div>';
-      html += '<div class="meta-desc">' + item.description + '</div>';
-      html += '<div class="meta-year">' + item.year + '</div>';
-      html += '</div>';
-
-      overlayInner.innerHTML = html;
-    }
-
-    window.prevSlide = function() {
-      if (currentSlide > 0) { currentSlide--; renderOverlay(); }
-    };
-    window.nextSlide = function() {
-      if (currentSlide < currentItem.images.length - 1) { currentSlide++; renderOverlay(); }
-    };
   </script>
 </body>
 </html>
