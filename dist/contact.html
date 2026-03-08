@@ -70,10 +70,29 @@
     .reveal-delay-3 { transition-delay: 0.3s; }
     .reveal-delay-4 { transition-delay: 0.4s; }
   </style>
-  <script type="module" crossorigin src="/assets/contact-VnFtlXYB.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/content-DioRnamd.js">
+  <script type="module" crossorigin src="/assets/contact-BQbJrcFO.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/content-DQ4bI-ON.js">
 </head>
 <body>
+  <audio id="bg-audio" src="/song.mp3" loop></audio>
+  <script>
+    (function() {
+      var audio = document.getElementById('bg-audio');
+      var saved = localStorage.getItem('audioPlaying');
+      var savedTime = parseFloat(localStorage.getItem('audioTime')) || 0;
+      if (saved === 'true') {
+        audio.currentTime = savedTime;
+        audio.play().catch(function() {});
+      }
+      setInterval(function() {
+        if (!audio.paused) localStorage.setItem('audioTime', audio.currentTime);
+      }, 500);
+      window.addEventListener('beforeunload', function() {
+        localStorage.setItem('audioPlaying', !audio.paused);
+        localStorage.setItem('audioTime', audio.currentTime);
+      });
+    })();
+  </script>
   <nav class="back-nav"><a href="index.html#content" id="back-link"></a></nav>
   <div class="wrapper">
     <div class="contact-links reveal" id="contact-links"></div>

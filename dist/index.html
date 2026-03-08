@@ -190,10 +190,12 @@
 
     .left-bio strong {
       font-weight: 700;
-      transition: color 0.3s ease;
       cursor: default;
     }
-    .left-bio strong:hover { color: #999999; }
+    .left-bio strong:has(a) {
+      transition: color 0.3s ease;
+    }
+    .left-bio strong:has(a):hover { color: #999999; }
     .left-bio strong a {
       color: inherit;
       text-decoration: none;
@@ -231,6 +233,12 @@
       letter-spacing: -0.1vw;
       margin-top: 2vw;
     }
+    .section-heading .projects-link {
+      color: #000000;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    .section-heading .projects-link:hover { color: #000000; }
 
     hr {
       grid-column: 1 / 15;
@@ -367,8 +375,8 @@
       }
     }
   </style>
-  <script type="module" crossorigin src="/assets/main-f5PgjHbF.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/content-DioRnamd.js">
+  <script type="module" crossorigin src="/assets/main-AzauwNpC.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/content-DQ4bI-ON.js">
 </head>
 <body>
 
@@ -378,17 +386,45 @@
   </nav>
   <audio id="bg-audio" src="/song.mp3" loop></audio>
   <script>
-    function togglePlay() {
+    (function() {
       var audio = document.getElementById('bg-audio');
       var btn = document.getElementById('play-btn');
-      if (audio.paused) {
-        audio.play();
-        btn.textContent = '{pause}';
-      } else {
-        audio.pause();
-        btn.textContent = '{play}';
+
+      // Restore state from localStorage
+      var saved = localStorage.getItem('audioPlaying');
+      var savedTime = parseFloat(localStorage.getItem('audioTime')) || 0;
+      if (saved === 'true') {
+        audio.currentTime = savedTime;
+        audio.play().then(function() {
+          btn.textContent = '{pause}';
+        }).catch(function() {});
       }
-    }
+
+      // Save state periodically
+      setInterval(function() {
+        if (!audio.paused) {
+          localStorage.setItem('audioTime', audio.currentTime);
+        }
+      }, 500);
+
+      // Save state before leaving page
+      window.addEventListener('beforeunload', function() {
+        localStorage.setItem('audioPlaying', !audio.paused);
+        localStorage.setItem('audioTime', audio.currentTime);
+      });
+
+      window.togglePlay = function() {
+        if (audio.paused) {
+          audio.play();
+          btn.textContent = '{pause}';
+          localStorage.setItem('audioPlaying', 'true');
+        } else {
+          audio.pause();
+          btn.textContent = '{play}';
+          localStorage.setItem('audioPlaying', 'false');
+        }
+      };
+    })();
   </script>
 
   <section class="horse-scroll" id="horse-scroll">
@@ -485,7 +521,7 @@
 
         const progress = scrolled / scrollRange; // 0 → 1
 
-        // Fade out [Aayush Jain] quickly as image enters
+        // Fade out intro text quickly as image enters
         introText.style.opacity = Math.max(0, 1 - progress * 5);
 
         // Phase 1 (0 → 0.35): rise from below viewport, scale 0.3 → 1, fade in
