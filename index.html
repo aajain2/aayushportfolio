@@ -517,14 +517,15 @@
       const desc = document.createElement('p');
       desc.className = 'project-description reveal reveal-delay-2';
       desc.textContent = proj.description;
-      if (proj.link) {
+      const allLinks = proj.links ? proj.links : proj.link ? [proj.link] : [];
+      allLinks.forEach(lnk => {
         desc.appendChild(document.createTextNode('\u00A0'));
         const a = document.createElement('a');
-        a.href = proj.link.url;
-        if (!proj.link.url.endsWith('.html')) a.target = '_blank';
-        a.innerHTML = '&#x2197;&#xFE0E; ' + proj.link.label;
+        a.href = lnk.url;
+        if (!lnk.url.endsWith('.html')) a.target = '_blank';
+        a.innerHTML = '&#x2197;&#xFE0E; ' + lnk.label;
         desc.appendChild(a);
-      }
+      });
       grid.insertBefore(desc, container);
     });
     container.remove();

@@ -82,6 +82,15 @@ const CONTENT = {
       link: { label: 'Read papers', url: 'https://scholar.google.com/citations?user=XtNy-UUAAAAJ&hl=en' },
     },
     {
+      title: 'Circle',
+      categories: 'Figma Make, Educational Tools, Design Prototyping',
+      description: 'Built for the FigBuild 2026 Hackathon on Figma Make, Circle was our response to the hackathon prompt: design a speculative tool that tracks, measures, or visualizes an aspect of human sensory experience not typically considered. Belonging is the most powerful force shaping whether a child thrives in school. It\u2019s also completely invisible. We built Circle to change that, deploying participation tracking and peer interaction data to give elementary school teachers a new sense: the ability to see which students feel included, which are quietly drifting, and exactly what to do about it, using that history to generate daily optimal group assignments. The hardest part was not the concept but the craft, closing the gap between the product we could see clearly and what a generative design tool would produce by default required a level of prompt engineering and design precision we didn\u2019t anticipate.',
+      links: [
+        { label: 'See presentation', url: 'https://www.figma.com/deck/6mvGaXicsCHeNVU0PR7KdG' },
+        { label: 'See prototype', url: 'https://posts-bottom-97550920.figma.site' },
+      ],
+    },
+    {
       title: 'Fine Art',
       categories: 'Charcoal, Printmaking, Installations',
       description: 'Exhibited at Pratt Manhattan Gallery, Memphis International Airport, and Brooks Museum of Art, among others. Sold to Gus\'s Fried Chicken and private buyers. Recognized by the Scholastic Art Awards and National YoungArts Foundation.',
