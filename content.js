@@ -64,6 +64,16 @@ const CONTENT = {
       link: { label: 'See project', url: '/Aora_Deck.pdf' },
     },
     {
+      title: 'Circle',
+      categories: 'Figma Make, Educational Tools, Design Prototyping',
+      description: 'FigBuild 2026 Hackathon Winner built on Figma Make, Circle was our response to the hackathon prompt: design a speculative tool that tracks, measures, or visualizes an aspect of human sensory experience not typically considered. Belonging is the most powerful force shaping whether a child thrives in school. It\u2019s also completely invisible. We built Circle to change that, deploying participation tracking and peer interaction data to give elementary school teachers a new sense: the ability to see which students feel included, which are quietly drifting, and exactly what to do about it, using that history to generate daily optimal group assignments. The hardest part was not the concept but the craft, closing the gap between the product we could see clearly and what a generative design tool would produce by default required a level of prompt engineering and design precision we didn\u2019t anticipate.',
+      links: [
+        { label: 'See presentation', url: 'https://www.figma.com/deck/6mvGaXicsCHeNVU0PR7KdG' },
+        { label: 'See prototype', url: 'https://posts-bottom-97550920.figma.site' },
+        { label: 'See submission', url: 'https://devpost.com/software/circle-lhf970' },
+      ],
+    },
+    {
       title: 'Mergen',
       categories: 'EdTech, RAG Systems, Accessibility',
       description: 'College admissions advice has always been expensive, opaque, and unevenly distributed. I built Mergen with my brother as a way to help him navigate his own application process, then watched it grow into something larger. The system uses retrieval-augmented generation to deliver personalized guidance, deadline tracking, and essay feedback to students who would otherwise have no access to a counselor. Built on LangChain with an AWS backend and a React and Next.js frontend, Mergen has since served over 2,000 students. We ended up shutting this down after finding a consumer-first approach for high school education technology difficult to monetize.',
@@ -80,16 +90,6 @@ const CONTENT = {
       categories: 'Cancer Biology, Biochemistry, Translational Medicine',
       description: 'I became interested in a core tension in oncology: conventional chemotherapy is effective at targeting tumor cells but kills indiscriminately, producing dose-limiting side effects that can halt treatment entirely. This led me to targeted cancer therapy and phytochemicals as a complementary answer, compounds found in everyday foods that exert cytotoxic effects on cancerous cells while actively protecting healthy tissue. I wrote review papers on these methods alongside my research stint at the University of Memphis.',
       link: { label: 'Read papers', url: 'https://scholar.google.com/citations?user=XtNy-UUAAAAJ&hl=en' },
-    },
-    {
-      title: 'Circle',
-      categories: 'Figma Make, Educational Tools, Design Prototyping',
-      description: 'FigBuild 2026 Hackathon Winner built on Figma Make, Circle was our response to the hackathon prompt: design a speculative tool that tracks, measures, or visualizes an aspect of human sensory experience not typically considered. Belonging is the most powerful force shaping whether a child thrives in school. It\u2019s also completely invisible. We built Circle to change that, deploying participation tracking and peer interaction data to give elementary school teachers a new sense: the ability to see which students feel included, which are quietly drifting, and exactly what to do about it, using that history to generate daily optimal group assignments. The hardest part was not the concept but the craft, closing the gap between the product we could see clearly and what a generative design tool would produce by default required a level of prompt engineering and design precision we didn\u2019t anticipate.',
-      links: [
-        { label: 'See presentation', url: 'https://www.figma.com/deck/6mvGaXicsCHeNVU0PR7KdG' },
-        { label: 'See prototype', url: 'https://posts-bottom-97550920.figma.site' },
-        { label: 'See submission', url: 'https://devpost.com/software/circle-lhf970' },
-      ],
     },
     {
       title: 'Fine Art',
