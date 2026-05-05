@@ -58,6 +58,12 @@ const CONTENT = {
       link: null,
     },
     {
+      title: 'CHAIWALA',
+      categories: 'Brand Design, Community Building, Hospitality',
+      description: 'CHAIWALA started as a simple idea: bring the camaraderie of a teahouse to Stanford not just for the South Asian community, but for anyone on campus, across all years. We built it from scratch with three friends, developing every recipe, designing the brand and space, and running the entire operation ourselves. We included classics like masala and Kashmiri pink chai and developed new items like a chai affogato that became an instant hit. We had no marketing budget and no promotion beyond telling our friends we were doing it. 300+ showed up to the first night and we sold out of everything. From the beginning, the goal was to create a real third space, and that\'s exactly what happened: people stayed for hours on a Thursday night, strangers sat together and got to know each other. We also learned, quickly, how intense scaled kitchen operations and event management actually are: coordinating prep and managing flow for hundreds of people taught us lessons we wouldn\'t have learned from a textbook. We\'re continuing the series and figuring out what CHAIWALA becomes beyond a popup.',
+      link: { label: 'See Instagram', url: 'https://instagram.com/stanfordchaiwala' },
+    },
+    {
       title: 'Aora',
       categories: 'AI Prompt to Product, Sensory Computing, Personalization',
       description: 'The fragrance industry sells catalogs. People want one-of-a-kind signatures. We built Aora to explore whether AI could translate subjective identity signals like memories, moods, places, aesthetics into structured fragrance compositions of top, middle, and base notes. This concept was inspired by our experience working at Arcade, where we learned how generative systems can translate creative prompts into real physical products. We validated the system inside a real custom perfume store, mixing AI-generated formulations into physical scents. In one case, a customer\'s AI-generated formula produced a perfume closer to what they had imagined than the one they mixed by hand.',
