@@ -1,3 +1,27 @@
 {
-  "cleanUrls": true
+  "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/art",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": ".*(facebookexternalhit|Facebot|Twitterbot|Slackbot|Discordbot|WhatsApp|LinkedInBot|TelegramBot|Applebot|SkypeUriPreview|redditbot|Pinterest|vkShare|W3C_Validator|Google-PageRenderer).*"
+        }
+      ],
+      "destination": "/preview.html"
+    },
+    {
+      "source": "/artwork",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": ".*(facebookexternalhit|Facebot|Twitterbot|Slackbot|Discordbot|WhatsApp|LinkedInBot|TelegramBot|Applebot|SkypeUriPreview|redditbot|Pinterest|vkShare|W3C_Validator|Google-PageRenderer).*"
+        }
+      ],
+      "destination": "/preview.html"
+    }
+  ]
 }
