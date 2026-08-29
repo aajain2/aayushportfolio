@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aayush Jain — Art</title>
+  <link rel="icon" type="image/png" href="/assets/favicon-DSqbWA3t.png">
+  <link rel="apple-touch-icon" href="/assets/favicon-DSqbWA3t.png">
+  <style>
+    @font-face {
+      font-family: 'Optima';
+      src: url('/assets/Optima-Regular-CjVdqR8P.ttf') format('truetype');
+      font-weight: 400; font-style: normal; font-display: swap;
+    }
+    @font-face {
+      font-family: 'Optima';
+      src: url('/assets/Optima-Medium-VrIRhYy2.ttf') format('truetype');
+      font-weight: 500; font-style: normal; font-display: swap;
+    }
+    @font-face {
+      font-family: 'Optima';
+      src: url('/assets/Optima-Bold-sLdpseRy.ttf') format('truetype');
+      font-weight: 700; font-style: normal; font-display: swap;
+    }
+    @font-face {
+      font-family: 'Optima';
+      src: url('/assets/Optima-Italic-zIjFeekJ.ttf') format('truetype');
+      font-weight: 400; font-style: italic; font-display: swap;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Optima', 'Optima nova', Candara, 'Segoe UI', sans-serif;
+      background: #ffffff;
+      color: #111111;
+      -webkit-font-smoothing: antialiased;
+      max-width: 100vw;
+      overflow-x: hidden;
+    }
+
+    /* ===== TOP NAV (Screenshot 1 placement) ===== */
+    .top-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding: 30px 34px;
+      mix-blend-mode: difference;
+      color: #ffffff;
+      pointer-events: none;
+    }
+
+    .brand {
+      font-size: clamp(24px, 2.3vw, 36px);
+      font-weight: 400;
+      letter-spacing: 0.01em;
+      line-height: 1;
+      pointer-events: auto;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 26px;
+      font-size: clamp(15px, 1.25vw, 20px);
+      font-weight: 400;
+      letter-spacing: 0.01em;
+      pointer-events: auto;
+    }
+    .nav-links a {
+      color: inherit;
+      text-decoration: none;
+      transition: opacity 0.3s ease;
+    }
+    .nav-links a:hover { opacity: 0.55; }
+
+    /* ===== IMAGE STREAM ===== */
+    .stream {
+      width: 100%;
+      display: block;
+    }
+
+    .shot {
+      width: 100vw;
+      display: block;
+      overflow: hidden;
+    }
+
+    .shot img {
+      width: 100vw;
+      height: auto;
+      display: block;
+      user-select: none;
+      -webkit-user-drag: none;
+      opacity: 0;
+      transform: translateY(56px) scale(1.045);
+      transition: opacity 1.15s cubic-bezier(0.22, 0.61, 0.36, 1),
+                  transform 1.15s cubic-bezier(0.22, 0.61, 0.36, 1);
+      will-change: opacity, transform;
+    }
+
+    .shot.in img {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    @media (max-width: 768px) {
+      .top-nav { padding: 20px 20px; }
+      .nav-links { gap: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <audio id="bg-audio" src="/song.mp3" loop></audio>
+  <script>
+    (function() {
+      var audio = document.getElementById('bg-audio');
+      var saved = localStorage.getItem('audioPlaying');
+      var savedTime = parseFloat(localStorage.getItem('audioTime')) || 0;
+      if (saved === 'true') {
+        audio.currentTime = savedTime;
+        audio.play().catch(function() {});
+      }
+      setInterval(function() {
+        if (!audio.paused) localStorage.setItem('audioTime', audio.currentTime);
+      }, 500);
+      window.addEventListener('beforeunload', function() {
+        localStorage.setItem('audioPlaying', !audio.paused);
+        localStorage.setItem('audioTime', audio.currentTime);
+      });
+    })();
+  </script>
+
+  <nav class="top-nav">
+    <a class="brand" href="art.html" style="text-decoration:none;color:inherit;">Aayush Jain</a>
+    <div class="nav-links">
+      <a href="artwork.html">Work</a>
+      <a href="mailto:jainaayushmr@gmail.com">Inquiries</a>
+    </div>
+  </nav>
+
+  <main class="stream" id="stream">
+    <figure class="shot"><img src="/photography/1.jpg" alt="" loading="eager" fetchpriority="high"></figure>
+    <figure class="shot"><img src="/photography/2.jpg" alt="" loading="eager"></figure>
+    <figure class="shot"><img src="/photography/3.jpg" alt="" loading="lazy"></figure>
+    <figure class="shot"><img src="/photography/4.jpg" alt="" loading="lazy"></figure>
+  </main>
+
+  <script>
+    // Reveal each image as it scrolls into view (rosysf-style appear)
+    (function() {
+      const shots = document.querySelectorAll('.shot');
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in');
+            obs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+      shots.forEach(s => obs.observe(s));
+    })();
+  </script>
+
+  <script>
+    // Heavy, smooth momentum scroll (desktop only) — matches the site's feel
+    (function() {
+      const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      if (isTouch) return;
+      let targetY = window.scrollY;
+      let currentY = window.scrollY;
+      const ease = 0.11;
+      window.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        targetY += e.deltaY;
+        targetY = Math.max(0, Math.min(targetY, document.body.scrollHeight - window.innerHeight));
+      }, { passive: false });
+      function tick() {
+        currentY += (targetY - currentY) * ease;
+        if (Math.abs(targetY - currentY) < 0.5) currentY = targetY;
+        window.scrollTo(0, currentY);
+        requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    })();
+  </script>
+</body>
+</html>
