@@ -101,7 +101,7 @@ const CONTENT = {
       title: 'Fine Art',
       categories: 'Charcoal, Printmaking, Installations',
       description: 'Exhibited at Pratt Manhattan Gallery, Memphis International Airport, and Brooks Museum of Art, among others. Sold to Gus\'s Fried Chicken and private buyers. Recognized by the Scholastic Art Awards and National YoungArts Foundation.',
-      link: { label: 'See selected works', url: 'fine-art.html' },
+      link: { label: 'See selected works', url: '/art' },
     },
     {
       title: 'Service Jobs',
