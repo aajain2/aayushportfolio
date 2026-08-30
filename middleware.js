@@ -5,13 +5,13 @@
 const BOT = /facebookexternalhit|Facebot|Twitterbot|Slackbot|Discordbot|WhatsApp|LinkedInBot|TelegramBot|Applebot|SkypeUriPreview|redditbot|Pinterest|vkShare|Bufferbot|Google-InspectionTool|BingPreview/i;
 
 const PREVIEW = '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">' +
-  '<title>Aayush Jain</title>' +
+  '<title>Aayush Jain — Art</title>' +
   '<meta property="og:type" content="website">' +
-  '<meta property="og:title" content="Aayush Jain">' +
+  '<meta property="og:title" content="Aayush Jain — Art">' +
   '<meta property="og:site_name" content="Aayush Jain">' +
   '<meta property="og:url" content="https://fromaayush.com/art">' +
   '<meta name="twitter:card" content="summary">' +
-  '<meta name="twitter:title" content="Aayush Jain">' +
+  '<meta name="twitter:title" content="Aayush Jain — Art">' +
   '</head><body></body></html>';
 
 export const config = {
