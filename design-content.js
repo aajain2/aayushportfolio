@@ -26,10 +26,6 @@ const DESIGN = {
   // --- Intro card (top of the stack) ---
   about: {
     text: 'Aayush Jain is a creative technologist working across brand, product and design.',
-    buttons: [
-      { label: 'Portfolio', url: '/#content' },
-      { label: 'Email', url: 'mailto:jainaayushmr@gmail.com' },
-    ],
   },
 
   // --- Projects ---

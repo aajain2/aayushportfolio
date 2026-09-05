@@ -337,25 +337,8 @@
       cursor: default;
       align-items: flex-start;
       height: auto;
-      flex-flow: column;
-      row-gap: 12px;
     }
     .nav__card__about .nav__card__inner::after { display: none; }
-    .nav__card__about__actions { display: flex; gap: 6px; width: 100%; margin-top: 8px; }
-    .nav__card__about__btn {
-      display: flex;
-      flex: 1;
-      align-items: center;
-      height: 42px;
-      padding: 0 12px;
-      border-radius: 10px;
-      background-color: var(--color-gray10);
-      cursor: pointer;
-      pointer-events: auto;
-      transition: background-color 0.5s;
-    }
-    .nav__card__about__btn:hover { background-color: var(--color-gray10-hover); }
-    .nav__card__about__btn p { white-space: nowrap; }
 
     .nav__card__end { height: 40px; }
 
@@ -567,18 +550,6 @@
     aboutP.textContent = D.about.text;
     aboutInfo.appendChild(aboutP);
     aboutInner.appendChild(aboutInfo);
-    const aboutActions = document.createElement('div');
-    aboutActions.className = 'nav__card__about__actions';
-    D.about.buttons.forEach(btn => {
-      const a = document.createElement('a');
-      a.className = 'nav__card__about__btn';
-      a.href = btn.url;
-      const p = document.createElement('p');
-      p.textContent = btn.label;
-      a.appendChild(p);
-      aboutActions.appendChild(a);
-    });
-    aboutInner.appendChild(aboutActions);
     aboutCard.appendChild(aboutInner);
     cardsEl.appendChild(aboutCard);
 
