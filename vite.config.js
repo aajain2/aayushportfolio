@@ -14,6 +14,7 @@ export default defineConfig({
         bloopers: resolve(__dirname, 'bloopers.html'),
         art: resolve(__dirname, 'art.html'),
         artwork: resolve(__dirname, 'artwork.html'),
+        design: resolve(__dirname, 'design.html'),
       }
     }
   }

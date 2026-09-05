@@ -19,24 +19,23 @@ const CONTENT = {
   // --- Bio (left column) ---
   // Use { text, bold } objects. Bold items get hover-to-grey effect.
   leftBio: [
-    { text: 'Hi, I am Aayush, a creative technologist. I build products that democratize access to personalized expertise through intelligent interfaces. Currently an undergraduate student at ' },
-    { text: 'Stanford,', bold: true },
-    { text: ' I\'ve previously made stops at ' },
-    { text: 'Arcade,', bold: true, url: 'https://wwd.com/business-news/technology/arcade-ai-maia-custom-design-platform-1238339735/' },
-    { text: ' ' },
-    { text: 'Glean,', bold: true, url: 'https://www.glean.com/connectors' },
-    { text: ' ' },
-    { text: 'Apple,', bold: true, url: 'https://ads.apple.com/app-store' },
-    { text: ' ' },
-    { text: 'AutoZone,', bold: true },
-    { text: ' ' },
-    { text: 'St. Jude Children\'s Research Hospital,', bold: true, url: 'https://www.stjude.org/research/labs/yu-lab.html' },
-    { text: ' and the ' },
-    { text: 'University of Memphis.', bold: true },
+    { text: 'Hi, I am Aayush, a creative technologist. I build products that democratize access to personalized expertise through intelligent interfaces. Currently at ' },
+    { text: 'Arcade', bold: true, url: 'https://techcrunch.com/2025/03/24/ai-creation-platform-arcade-expands-from-jewelry-to-home-goods/' },
+    { text: ', I\'ve previously made stops at ' },
+    { text: 'Stanford', bold: true, url: 'https://www.stanford.edu/' },
+    { text: ', ' },
+    { text: 'Glean', bold: true, url: 'https://www.glean.com/' },
+    { text: ', ' },
+    { text: 'Apple', bold: true, url: 'https://www.apple.com' },
+    { text: ', and more across zero-to-one product development, go-to-market, brand and design and everything in between.' },
   ],
 
   // --- Bio (right column) ---
-  rightBio: 'My work spans zero-to-one product development, user research, and cross-functional execution. I care most about the early stages, finding the insight that changes how a team thinks about the problem, then moving fast enough to learn before assumptions calcify. Some of the products I\'ve built and shipped can be found below.',
+  // Same { text, bold, url } format as leftBio.
+  rightBio: [
+    { text: 'I care most about the early stages, finding the insight that changes how a team thinks about the problem, then moving fast enough to learn before assumptions calcify. Some projects I\'ve built and shipped can be found below, and ' },
+    { text: 'select design and brand work here.', bold: true, url: '/design' },
+  ],
 
   // --- Links ---
   links: [

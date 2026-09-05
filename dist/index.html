@@ -59,23 +59,6 @@
       white-space: nowrap;
     }
 
-    .scroll-hint {
-      position: absolute;
-      bottom: 3vh;
-      left: 50%;
-      transform: translateX(-50%);
-      font-family: 'Kalice Trial', serif;
-      font-size: 18px;
-      font-weight: 400;
-      color: #000000;
-      opacity: 0;
-      transition: opacity 0.8s ease;
-    }
-
-    .scroll-hint.show {
-      opacity: 1;
-    }
-
     /* ===== CONTACT NAV ===== */
     .top-nav {
       position: fixed;
@@ -208,6 +191,20 @@
       line-height: 28px;
       font-weight: 400;
       letter-spacing: -0.005em;
+    }
+
+    .right-bio strong {
+      font-weight: 700;
+      cursor: default;
+    }
+    .right-bio strong:has(a) {
+      transition: color 0.3s ease;
+    }
+    .right-bio strong:has(a):hover { color: #999999; }
+    .right-bio strong a {
+      color: inherit;
+      text-decoration: none;
+      cursor: pointer;
     }
 
     .links {
@@ -375,8 +372,9 @@
       }
     }
   </style>
-  <script type="module" crossorigin src="/assets/main-DYm9psgR.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/content-lvil2gLI.js">
+  <script type="module" crossorigin src="/assets/main-B5dAIqZ8.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
+  <link rel="modulepreload" crossorigin href="/assets/content-BR5SUWt9.js">
 </head>
 <body>
 
@@ -430,7 +428,6 @@
   <section class="horse-scroll" id="horse-scroll">
     <div class="intro-section" id="intro-section">
       <div class="intro-text" id="intro-text"></div>
-      <div class="scroll-hint" id="scroll-hint">{scroll down}</div>
     </div>
     <div class="horse-fixed" id="horse-fixed">
       <img src="/assets/contact-image-CEfT1x4y.png" alt="" id="horse-img">

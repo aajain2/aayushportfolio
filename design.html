@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>Aayush Jain</title>
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="apple-touch-icon" href="assets/favicon.png">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Aayush Jain — Design">
+  <meta property="og:site_name" content="Aayush Jain">
+  <meta property="og:url" content="https://fromaayush.com/design">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Aayush Jain — Design">
+  <style>
+    @font-face {
+      font-family: 'Kalice Trial';
+      src: url('fonts/KaliceTrial-Regular.otf') format('opentype');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Kalice Trial';
+      src: url('fonts/KaliceTrial-Bold.otf') format('opentype');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    /* ===== TOKENS ===== */
+    :root {
+      --br: 16px;
+      --br2: 8px;
+      --pd: 16px;
+      --pd2: 8px;
+      --pd3: 4px;
+
+      --color-black: #000;
+      --color-white: #e2e6e3;
+      --color-blue: #007aff;
+      --color-gray10: hsla(135, 7%, 89%, 0.1);
+      --color-gray20: hsla(135, 7%, 89%, 0.2);
+      --color-gray30: hsla(135, 7%, 89%, 0.3);
+      --color-gray50: hsla(135, 7%, 89%, 0.5);
+      --color-gray10-hover: hsla(135, 7%, 89%, 0.2);
+
+      --color-card: #1a1a1a;
+      --color-toggle: #ffffff1f;
+      --color-toggle-hover: #ffffff3d;
+      --start2: #343434;
+      --end2: #1c1c1c;
+
+      /* Porto Rocha originals, kept for reference:
+         --font-text: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+         --font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif; */
+      --font-text: 'Kalice Trial', Georgia, serif;
+      --font-display: 'Kalice Trial', Georgia, serif;
+    }
+
+    html.light {
+      --color-black: #fff;
+      --color-white: #000;
+      --color-gray10: rgba(0, 0, 0, 0.04);
+      --color-gray20: rgba(0, 0, 0, 0.2);
+      --color-gray30: rgba(0, 0, 0, 0.3);
+      --color-gray50: rgba(0, 0, 0, 0.5);
+      --color-gray10-hover: rgba(0, 0, 0, 0.08);
+
+      --color-card: #f5f5f5;
+      --color-toggle: #00000014;
+      --color-toggle-hover: #0000001f;
+      --start2: #d9d6d5;
+      --end2: #efefef;
+    }
+
+    @media (max-width: 768px) {
+      :root { --br: 12px; }
+    }
+
+    /* ===== RESET ===== */
+    *, *::before, *::after { box-sizing: border-box; }
+    body, h1, h2, h3, p, figure { margin: 0; padding: 0; }
+    h1, h2, h3 { font-size: inherit; font-weight: inherit; }
+    a { color: inherit; text-decoration: none; display: inline-block; position: relative; }
+    button { font: inherit; color: inherit; background: none; border: none; padding: 0; }
+
+    html {
+      -webkit-tap-highlight-color: transparent;
+      overflow-x: hidden;
+      overflow-y: scroll;
+    }
+
+    body {
+      font-family: var(--font-text);
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0;
+      line-height: 125%;
+      background-color: var(--color-black);
+      color: var(--color-white);
+      -webkit-font-smoothing: antialiased;
+      transition: background-color 0.5s, color 0.5s;
+    }
+
+    .display {
+      font-family: var(--font-display);
+      font-size: 23px;
+      font-weight: 400;
+      letter-spacing: 0.45px;
+      line-height: 27px;
+    }
+
+    @media (max-width: 768px) {
+      body { font-size: 13.5px; letter-spacing: -0.31px; }
+      .display { font-size: 16px; letter-spacing: 0.25px; line-height: 130%; }
+    }
+
+    /* ===== SHELL ===== */
+    .wrapper { display: flex; }
+    .content { flex: auto; min-width: 0; }
+
+    /* ===== NAV (left column) ===== */
+    .nav {
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      max-height: 100svh;
+      overflow-y: auto;
+      padding: var(--pd2);
+      padding-right: 0;
+      scrollbar-width: none;
+    }
+    .nav::-webkit-scrollbar { display: none; }
+
+    .nav__inner {
+      width: clamp(368px, calc(346.667px + 0.0277778 * 100vw), 400px);
+    }
+
+    .nav__top__inner { display: flex; flex-flow: column; }
+
+    .nav__top__top {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav__top__top__right { display: flex; position: relative; }
+
+    .nav__top__middle {
+      display: flex;
+      flex: auto;
+      flex-flow: column;
+      align-items: center;
+      row-gap: 48px;
+      padding: 68px 0;
+    }
+
+    .nav__wordmark {
+      cursor: pointer;
+      margin: -10px;
+      padding: 10px;
+      font-family: var(--font-display);
+      font-size: 27px;
+      line-height: 1;
+      letter-spacing: 0.2px;
+      white-space: nowrap;
+      transition: color 0.5s;
+    }
+
+    .nav__clock {
+      cursor: default;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ===== BUTTONS ===== */
+    .page__button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 40px;
+      padding: 0 16px;
+      column-gap: var(--pd2);
+      border-radius: 40px;
+      background-color: var(--color-gray10);
+      cursor: pointer;
+      transition: background-color 0.5s;
+    }
+    .page__button:hover { background-color: var(--color-gray10-hover); }
+
+    .page__button__icon__back {
+      flex-shrink: 0;
+      width: 7px;
+      height: 7px;
+      border: 1.5px solid var(--color-white);
+      border-bottom: none;
+      border-right: none;
+      transform: rotate(-45deg);
+      transition: border-color 0.5s;
+    }
+
+    /* Light-mode toggle */
+    .nav__light__mode {
+      width: 62px;
+      height: 38px;
+      padding: 3px;
+      border-radius: 38px;
+      background-color: var(--color-toggle);
+      cursor: pointer;
+      transition: background-color 0.5s, transform 0.5s;
+      will-change: transform;
+    }
+    .nav__light__mode:hover { background-color: var(--color-toggle-hover); }
+    .nav__top__top__right.has-gallery .nav__light__mode { transform: translateX(-42px); }
+
+    .nav__light__mode__knob {
+      aspect-ratio: 1;
+      height: 100%;
+      border-radius: 50%;
+      background-color: var(--color-gray10);
+      transition: background-color 0.5s, transform 0.5s;
+    }
+    html.dark .nav__light__mode__knob { transform: translateX(23px); }
+    html.light .nav__light__mode__knob { background-color: var(--color-black); }
+
+    /* Gallery play/pause */
+    .nav__gallery__mode {
+      position: absolute;
+      top: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background-color: var(--color-toggle);
+      cursor: pointer;
+      transition: background-color 0.5s, opacity 0.3s 0.25s;
+      will-change: opacity;
+    }
+    .nav__gallery__mode:hover { background-color: var(--color-toggle-hover); }
+    .nav__top__top__right:not(.has-gallery) .nav__gallery__mode {
+      opacity: 0;
+      pointer-events: none;
+      transition: background-color 0.5s, opacity 0.2s;
+    }
+
+    .nav__gallery__mode__play {
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 4.5px 0 4.5px 7.5px;
+      border-color: transparent transparent transparent var(--color-white);
+      transform: translateX(1px);
+      transition: border-color 0.5s;
+    }
+    .nav__gallery__mode.playing .nav__gallery__mode__play {
+      width: 7px;
+      height: 9px;
+      border: none;
+      transform: none;
+      background-color: var(--color-white);
+      -webkit-mask: linear-gradient(#000 0 0) left / 2.5px 100% no-repeat,
+                    linear-gradient(#000 0 0) right / 2.5px 100% no-repeat;
+              mask: linear-gradient(#000 0 0) left / 2.5px 100% no-repeat,
+                    linear-gradient(#000 0 0) right / 2.5px 100% no-repeat;
+      transition: background-color 0.5s;
+    }
+
+    /* ===== CARD STACK ===== */
+    .nav__cards { display: flex; flex-flow: column; row-gap: 8px; }
+
+    .nav__card { pointer-events: none; }
+
+    .nav__card__inner {
+      position: relative;
+      display: flex;
+      height: 98px;
+      padding: 16px;
+      column-gap: 12px;
+      border-radius: 10px;
+      overflow: hidden;
+      pointer-events: auto;
+      background-color: var(--color-card);
+      transition: background-color 0.5s;
+      width: 100%;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .nav__card__inner::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-color: var(--color-gray10);
+      opacity: 0;
+      transition: opacity 0.5s;
+      pointer-events: none;
+    }
+    .nav__card__inner:hover::after { opacity: 1; }
+    .nav__card.selected .nav__card__inner::after { opacity: 1; }
+
+    .nav__card__img {
+      position: relative;
+      flex-shrink: 0;
+      width: 65px;
+      height: 65px;
+      border-radius: 10px;
+      overflow: hidden;
+      background-color: var(--color-gray10);
+    }
+    .nav__card__img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .nav__card__bg {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 20px;
+      letter-spacing: 0.45px;
+      color: var(--color-gray50);
+      background: radial-gradient(76.17% 129.78% at 23.83% 65.4%, var(--start2) 0, var(--end2) 100%);
+      transition: --start2 0.5s, --end2 0.5s;
+    }
+
+    .nav__card__info { position: relative; min-width: 0; }
+    .nav__card__info h2 { color: var(--color-white); }
+    .nav__card__info p { color: var(--color-gray50); }
+
+    /* About card */
+    .nav__card__about .nav__card__inner {
+      cursor: default;
+      align-items: flex-start;
+      height: auto;
+      flex-flow: column;
+      row-gap: 12px;
+    }
+    .nav__card__about .nav__card__inner::after { display: none; }
+    .nav__card__about__actions { display: flex; gap: 6px; width: 100%; margin-top: 8px; }
+    .nav__card__about__btn {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      height: 42px;
+      padding: 0 12px;
+      border-radius: 10px;
+      background-color: var(--color-gray10);
+      cursor: pointer;
+      pointer-events: auto;
+      transition: background-color 0.5s;
+    }
+    .nav__card__about__btn:hover { background-color: var(--color-gray10-hover); }
+    .nav__card__about__btn p { white-space: nowrap; }
+
+    .nav__card__end { height: 40px; }
+
+    /* ===== CONTENT (right column) ===== */
+    .page__container { padding: var(--pd2); padding-top: 2px; }
+
+    .page__card {
+      padding: var(--pd);
+      border-radius: var(--br2);
+      background-color: var(--color-gray10);
+      transition: background-color 0.5s;
+    }
+
+    .hero {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1496 / 998;
+      padding: 0;
+      overflow: hidden;
+      border-radius: var(--br2);
+    }
+
+    .hero__slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hero__slide:not(.selected) { visibility: hidden; }
+    .hero__slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-gray30);
+      background: radial-gradient(76.17% 129.78% at 23.83% 65.4%, var(--start2) 0, var(--end2) 100%);
+      transition: --start2 0.5s, --end2 0.5s;
+    }
+
+    .case__study__text {
+      display: flex;
+      flex-flow: column;
+      row-gap: var(--pd2);
+      padding: 96px var(--pd);
+      align-items: center;
+      text-align: center;
+    }
+    .case__study__text__text { max-width: 720px; }
+    .case__study__text h2 { color: var(--color-gray50); }
+
+    .case__study__gallery {
+      display: grid;
+      gap: var(--pd2);
+      grid-template-columns: 1fr 1fr;
+      margin-top: var(--pd2);
+    }
+    .case__study__gallery__item {
+      aspect-ratio: 4 / 3;
+      padding: 0;
+      overflow: hidden;
+      border-radius: var(--br2);
+    }
+    .case__study__gallery__item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .case__study__credits {
+      display: flex;
+      flex-flow: column;
+      row-gap: var(--pd3);
+      margin-top: var(--pd2);
+    }
+    .case__study__credits__row { display: flex; justify-content: space-between; column-gap: 24px; }
+    .case__study__credits__row span:first-child { color: var(--color-gray50); }
+
+    .content__end { height: 40px; }
+
+    /* ===== MOBILE ===== */
+    @media (max-width: 768px) {
+      .wrapper { flex-flow: column; }
+
+      .nav {
+        position: static;
+        max-height: none;
+        padding-right: var(--pd2);
+      }
+      .nav__inner { width: auto; }
+
+      .nav__top__middle { row-gap: 24px; padding: 44px 0; }
+      .nav__wordmark { font-size: 22px; }
+
+      .nav__cards { row-gap: 6px; }
+      .nav__card__inner { height: 80px; padding: 12px; column-gap: 9px; }
+      .nav__card__img { width: 56px; height: 56px; }
+      .nav__card__about .nav__card__inner { height: auto; }
+
+      .nav__light__mode { width: 55px; height: 33px; }
+      html.dark .nav__light__mode__knob { transform: translateX(22px); }
+      .nav__top__top__right.has-gallery .nav__light__mode { transform: translateX(-37px); }
+      .nav__gallery__mode { width: 33px; height: 33px; }
+      .nav__gallery__mode__play { border-width: 3.5px 0 3.5px 5.5px; }
+
+      .case__study__text { padding: 56px var(--pd); }
+      .case__study__gallery { grid-template-columns: 1fr; }
+    }
+
+    @property --start2 { syntax: '<color>'; inherits: true; initial-value: #343434; }
+    @property --end2 { syntax: '<color>'; inherits: true; initial-value: #1c1c1c; }
+  </style>
+</head>
+<body>
+
+  <audio id="bg-audio" src="/song.mp3" loop></audio>
+
+  <main class="wrapper">
+
+    <div class="nav">
+      <div class="nav__inner">
+
+        <header class="nav__top">
+          <div class="nav__top__inner">
+            <div class="nav__top__top">
+              <a class="page__button" id="back-btn" href="/#content">
+                <div class="page__button__icon__back"></div>
+                <p id="back-label">Back</p>
+              </a>
+              <div class="nav__top__top__right has-gallery" id="nav-actions">
+                <div class="nav__light__mode" id="theme-toggle" role="button" aria-label="Toggle light mode">
+                  <div class="nav__light__mode__knob"></div>
+                </div>
+                <div class="nav__gallery__mode" id="audio-toggle" role="button" aria-label="Play music">
+                  <div class="nav__gallery__mode__play"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="nav__top__middle">
+              <a class="nav__wordmark" href="/design"><h1 id="wordmark">Aayush Jain</h1></a>
+              <div class="nav__clock display"><p id="clock"></p></div>
+            </div>
+          </div>
+        </header>
+
+        <nav class="nav__cards" id="nav-cards"></nav>
+        <div class="nav__card__end"></div>
+
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="page__container">
+        <div class="page__card hero" id="hero"></div>
+        <div class="case__study__text" id="case-text"></div>
+        <div class="case__study__gallery" id="case-gallery"></div>
+        <div class="case__study__credits" id="case-credits"></div>
+        <div class="content__end"></div>
+      </div>
+    </div>
+
+  </main>
+
+  <script type="module">
+    import D from './design-content.js';
+
+    document.title = D.siteTitle;
+    document.getElementById('wordmark').textContent = D.wordmark;
+    document.getElementById('back-label').textContent = D.backLabel;
+    document.getElementById('back-btn').href = D.backUrl;
+
+    // ===== Clock =====
+    const clockEl = document.getElementById('clock');
+    function tickClock() {
+      const now = new Date();
+      const day = now.toLocaleDateString('en-US', {
+        weekday: 'long', month: 'long', day: 'numeric', timeZone: D.timeZone,
+      });
+      const time = now.toLocaleTimeString('en-GB', {
+        hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false, timeZone: D.timeZone,
+      });
+      clockEl.innerHTML = day + '<br>' + D.city + ', ' + time;
+    }
+    tickClock();
+    setInterval(tickClock, 1000);
+
+    // ===== Theme =====
+    const root = document.documentElement;
+    const savedTheme = localStorage.getItem('designTheme');
+    if (savedTheme === 'light') root.classList.replace('dark', 'light');
+
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      const light = root.classList.toggle('light');
+      root.classList.toggle('dark', !light);
+      localStorage.setItem('designTheme', light ? 'light' : 'dark');
+    });
+
+    // ===== Card stack =====
+    const cardsEl = document.getElementById('nav-cards');
+
+    // Intro card
+    const aboutCard = document.createElement('div');
+    aboutCard.className = 'nav__card nav__card__about';
+    const aboutInner = document.createElement('div');
+    aboutInner.className = 'nav__card__inner';
+    const aboutInfo = document.createElement('div');
+    aboutInfo.className = 'nav__card__info';
+    const aboutP = document.createElement('p');
+    aboutP.textContent = D.about.text;
+    aboutInfo.appendChild(aboutP);
+    aboutInner.appendChild(aboutInfo);
+    const aboutActions = document.createElement('div');
+    aboutActions.className = 'nav__card__about__actions';
+    D.about.buttons.forEach(btn => {
+      const a = document.createElement('a');
+      a.className = 'nav__card__about__btn';
+      a.href = btn.url;
+      const p = document.createElement('p');
+      p.textContent = btn.label;
+      a.appendChild(p);
+      aboutActions.appendChild(a);
+    });
+    aboutInner.appendChild(aboutActions);
+    aboutCard.appendChild(aboutInner);
+    cardsEl.appendChild(aboutCard);
+
+    // Project cards — z-index descends so each card stacks under the one above
+    const cardEls = D.projects.map((proj, i) => {
+      const card = document.createElement('div');
+      card.className = 'nav__card';
+      card.style.zIndex = String(D.projects.length - i);
+
+      const inner = document.createElement('button');
+      inner.type = 'button';
+      inner.className = 'nav__card__inner';
+
+      const img = document.createElement('div');
+      img.className = 'nav__card__img';
+      if (proj.icon) {
+        const el = document.createElement('img');
+        el.src = proj.icon;
+        el.alt = '';
+        el.width = 65;
+        el.height = 65;
+        el.loading = i < 4 ? 'eager' : 'lazy';
+        img.appendChild(el);
+      } else {
+        const bg = document.createElement('div');
+        bg.className = 'nav__card__bg';
+        bg.textContent = proj.title.charAt(0).toUpperCase();
+        img.appendChild(bg);
+      }
+      inner.appendChild(img);
+
+      const info = document.createElement('div');
+      info.className = 'nav__card__info';
+      const h2 = document.createElement('h2');
+      h2.textContent = proj.title;
+      const p = document.createElement('p');
+      p.textContent = proj.description;
+      info.append(h2, p);
+      inner.appendChild(info);
+
+      inner.addEventListener('click', () => select(i, true));
+
+      card.appendChild(inner);
+      cardsEl.appendChild(card);
+      return card;
+    });
+
+    // ===== Content panel =====
+    const heroEl = document.getElementById('hero');
+    const textEl = document.getElementById('case-text');
+    const galleryEl = document.getElementById('case-gallery');
+    const creditsEl = document.getElementById('case-credits');
+
+    let current = -1;
+    let slides = [];
+    let slideIndex = 0;
+    let timer = null;
+
+    // A project with no media yet still gets three placeholder panels so the
+    // layout reads the same once real images land in design-content.js.
+    function mediaOf(proj) {
+      return proj.media.length ? proj.media : [null, null, null];
+    }
+
+    function makeMedia(src, label) {
+      if (src) {
+        const img = document.createElement('img');
+        img.src = src;
+        img.alt = '';
+        return img;
+      }
+      const ph = document.createElement('div');
+      ph.className = 'placeholder';
+      ph.textContent = label;
+      return ph;
+    }
+
+    function select(i, scroll) {
+      if (i === current) return;
+      current = i;
+      const proj = D.projects[i];
+
+      cardEls.forEach((c, n) => c.classList.toggle('selected', n === i));
+      history.replaceState(null, '', '#' + proj.key);
+
+      // Hero slideshow
+      heroEl.textContent = '';
+      const media = mediaOf(proj);
+      slides = media.map((src, n) => {
+        const slide = document.createElement('div');
+        slide.className = 'hero__slide' + (n === 0 ? ' selected' : '');
+        slide.appendChild(makeMedia(src, proj.title + ' — ' + (n + 1)));
+        heroEl.appendChild(slide);
+        return slide;
+      });
+      slideIndex = 0;
+
+      // Text block
+      textEl.textContent = '';
+      const h2 = document.createElement('h2');
+      h2.textContent = proj.title;
+      const body = document.createElement('p');
+      body.className = 'case__study__text__text display';
+      body.textContent = proj.intro || proj.description;
+      textEl.append(h2, body);
+
+      // Gallery
+      galleryEl.textContent = '';
+      media.forEach((src, n) => {
+        const item = document.createElement('figure');
+        item.className = 'page__card case__study__gallery__item';
+        item.appendChild(makeMedia(src, proj.title + ' — ' + (n + 1)));
+        galleryEl.appendChild(item);
+      });
+
+      // Credits
+      creditsEl.textContent = '';
+      (proj.credits || []).forEach(row => {
+        const line = document.createElement('div');
+        line.className = 'case__study__credits__row';
+        const role = document.createElement('span');
+        role.textContent = row.role;
+        const name = document.createElement('span');
+        name.textContent = row.name;
+        line.append(role, name);
+        creditsEl.appendChild(line);
+      });
+
+      restart();
+
+      if (scroll && window.matchMedia('(max-width: 768px)').matches) {
+        document.querySelector('.content').scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    function advance() {
+      if (slides.length < 2) return;
+      slides[slideIndex].classList.remove('selected');
+      slideIndex = (slideIndex + 1) % slides.length;
+      slides[slideIndex].classList.add('selected');
+    }
+
+    function restart() {
+      clearInterval(timer);
+      if (slides.length > 1) timer = setInterval(advance, 2600);
+    }
+
+    // Background music — same track and same localStorage keys as the homepage,
+    // so playback carries across pages in either direction.
+    const audio = document.getElementById('bg-audio');
+    const audioToggle = document.getElementById('audio-toggle');
+
+    function paintAudio() {
+      const on = !audio.paused;
+      audioToggle.classList.toggle('playing', on);
+      audioToggle.setAttribute('aria-label', on ? 'Pause music' : 'Play music');
+    }
+
+    if (localStorage.getItem('audioPlaying') === 'true') {
+      audio.currentTime = parseFloat(localStorage.getItem('audioTime')) || 0;
+      audio.play().then(paintAudio).catch(() => {});
+    }
+
+    audioToggle.addEventListener('click', () => {
+      if (audio.paused) {
+        audio.play();
+        localStorage.setItem('audioPlaying', 'true');
+      } else {
+        audio.pause();
+        localStorage.setItem('audioPlaying', 'false');
+      }
+      paintAudio();
+    });
+
+    audio.addEventListener('play', paintAudio);
+    audio.addEventListener('pause', paintAudio);
+
+    setInterval(() => {
+      if (!audio.paused) localStorage.setItem('audioTime', audio.currentTime);
+    }, 500);
+
+    window.addEventListener('beforeunload', () => {
+      localStorage.setItem('audioPlaying', String(!audio.paused));
+      localStorage.setItem('audioTime', audio.currentTime);
+    });
+
+    paintAudio();
+
+    // Deep-link support: /design#chaiwala opens that project
+    const fromHash = D.projects.findIndex(p => '#' + p.key === window.location.hash);
+    select(fromHash >= 0 ? fromHash : 0, false);
+  </script>
+
+</body>
+</html>
