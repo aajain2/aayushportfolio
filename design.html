@@ -337,8 +337,28 @@
       cursor: default;
       align-items: flex-start;
       height: auto;
+      flex-flow: column;
+      row-gap: 12px;
     }
     .nav__card__about .nav__card__inner::after { display: none; }
+    .nav__card__about .nav__card__info h2 { margin-bottom: 2px; }
+
+    .nav__card__about__actions { display: flex; gap: 6px; width: 100%; }
+    .nav__card__about__btn {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      justify-content: center;
+      height: 42px;
+      padding: 0 12px;
+      border-radius: 10px;
+      background-color: var(--color-gray10);
+      cursor: pointer;
+      pointer-events: auto;
+      transition: background-color 0.5s;
+    }
+    .nav__card__about__btn:hover { background-color: var(--color-gray10-hover); }
+    .nav__card__about__btn p { white-space: nowrap; }
 
     .nav__card__end { height: 40px; }
 
@@ -407,6 +427,67 @@
     }
     .case__study__gallery__item img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
+    /* Flat artwork: shown whole at its own aspect ratio rather than cropped */
+    .case__study__sheets {
+      display: grid;
+      gap: var(--pd2);
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+      margin-top: var(--pd2);
+    }
+    .case__study__sheets:empty { display: none; }
+    .case__study__sheets__item {
+      padding: 0;
+      overflow: hidden;
+      border-radius: var(--br2);
+    }
+    .case__study__sheets__item img { width: 100%; height: auto; display: block; }
+
+    /* One card cutting between images at Porto Rocha's 700ms cadence.
+       visibility (not opacity) gives their hard flash rather than a fade. */
+    .case__study__flash {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 277 / 145;
+      padding: 0;
+      overflow: hidden;
+      border-radius: var(--br2);
+      margin-top: var(--pd2);
+    }
+    .case__study__flash:empty { display: none; }
+    .case__study__flash__frame { position: absolute; inset: 0; }
+    .case__study__flash__frame:not(.selected) { visibility: hidden; }
+    .case__study__flash__frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    /* Tall page shot easing up and down inside a gallery-sized card.
+       --scroll-to is measured in JS so any image height works. */
+    .case__study__scroller {
+      position: relative;
+      padding: 0;
+      overflow: hidden;
+      border-radius: var(--br2);
+      aspect-ratio: 4 / 3;
+      --scroll-to: 0px;
+    }
+    .case__study__scroller img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .case__study__scroller.ready img {
+      animation: page-scroll 46s ease-in-out infinite alternate;
+    }
+    @keyframes page-scroll {
+      from { transform: translateY(0); }
+      to   { transform: translateY(var(--scroll-to)); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .case__study__scroller.ready img { animation: none; }
+    }
+
     .case__study__credits {
       display: flex;
       flex-flow: column;
@@ -444,7 +525,8 @@
       .nav__gallery__mode__play { border-width: 3.5px 0 3.5px 5.5px; }
 
       .case__study__text { padding: 56px var(--pd); }
-      .case__study__gallery { grid-template-columns: 1fr; }
+      .case__study__gallery,
+      .case__study__sheets { grid-template-columns: 1fr; }
     }
 
     @property --start2 { syntax: '<color>'; inherits: true; initial-value: #343434; }
@@ -495,6 +577,8 @@
         <div class="page__card hero" id="hero"></div>
         <div class="case__study__text" id="case-text"></div>
         <div class="case__study__gallery" id="case-gallery"></div>
+        <div class="case__study__sheets" id="case-sheets"></div>
+        <div class="page__card case__study__flash" id="case-flash"></div>
         <div class="case__study__credits" id="case-credits"></div>
         <div class="content__end"></div>
       </div>
@@ -546,10 +630,24 @@
     aboutInner.className = 'nav__card__inner';
     const aboutInfo = document.createElement('div');
     aboutInfo.className = 'nav__card__info';
+    const aboutH2 = document.createElement('h2');
+    aboutH2.textContent = D.about.heading;
     const aboutP = document.createElement('p');
     aboutP.textContent = D.about.text;
-    aboutInfo.appendChild(aboutP);
+    aboutInfo.append(aboutH2, aboutP);
     aboutInner.appendChild(aboutInfo);
+
+    const aboutActions = document.createElement('div');
+    aboutActions.className = 'nav__card__about__actions';
+    const aboutLink = document.createElement('a');
+    aboutLink.className = 'nav__card__about__btn';
+    aboutLink.href = D.about.url;
+    const aboutLinkLabel = document.createElement('p');
+    aboutLinkLabel.textContent = D.about.linkLabel;
+    aboutLink.appendChild(aboutLinkLabel);
+    aboutActions.appendChild(aboutLink);
+    aboutInner.appendChild(aboutActions);
+
     aboutCard.appendChild(aboutInner);
     cardsEl.appendChild(aboutCard);
 
@@ -601,12 +699,16 @@
     const heroEl = document.getElementById('hero');
     const textEl = document.getElementById('case-text');
     const galleryEl = document.getElementById('case-gallery');
+    const sheetsEl = document.getElementById('case-sheets');
+    const flashEl = document.getElementById('case-flash');
     const creditsEl = document.getElementById('case-credits');
 
     let current = -1;
     let slides = [];
     let slideIndex = 0;
     let timer = null;
+    let flashTimer = null;
+    let scrollerObserver = null;
 
     // A project with no media yet still gets three placeholder panels so the
     // layout reads the same once real images land in design-content.js.
@@ -625,6 +727,35 @@
       ph.className = 'placeholder';
       ph.textContent = label;
       return ph;
+    }
+
+    // Card holding a tall image that eases from its top to its bottom and back.
+    // The travel distance is measured rather than assumed, so swapping in an
+    // image of any height needs no CSS change.
+    function makeScroller(src) {
+      const card = document.createElement('figure');
+      card.className = 'page__card case__study__scroller';
+      const img = document.createElement('img');
+      img.alt = '';
+
+      const measure = () => {
+        const travel = img.offsetHeight - card.clientHeight;
+        if (travel > 0) {
+          card.style.setProperty('--scroll-to', '-' + travel + 'px');
+          card.classList.add('ready');
+        } else {
+          card.classList.remove('ready');
+        }
+      };
+
+      img.addEventListener('load', measure);
+      if (scrollerObserver) scrollerObserver.disconnect();
+      scrollerObserver = new ResizeObserver(measure);
+      scrollerObserver.observe(card);
+
+      img.src = src;
+      card.appendChild(img);
+      return card;
     }
 
     function select(i, scroll) {
@@ -656,14 +787,53 @@
       body.textContent = proj.intro || proj.description;
       textEl.append(h2, body);
 
-      // Gallery
+      // Gallery — the scroller leads, then the tiles. `gallery` overrides the
+      // hero `media` when the two should differ.
       galleryEl.textContent = '';
-      media.forEach((src, n) => {
+      if (proj.scroller) galleryEl.appendChild(makeScroller(proj.scroller));
+      const tiles = proj.gallery || (proj.scroller ? [] : media);
+      tiles.forEach((src, n) => {
         const item = document.createElement('figure');
         item.className = 'page__card case__study__gallery__item';
         item.appendChild(makeMedia(src, proj.title + ' — ' + (n + 1)));
         galleryEl.appendChild(item);
       });
+
+      // Printed pieces — never cropped, so no placeholder stand-in
+      sheetsEl.textContent = '';
+      (proj.sheets || []).forEach(src => {
+        const item = document.createElement('figure');
+        item.className = 'page__card case__study__sheets__item';
+        const img = document.createElement('img');
+        img.src = src;
+        img.alt = '';
+        img.loading = 'lazy';
+        item.appendChild(img);
+        sheetsEl.appendChild(item);
+      });
+
+      // Flashing card — hard cuts at Porto Rocha's 700ms, paused in a hidden tab
+      clearInterval(flashTimer);
+      flashEl.textContent = '';
+      const frames = (proj.flash || []).map((src, n) => {
+        const frame = document.createElement('div');
+        frame.className = 'case__study__flash__frame' + (n === 0 ? ' selected' : '');
+        const img = document.createElement('img');
+        img.src = src;
+        img.alt = '';
+        frame.appendChild(img);
+        flashEl.appendChild(frame);
+        return frame;
+      });
+      if (frames.length > 1) {
+        let fi = 0;
+        flashTimer = setInterval(() => {
+          if (document.hidden) return;
+          frames[fi].classList.remove('selected');
+          fi = (fi + 1) % frames.length;
+          frames[fi].classList.add('selected');
+        }, 700);
+      }
 
       // Credits
       creditsEl.textContent = '';

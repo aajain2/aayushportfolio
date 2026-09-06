@@ -337,8 +337,28 @@
       cursor: default;
       align-items: flex-start;
       height: auto;
+      flex-flow: column;
+      row-gap: 12px;
     }
     .nav__card__about .nav__card__inner::after { display: none; }
+    .nav__card__about .nav__card__info h2 { margin-bottom: 2px; }
+
+    .nav__card__about__actions { display: flex; gap: 6px; width: 100%; }
+    .nav__card__about__btn {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      justify-content: center;
+      height: 42px;
+      padding: 0 12px;
+      border-radius: 10px;
+      background-color: var(--color-gray10);
+      cursor: pointer;
+      pointer-events: auto;
+      transition: background-color 0.5s;
+    }
+    .nav__card__about__btn:hover { background-color: var(--color-gray10-hover); }
+    .nav__card__about__btn p { white-space: nowrap; }
 
     .nav__card__end { height: 40px; }
 
@@ -407,6 +427,67 @@
     }
     .case__study__gallery__item img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
+    /* Flat artwork: shown whole at its own aspect ratio rather than cropped */
+    .case__study__sheets {
+      display: grid;
+      gap: var(--pd2);
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+      margin-top: var(--pd2);
+    }
+    .case__study__sheets:empty { display: none; }
+    .case__study__sheets__item {
+      padding: 0;
+      overflow: hidden;
+      border-radius: var(--br2);
+    }
+    .case__study__sheets__item img { width: 100%; height: auto; display: block; }
+
+    /* One card cutting between images at Porto Rocha's 700ms cadence.
+       visibility (not opacity) gives their hard flash rather than a fade. */
+    .case__study__flash {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 277 / 145;
+      padding: 0;
+      overflow: hidden;
+      border-radius: var(--br2);
+      margin-top: var(--pd2);
+    }
+    .case__study__flash:empty { display: none; }
+    .case__study__flash__frame { position: absolute; inset: 0; }
+    .case__study__flash__frame:not(.selected) { visibility: hidden; }
+    .case__study__flash__frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    /* Tall page shot easing up and down inside a gallery-sized card.
+       --scroll-to is measured in JS so any image height works. */
+    .case__study__scroller {
+      position: relative;
+      padding: 0;
+      overflow: hidden;
+      border-radius: var(--br2);
+      aspect-ratio: 4 / 3;
+      --scroll-to: 0px;
+    }
+    .case__study__scroller img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .case__study__scroller.ready img {
+      animation: page-scroll 46s ease-in-out infinite alternate;
+    }
+    @keyframes page-scroll {
+      from { transform: translateY(0); }
+      to   { transform: translateY(var(--scroll-to)); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .case__study__scroller.ready img { animation: none; }
+    }
+
     .case__study__credits {
       display: flex;
       flex-flow: column;
@@ -444,13 +525,14 @@
       .nav__gallery__mode__play { border-width: 3.5px 0 3.5px 5.5px; }
 
       .case__study__text { padding: 56px var(--pd); }
-      .case__study__gallery { grid-template-columns: 1fr; }
+      .case__study__gallery,
+      .case__study__sheets { grid-template-columns: 1fr; }
     }
 
     @property --start2 { syntax: '<color>'; inherits: true; initial-value: #343434; }
     @property --end2 { syntax: '<color>'; inherits: true; initial-value: #1c1c1c; }
   </style>
-  <script type="module" crossorigin src="/assets/design-rM0SbV0s.js"></script>
+  <script type="module" crossorigin src="/assets/design-RSyxD1_I.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
 </head>
 <body>
@@ -497,6 +579,8 @@
         <div class="page__card hero" id="hero"></div>
         <div class="case__study__text" id="case-text"></div>
         <div class="case__study__gallery" id="case-gallery"></div>
+        <div class="case__study__sheets" id="case-sheets"></div>
+        <div class="page__card case__study__flash" id="case-flash"></div>
         <div class="case__study__credits" id="case-credits"></div>
         <div class="content__end"></div>
       </div>
