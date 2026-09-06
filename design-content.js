@@ -75,6 +75,23 @@ const DESIGN = {
       gallery: [],
       // The live product, running inside the page below the descriptor.
       embed: 'https://posts-bottom-97550920.figma.site/',
+      // The deck, two slides per row under the embed.
+      sheets: [
+        '/design/circle-slide-01.jpg',
+        '/design/circle-slide-02.jpg',
+        '/design/circle-slide-03.jpg',
+        '/design/circle-slide-04.jpg',
+        '/design/circle-slide-05.jpg',
+        '/design/circle-slide-06.jpg',
+        '/design/circle-slide-07.jpg',
+        '/design/circle-slide-08.jpg',
+        '/design/circle-slide-09.jpg',
+        '/design/circle-slide-10.jpg',
+        '/design/circle-slide-11.jpg',
+        '/design/circle-slide-12.jpg',
+        '/design/circle-slide-13.jpg',
+        '/design/circle-slide-14.jpg',
+      ],
       intro: '',
       credits: [],
     },
