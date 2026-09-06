@@ -443,12 +443,22 @@
     }
     .case__study__sheets__item img { width: 100%; height: auto; display: block; }
 
+    /* A live page running inside the case study, below the descriptor. */
+    .case__study__embed {
+      padding: 0;
+      overflow: hidden;
+      border-radius: var(--br2);
+      height: min(820px, 78svh);
+    }
+    .case__study__embed:empty { display: none; }
+    .case__study__embed iframe { width: 100%; height: 100%; border: 0; display: block; }
+
     /* One card cutting between images at Porto Rocha's 700ms cadence.
        visibility (not opacity) gives their hard flash rather than a fade. */
     .case__study__flash {
       position: relative;
       width: 100%;
-      aspect-ratio: 277 / 145;
+      aspect-ratio: 884 / 461;
       padding: 0;
       overflow: hidden;
       border-radius: var(--br2);
@@ -488,6 +498,16 @@
       .case__study__scroller.ready img { animation: none; }
     }
 
+    .case__study__video {
+      padding: 0;
+      overflow: hidden;
+      border-radius: var(--br2);
+      aspect-ratio: 16 / 9;
+      margin-top: var(--pd2);
+    }
+    .case__study__video:empty { display: none; }
+    .case__study__video video { width: 100%; height: 100%; object-fit: cover; display: block; }
+
     .case__study__credits {
       display: flex;
       flex-flow: column;
@@ -524,6 +544,7 @@
       .nav__gallery__mode { width: 33px; height: 33px; }
       .nav__gallery__mode__play { border-width: 3.5px 0 3.5px 5.5px; }
 
+      .case__study__embed { height: min(560px, 70svh); }
       .case__study__text { padding: 56px var(--pd); }
       .case__study__gallery,
       .case__study__sheets { grid-template-columns: 1fr; }
@@ -532,7 +553,7 @@
     @property --start2 { syntax: '<color>'; inherits: true; initial-value: #343434; }
     @property --end2 { syntax: '<color>'; inherits: true; initial-value: #1c1c1c; }
   </style>
-  <script type="module" crossorigin src="/assets/design-RSyxD1_I.js"></script>
+  <script type="module" crossorigin src="/assets/design-DZNJTUEI.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
 </head>
 <body>
@@ -578,9 +599,11 @@
       <div class="page__container">
         <div class="page__card hero" id="hero"></div>
         <div class="case__study__text" id="case-text"></div>
+        <div class="page__card case__study__embed" id="case-embed"></div>
+        <div class="page__card case__study__flash" id="case-flash"></div>
         <div class="case__study__gallery" id="case-gallery"></div>
         <div class="case__study__sheets" id="case-sheets"></div>
-        <div class="page__card case__study__flash" id="case-flash"></div>
+        <div class="page__card case__study__video" id="case-video"></div>
         <div class="case__study__credits" id="case-credits"></div>
         <div class="content__end"></div>
       </div>

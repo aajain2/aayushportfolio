@@ -443,12 +443,22 @@
     }
     .case__study__sheets__item img { width: 100%; height: auto; display: block; }
 
+    /* A live page running inside the case study, below the descriptor. */
+    .case__study__embed {
+      padding: 0;
+      overflow: hidden;
+      border-radius: var(--br2);
+      height: min(820px, 78svh);
+    }
+    .case__study__embed:empty { display: none; }
+    .case__study__embed iframe { width: 100%; height: 100%; border: 0; display: block; }
+
     /* One card cutting between images at Porto Rocha's 700ms cadence.
        visibility (not opacity) gives their hard flash rather than a fade. */
     .case__study__flash {
       position: relative;
       width: 100%;
-      aspect-ratio: 277 / 145;
+      aspect-ratio: 884 / 461;
       padding: 0;
       overflow: hidden;
       border-radius: var(--br2);
@@ -488,6 +498,16 @@
       .case__study__scroller.ready img { animation: none; }
     }
 
+    .case__study__video {
+      padding: 0;
+      overflow: hidden;
+      border-radius: var(--br2);
+      aspect-ratio: 16 / 9;
+      margin-top: var(--pd2);
+    }
+    .case__study__video:empty { display: none; }
+    .case__study__video video { width: 100%; height: 100%; object-fit: cover; display: block; }
+
     .case__study__credits {
       display: flex;
       flex-flow: column;
@@ -524,6 +544,7 @@
       .nav__gallery__mode { width: 33px; height: 33px; }
       .nav__gallery__mode__play { border-width: 3.5px 0 3.5px 5.5px; }
 
+      .case__study__embed { height: min(560px, 70svh); }
       .case__study__text { padding: 56px var(--pd); }
       .case__study__gallery,
       .case__study__sheets { grid-template-columns: 1fr; }
@@ -576,9 +597,11 @@
       <div class="page__container">
         <div class="page__card hero" id="hero"></div>
         <div class="case__study__text" id="case-text"></div>
+        <div class="page__card case__study__embed" id="case-embed"></div>
+        <div class="page__card case__study__flash" id="case-flash"></div>
         <div class="case__study__gallery" id="case-gallery"></div>
         <div class="case__study__sheets" id="case-sheets"></div>
-        <div class="page__card case__study__flash" id="case-flash"></div>
+        <div class="page__card case__study__video" id="case-video"></div>
         <div class="case__study__credits" id="case-credits"></div>
         <div class="content__end"></div>
       </div>
@@ -698,9 +721,11 @@
     // ===== Content panel =====
     const heroEl = document.getElementById('hero');
     const textEl = document.getElementById('case-text');
+    const embedEl = document.getElementById('case-embed');
     const galleryEl = document.getElementById('case-gallery');
     const sheetsEl = document.getElementById('case-sheets');
     const flashEl = document.getElementById('case-flash');
+    const videoEl = document.getElementById('case-video');
     const creditsEl = document.getElementById('case-credits');
 
     let current = -1;
@@ -709,6 +734,7 @@
     let timer = null;
     let flashTimer = null;
     let scrollerObserver = null;
+    let videoObserver = null;
 
     // A project with no media yet still gets three placeholder panels so the
     // layout reads the same once real images land in design-content.js.
@@ -787,6 +813,17 @@
       body.textContent = proj.intro || proj.description;
       textEl.append(h2, body);
 
+      // Live embed — the published page itself, sitting under the descriptor
+      embedEl.textContent = '';
+      if (proj.embed) {
+        const frame = document.createElement('iframe');
+        frame.src = proj.embed;
+        frame.title = proj.title;
+        frame.loading = 'lazy';
+        frame.allow = 'clipboard-write; fullscreen';
+        embedEl.appendChild(frame);
+      }
+
       // Gallery — the scroller leads, then the tiles. `gallery` overrides the
       // hero `media` when the two should differ.
       galleryEl.textContent = '';
@@ -833,6 +870,26 @@
           fi = (fi + 1) % frames.length;
           frames[fi].classList.add('selected');
         }, 700);
+      }
+
+      // Video — silent, looping, and only fetched once it scrolls into view
+      if (videoObserver) { videoObserver.disconnect(); videoObserver = null; }
+      videoEl.textContent = '';
+      if (proj.video) {
+        const video = document.createElement('video');
+        video.src = proj.video;
+        video.muted = true;
+        video.loop = true;
+        video.playsInline = true;
+        video.preload = 'metadata';
+        videoEl.appendChild(video);
+        videoObserver = new IntersectionObserver(entries => {
+          entries.forEach(e => {
+            if (e.isIntersecting) video.play().catch(() => {});
+            else video.pause();
+          });
+        }, { threshold: 0.25 });
+        videoObserver.observe(videoEl);
       }
 
       // Credits

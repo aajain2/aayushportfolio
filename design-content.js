@@ -11,10 +11,14 @@
 //            omitted. Set it when the hero and the tiles should differ.
 //   scroller — optional tall image (e.g. a full-page shot) that auto-scrolls
 //            inside one gallery-sized card, shown first in the gallery row.
+//   video  — optional silent clip in a card below every other row; it only
+//            loads and plays once scrolled into view.
 //   sheets — optional flat artwork (posters, menus) shown uncropped at its
 //            own aspect ratio, in a row below the gallery.
 //   flash  — optional images for a single card below the sheets that cuts
 //            between them every 700ms (Porto Rocha's cadence).
+//   embed  — optional URL of a live page, shown in a card directly below the
+//            descriptor so visitors can use the real thing on the page.
 //   credits — optional [{ role, name }] rows listed under the description.
 
 const DESIGN = {
@@ -57,6 +61,20 @@ const DESIGN = {
       // replaces the gallery tiles for the project.
       scroller: '/design/arcade-careers-page.jpg',
       gallery: ['/design/arcade-cyanotype.jpg'],
+      video: '/design/arcade-reel.mp4',
+      intro: '',
+      credits: [],
+    },
+    {
+      key: 'circle',
+      title: 'Circle',
+      description: 'Placeholder description for the Circle work.',
+      icon: '/design/circle-icon.jpg',
+      media: [],
+      // Nothing below the embed — the live page is the gallery.
+      gallery: [],
+      // The live product, running inside the page below the descriptor.
+      embed: 'https://posts-bottom-97550920.figma.site/',
       intro: '',
       credits: [],
     },
@@ -76,9 +94,9 @@ const DESIGN = {
         '/design/chaiwala-menu-print.jpg',
       ],
       flash: [
-        '/design/chaiwala-cup-bird.png',
-        '/design/chaiwala-cup-peacock.png',
-        '/design/chaiwala-cup-tiger.png',
+        '/design/chaiwala-cup-bird.jpg',
+        '/design/chaiwala-cup-peacock.jpg',
+        '/design/chaiwala-cup-tiger.jpg',
       ],
       intro: '',
       credits: [],
