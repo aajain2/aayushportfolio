@@ -114,6 +114,7 @@
     @media (max-width: 768px) {
       body { font-size: 13.5px; letter-spacing: -0.31px; }
       .display { font-size: 16px; letter-spacing: 0.25px; line-height: 130%; }
+      .nav__clock { font-size: 23px; letter-spacing: 0.45px; line-height: 27px; }
     }
 
     /* ===== SHELL ===== */
@@ -154,7 +155,7 @@
       flex-flow: column;
       align-items: center;
       row-gap: 48px;
-      padding: 68px 0;
+      padding: 74px 0;
     }
 
     .nav__wordmark {
@@ -363,7 +364,7 @@
     .nav__card__end { height: 40px; }
 
     /* ===== CONTENT (right column) ===== */
-    .page__container { padding: var(--pd2); padding-top: 2px; }
+    .page__container { padding: var(--pd2); }
 
     .page__card {
       padding: var(--pd);
@@ -389,7 +390,15 @@
       justify-content: center;
     }
     .hero__slide:not(.selected) { visibility: hidden; }
-    .hero__slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    /* Overscanned by 3px a side: some artwork carries its own hairline border
+       right at the edge, which reads as a seam against the card. */
+    .hero__slide img {
+      width: calc(100% + 6px);
+      height: calc(100% + 6px);
+      margin: -3px;
+      object-fit: cover;
+      display: block;
+    }
 
     .placeholder {
       width: 100%;
@@ -491,7 +500,7 @@
       display: block;
     }
     .case__study__scroller.ready img {
-      animation: page-scroll 46s ease-in-out infinite alternate;
+      animation: page-scroll 22s ease-in-out infinite alternate;
     }
     @keyframes page-scroll {
       from { transform: translateY(0); }
@@ -511,6 +520,72 @@
     .case__study__video:empty { display: none; }
     .case__study__video video { width: 100%; height: 100%; object-fit: cover; display: block; }
 
+    /* Closing row — every card the same height, widths proportional to each
+       image's aspect ratio. flex-grow is set from the loaded image in JS, so
+       nothing is cropped and the row bottoms line up. */
+    /* Free-form rows. Each row is any number of cards across, and a card is
+       an image, a stack that flashes between images, or a descriptor set in
+       the same type as the main one. Everything below the menu sheets that
+       doesn't fit the fixed rows above is built from these. */
+    .case__study__rows {
+      display: flex;
+      flex-flow: column;
+      row-gap: var(--pd2);
+      margin-top: var(--pd2);
+    }
+    .case__study__rows:empty { display: none; }
+
+    .case__study__row {
+      display: grid;
+      gap: var(--pd2);
+      grid-template-columns: repeat(var(--cols), 1fr);
+      align-items: start;
+    }
+
+    .case__study__row__cell {
+      position: relative;
+      padding: 0;
+      overflow: hidden;
+      border-radius: var(--br2);
+      aspect-ratio: var(--ratio, 4 / 3);
+    }
+    .case__study__row__cell img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .case__study__row__frame { position: absolute; inset: 0; }
+    .case__study__row__frame:not(.selected) { visibility: hidden; }
+
+    .case__study__row__text {
+      display: flex;
+      flex-flow: column;
+      align-items: center;
+      justify-content: center;
+      row-gap: var(--pd2);
+      padding: var(--pd) clamp(var(--pd), 8%, 72px);
+      text-align: center;
+      background-color: var(--color-gray10);
+      transition: background-color 0.5s;
+    }
+    .case__study__row__text h3 { color: var(--color-gray50); }
+
+    .case__study__closer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--pd2);
+      align-items: flex-start;
+      background: none;
+      padding: 0;
+      margin-top: var(--pd2);
+    }
+    .case__study__closer:empty { display: none; }
+    .case__study__closer__item {
+      flex: 1 1 0;
+      min-width: 0;
+      padding: 0;
+      overflow: hidden;
+      border-radius: var(--br2);
+    }
+    .case__study__closer__item img { width: 100%; height: auto; display: block; }
+
     .case__study__credits {
       display: flex;
       flex-flow: column;
@@ -522,18 +597,12 @@
 
     .content__end { height: 40px; }
 
-    /* ===== MOBILE ===== */
+    /* ===== NARROW (still a sidebar) ===== */
+    /* Porto Rocha runs two breakpoints, not one: at 768px the type and the
+       card stack tighten while the layout stays two columns, and only below
+       656px does the nav drop above the content. */
     @media (max-width: 768px) {
-      .wrapper { flex-flow: column; }
-
-      .nav {
-        position: static;
-        max-height: none;
-        padding-right: var(--pd2);
-      }
-      .nav__inner { width: auto; }
-
-      .nav__top__middle { row-gap: 24px; padding: 44px 0; }
+      .nav__top__middle { row-gap: 24px; padding: 56px 0; }
       .nav__wordmark { font-size: 22px; }
 
       .nav__cards { row-gap: 6px; }
@@ -550,12 +619,31 @@
       .case__study__text { padding: 56px var(--pd); }
       .case__study__gallery,
       .case__study__sheets { grid-template-columns: 1fr; }
+      .case__study__closer__item { flex: 1 1 100%; }
+      .case__study__row { grid-template-columns: 1fr; }
+    }
+
+    /* ===== STACKED ===== */
+    /* The nav leaves the sidebar and sits above the content. Porto Rocha
+       drops the container's top gutter to 2px here, since the nav's own 8px
+       bottom padding already separates the two. */
+    @media (max-width: 656px) {
+      .wrapper { flex-flow: column; }
+
+      .nav {
+        position: static;
+        max-height: none;
+        padding-right: var(--pd2);
+      }
+      .nav__inner { width: auto; }
+
+      .page__container { padding-top: 2px; }
     }
 
     @property --start2 { syntax: '<color>'; inherits: true; initial-value: #343434; }
     @property --end2 { syntax: '<color>'; inherits: true; initial-value: #1c1c1c; }
   </style>
-  <script type="module" crossorigin src="/assets/design-D0PYz84N.js"></script>
+  <script type="module" crossorigin src="/assets/design-B_YyHHWw.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
 </head>
 <body>
@@ -606,6 +694,9 @@
         <div class="case__study__gallery" id="case-gallery"></div>
         <div class="case__study__sheets" id="case-sheets"></div>
         <div class="page__card case__study__video" id="case-video"></div>
+        <div class="case__study__rows" id="case-rows-mid"></div>
+        <div class="case__study__closer" id="case-closer"></div>
+        <div class="case__study__rows" id="case-rows"></div>
         <div class="case__study__credits" id="case-credits"></div>
         <div class="content__end"></div>
       </div>
