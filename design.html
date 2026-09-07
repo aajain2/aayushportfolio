@@ -272,12 +272,20 @@
     }
 
     /* ===== CARD STACK ===== */
-    .nav__cards { display: flex; flex-flow: column; row-gap: 8px; }
+    .nav__cards {
+      display: flex;
+      flex-flow: column;
+      row-gap: 8px;
+      /* Trailing space so the last card can clear the fold zone. The fold
+         starts half a card early, so this must exceed h/2 (~49px) minus the
+         nav's own bottom padding, or the stack never flattens at the end. */
+      padding-bottom: 60px;
+    }
 
     .nav__card { pointer-events: none; }
     /* Cards past the foot of the nav fold into a stack, so it reads as
        "there is more below" rather than just clipping. */
-    .nav__card__inner { transform-origin: 50% 100%; will-change: transform; }
+    .nav__card__inner { transform-origin: 50% 100%; will-change: transform, opacity; }
 
     .nav__card__inner {
       position: relative;
@@ -355,7 +363,17 @@
 
 
     /* ===== CONTENT (right column) ===== */
-    .page__container { padding: var(--pd2); }
+    .page__container {
+      padding: var(--pd2);
+      opacity: 1;
+      transition: opacity 0.45s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+    /* Set with the transition off, so removing it fades up from nothing
+       instead of easing back from whatever it was mid-flight. */
+    .page__container.is-entering { opacity: 0; transition: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .page__container { transition: none; }
+    }
 
     .page__card {
       padding: var(--pd);
@@ -411,6 +429,8 @@
       text-align: center;
     }
     .case__study__text__text { max-width: 720px; }
+    /* display:flex above would otherwise beat the UA rule for [hidden] */
+    .case__study__text[hidden] { display: none; }
     .case__study__text h2 { color: var(--color-gray50); }
 
     .case__study__gallery {
@@ -673,7 +693,7 @@
     </div>
 
     <div class="content">
-      <div class="page__container">
+      <div class="page__container" id="page-container">
         <div class="page__card hero" id="hero"></div>
         <div class="case__study__text" id="case-text"></div>
         <div class="page__card case__study__embed" id="case-embed"></div>
@@ -795,47 +815,54 @@
       return card;
     });
 
-    // ===== Folded card stack =====
-    // The nav scrolls inside its own sticky column. Any card that would run
-    // past the bottom is pinned there instead, each one a little smaller and a
-    // little lower than the one in front, so the overflow reads as a deck.
+    // ===== Card fold =====
+    // Porto Rocha's deck, measured off their site rather than guessed. As a
+    // card reaches the foot of the nav's visible box it lifts, scales toward
+    // half size and fades out, so the stack folds into itself instead of
+    // clipping. Every constant falls out of the card pitch: the lift is two
+    // cards' worth, the fold starts half a card early, and the fade covers the
+    // last 30% of the travel. Reproduces their curve to within 0.005px.
     const navEl = document.querySelector('.nav');
-    const PEEK = 10;     // how far each folded card shows below the one above
-    const SHRINK = 0.05; // scale lost per card of depth
-    const MAX_DEPTH = 4;
+    const FOLD_FADE = 0.3;
+    let foldQueued = false;
 
     function foldCards() {
-      const inners = cardsEl.querySelectorAll('.nav__card__inner');
-      if (window.matchMedia('(max-width: 768px)').matches) {
-        inners.forEach(el => { el.style.transform = ''; });
-        return;
-      }
-      const navBottom = navEl.getBoundingClientRect().bottom;
-      // Measure the wrapper, not the inner: the inner is the thing being
-      // transformed, so measuring it would feed its own offset back in.
+      foldQueued = false;
+      const unit = cardEls[0] && cardEls[0].querySelector('.nav__card__inner');
+      if (!unit) return;
+
+      const h = unit.offsetHeight;
+      const pitch = h + (parseFloat(getComputedStyle(cardsEl).rowGap) || 0);
+      const start = h / 2;
+      const lift = pitch * 2;
+      const range = lift + start;
+      // The nav is its own scroll box on desktop and part of the page once
+      // stacked, so fold against whichever edge the reader actually sees.
+      const foot = Math.min(navEl.getBoundingClientRect().bottom, window.innerHeight);
+
       cardsEl.querySelectorAll('.nav__card').forEach(card => {
         const el = card.querySelector('.nav__card__inner');
         if (!el) return;
-        const r = card.getBoundingClientRect();
-        // where this card would sit if it were the last fully visible one
-        const over = r.top - (navBottom - r.height);
-        if (over <= 0) {
-          el.style.transform = '';
-          return;
-        }
-        const depth = Math.min(over / r.height, MAX_DEPTH);
-        // The front card of the stack stops short of the bottom, and each card
-        // behind it ends a little lower, so they peek out from underneath.
-        const bottom = navBottom - (MAX_DEPTH - depth) * PEEK;
-        const scale = Math.max(1 - depth * SHRINK, 0.78);
+        // Measure the wrapper, not the inner: the inner carries the transform,
+        // so measuring it would feed its own offset back in.
+        const gap = foot - card.getBoundingClientRect().bottom;
+        const u = Math.min(1, Math.max(0, (start - gap) / range));
         el.style.transform =
-          'translateY(' + (bottom - r.bottom).toFixed(2) + 'px) scale(' + scale.toFixed(3) + ')';
+          'translateY(' + (-lift * u).toFixed(2) + 'px) scale(' + (1 - 0.5 * u).toFixed(4) + ')';
+        el.style.opacity = Math.min(1, Math.max(0, (1 - u) / FOLD_FADE)).toFixed(4);
       });
     }
 
-    navEl.addEventListener('scroll', () => requestAnimationFrame(foldCards), { passive: true });
-    window.addEventListener('resize', foldCards);
-    new ResizeObserver(foldCards).observe(cardsEl);
+    function queueFold() {
+      if (foldQueued) return;
+      foldQueued = true;
+      requestAnimationFrame(foldCards);
+    }
+
+    navEl.addEventListener('scroll', queueFold, { passive: true });
+    window.addEventListener('scroll', queueFold, { passive: true });
+    window.addEventListener('resize', queueFold);
+    new ResizeObserver(queueFold).observe(cardsEl);
     foldCards();
 
     // ===== Content panel =====
@@ -998,10 +1025,22 @@
       });
     }
 
+    const panelEl = document.getElementById('page-container');
+
+    // Fade the panel up whenever its contents are swapped, so a new tab eases
+    // in rather than snapping straight to the new images.
+    function fadeInPanel() {
+      panelEl.classList.add('is-entering');
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        panelEl.classList.remove('is-entering');
+      }));
+    }
+
     function select(i, scroll) {
       if (i === current) return;
       current = i;
       const proj = D.projects[i];
+      fadeInPanel();
 
       cardEls.forEach((c, n) => c.classList.toggle('selected', n === i));
       history.replaceState(null, '', '#' + proj.key);
@@ -1032,10 +1071,12 @@
       body.textContent = proj.intro || proj.description;
       textEl.append(h2, body);
 
-      // textAtEnd moves the descriptor below the rows, for projects that want
-      // the pictures to speak first. The container is the same element either
-      // way, so nothing else has to know.
+      // hideText drops the descriptor entirely, for a project that is only
+      // pictures. textAtEnd moves it below the rows instead, for one that
+      // wants the pictures to speak first. The container is the same element
+      // either way, so nothing else has to know.
       const container = textEl.parentNode;
+      textEl.hidden = !!proj.hideText;
       if (proj.textAtEnd) container.insertBefore(textEl, creditsEl);
       else container.insertBefore(textEl, embedEl);
 

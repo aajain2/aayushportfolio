@@ -28,6 +28,7 @@
 //            ratio so the row bottoms out level without cropping anything.
 //   midRows — the same, but placed between the video and the closer.
 //   textAtEnd — move the descriptor below every row instead of under the hero.
+//   hideText — drop the descriptor block entirely.
 //   closer — optional images forming the last row, under the video. They sit
 //            side by side in equal columns at their own aspect ratios, so
 //            nothing is cropped.
@@ -212,7 +213,7 @@ const DESIGN = {
     {
       key: 'chaiwala',
       title: 'CHAIWALA',
-      description: 'Brand and experience design for my South Asian inspired teahouse popup series',
+      description: 'Brand and experience design for my South Asian teahouse popup series',
       icon: '/design/chaiwala-icon.png',
       // The event photographs, cycling on top; the same set closes the page.
       media: [
@@ -510,7 +511,67 @@ const DESIGN = {
       title: 'Fine Art',
       description: 'Exhibited at Pratt, Memphis Airport, sold to Gus’s Fried Chicken',
       icon: '/design/fine-art-icon.jpg',
-      media: [],
+      media: ['/design/fine-art-hero.jpg'],
+      gallery: [],
+      // A gallery, not a case study — the work carries the page.
+      hideText: true,
+      rows: [
+        // Three faces staring out — the charcoal-and-red language, stated once
+        // at full width before anything else.
+        [
+          { image: '/design/fine-art-egotism.jpg', ratio: '4698 / 2925' },
+        ],
+        // Twin portraits: same scale, same palette, the same held moment.
+        [
+          { image: '/design/fine-art-masked.jpg', ratio: '2549 / 3389' },
+          { image: '/design/fine-art-snatched.jpg', ratio: '2755 / 3629' },
+        ],
+        // The narrative pair — a figure and a group, both interrupted by colour.
+        {
+          alignHeights: true,
+          items: [
+            { image: '/design/fine-art-burden.jpg', ratio: '3150 / 3952' },
+            { image: '/design/fine-art-peer-pressure.jpg', ratio: '3214 / 2330' },
+          ],
+        },
+        // A breath: the darkest work, alone.
+        [
+          { image: '/design/fine-art-herself-a-stranger-within.jpg', ratio: '3128 / 2398' },
+        ],
+        // The print chapter — two high-contrast fields, near-identical shapes.
+        [
+          { image: '/design/fine-art-flux.jpg', ratio: '691 / 500' },
+          { image: '/design/fine-art-drenched.jpg', ratio: '672 / 500' },
+        ],
+        // Alone, full width.
+        [
+          { image: '/design/fine-art-emergence.jpg', ratio: '1554 / 2562' },
+        ],
+        // Two verticals that leave charcoal behind: ornament and sepia.
+        {
+          alignHeights: true,
+          items: [
+            { image: '/design/fine-art-prayer-for-hunger.jpg', ratio: '3226 / 4188' },
+            { image: '/design/fine-art-throw-me-back.jpg', ratio: '3085 / 4327' },
+          ],
+        },
+        // Off the wall and into the room. Each piece is shown whole, then
+        // close enough to see how it is made.
+        {
+          alignHeights: true,
+          items: [
+            { image: '/design/fine-art-ceramics.jpg', ratio: '1454 / 1588' },
+            { image: '/design/fine-art-ceramics-detail.jpg', ratio: '1692 / 1269' },
+          ],
+        },
+        {
+          alignHeights: true,
+          items: [
+            { image: '/design/fine-art-work.jpg', ratio: '2852 / 3062' },
+            { image: '/design/fine-art-work-detail.jpg', ratio: '1052 / 2095' },
+          ],
+        },
+      ],
       intro: '',
       credits: [],
     },

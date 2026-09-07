@@ -272,12 +272,20 @@
     }
 
     /* ===== CARD STACK ===== */
-    .nav__cards { display: flex; flex-flow: column; row-gap: 8px; }
+    .nav__cards {
+      display: flex;
+      flex-flow: column;
+      row-gap: 8px;
+      /* Trailing space so the last card can clear the fold zone. The fold
+         starts half a card early, so this must exceed h/2 (~49px) minus the
+         nav's own bottom padding, or the stack never flattens at the end. */
+      padding-bottom: 60px;
+    }
 
     .nav__card { pointer-events: none; }
     /* Cards past the foot of the nav fold into a stack, so it reads as
        "there is more below" rather than just clipping. */
-    .nav__card__inner { transform-origin: 50% 100%; will-change: transform; }
+    .nav__card__inner { transform-origin: 50% 100%; will-change: transform, opacity; }
 
     .nav__card__inner {
       position: relative;
@@ -355,7 +363,17 @@
 
 
     /* ===== CONTENT (right column) ===== */
-    .page__container { padding: var(--pd2); }
+    .page__container {
+      padding: var(--pd2);
+      opacity: 1;
+      transition: opacity 0.45s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+    /* Set with the transition off, so removing it fades up from nothing
+       instead of easing back from whatever it was mid-flight. */
+    .page__container.is-entering { opacity: 0; transition: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .page__container { transition: none; }
+    }
 
     .page__card {
       padding: var(--pd);
@@ -411,6 +429,8 @@
       text-align: center;
     }
     .case__study__text__text { max-width: 720px; }
+    /* display:flex above would otherwise beat the UA rule for [hidden] */
+    .case__study__text[hidden] { display: none; }
     .case__study__text h2 { color: var(--color-gray50); }
 
     .case__study__gallery {
@@ -633,7 +653,7 @@
     @property --start2 { syntax: '<color>'; inherits: true; initial-value: #343434; }
     @property --end2 { syntax: '<color>'; inherits: true; initial-value: #1c1c1c; }
   </style>
-  <script type="module" crossorigin src="/assets/design-BK_gUX0f.js"></script>
+  <script type="module" crossorigin src="/assets/design-rPPeoVkl.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
 </head>
 <body>
@@ -675,7 +695,7 @@
     </div>
 
     <div class="content">
-      <div class="page__container">
+      <div class="page__container" id="page-container">
         <div class="page__card hero" id="hero"></div>
         <div class="case__study__text" id="case-text"></div>
         <div class="page__card case__study__embed" id="case-embed"></div>
