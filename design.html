@@ -279,7 +279,7 @@
     .nav__card__inner {
       position: relative;
       display: flex;
-      height: 98px;
+      min-height: 98px;
       padding: 16px;
       column-gap: 12px;
       border-radius: 10px;
@@ -338,30 +338,18 @@
       cursor: default;
       align-items: flex-start;
       height: auto;
-      flex-flow: column;
-      row-gap: 12px;
     }
     .nav__card__about .nav__card__inner::after { display: none; }
     .nav__card__about .nav__card__info h2 { margin-bottom: 2px; }
 
-    .nav__card__about__actions { display: flex; gap: 6px; width: 100%; }
-    .nav__card__about__btn {
-      display: flex;
-      flex: 1;
-      align-items: center;
-      justify-content: center;
-      height: 42px;
-      padding: 0 12px;
-      border-radius: 10px;
-      background-color: var(--color-gray10);
-      cursor: pointer;
+    .nav__card__about__link {
+      color: var(--color-gray50);
       pointer-events: auto;
-      transition: background-color 0.5s;
+      cursor: pointer;
+      transition: color 0.3s ease;
     }
-    .nav__card__about__btn:hover { background-color: var(--color-gray10-hover); }
-    .nav__card__about__btn p { white-space: nowrap; }
+    .nav__card__about__link:hover { color: var(--color-white); }
 
-    .nav__card__end { height: 40px; }
 
     /* ===== CONTENT (right column) ===== */
     .page__container { padding: var(--pd2); }
@@ -592,10 +580,9 @@
       row-gap: var(--pd3);
       margin-top: var(--pd2);
     }
+    .case__study__credits:empty { display: none; }
     .case__study__credits__row { display: flex; justify-content: space-between; column-gap: 24px; }
     .case__study__credits__row span:first-child { color: var(--color-gray50); }
-
-    .content__end { height: 40px; }
 
     /* ===== NARROW (still a sidebar) ===== */
     /* Porto Rocha runs two breakpoints, not one: at 768px the type and the
@@ -606,7 +593,7 @@
       .nav__wordmark { font-size: 22px; }
 
       .nav__cards { row-gap: 6px; }
-      .nav__card__inner { height: 80px; padding: 12px; column-gap: 9px; }
+      .nav__card__inner { min-height: 80px; padding: 12px; column-gap: 9px; }
       .nav__card__img { width: 56px; height: 56px; }
       .nav__card__about .nav__card__inner { height: auto; }
 
@@ -678,7 +665,6 @@
         </header>
 
         <nav class="nav__cards" id="nav-cards"></nav>
-        <div class="nav__card__end"></div>
 
       </div>
     </div>
@@ -696,7 +682,6 @@
         <div class="case__study__closer" id="case-closer"></div>
         <div class="case__study__rows" id="case-rows"></div>
         <div class="case__study__credits" id="case-credits"></div>
-        <div class="content__end"></div>
       </div>
     </div>
 
@@ -750,19 +735,15 @@
     aboutH2.textContent = D.about.heading;
     const aboutP = document.createElement('p');
     aboutP.textContent = D.about.text;
+    // "Learn more" closes the sentence as a link rather than a separate button
+    const aboutLink = document.createElement('a');
+    aboutLink.className = 'nav__card__about__link';
+    aboutLink.href = D.about.url;
+    aboutLink.textContent = D.about.linkLabel;
+    aboutP.appendChild(aboutLink);
+    aboutP.appendChild(document.createTextNode('.'));
     aboutInfo.append(aboutH2, aboutP);
     aboutInner.appendChild(aboutInfo);
-
-    const aboutActions = document.createElement('div');
-    aboutActions.className = 'nav__card__about__actions';
-    const aboutLink = document.createElement('a');
-    aboutLink.className = 'nav__card__about__btn';
-    aboutLink.href = D.about.url;
-    const aboutLinkLabel = document.createElement('p');
-    aboutLinkLabel.textContent = D.about.linkLabel;
-    aboutLink.appendChild(aboutLinkLabel);
-    aboutActions.appendChild(aboutLink);
-    aboutInner.appendChild(aboutActions);
 
     aboutCard.appendChild(aboutInner);
     cardsEl.appendChild(aboutCard);
@@ -979,7 +960,9 @@
       cardEls.forEach((c, n) => c.classList.toggle('selected', n === i));
       history.replaceState(null, '', '#' + proj.key);
 
-      // Hero slideshow
+      // Hero slideshow — a project may set its own ratio when its artwork is
+      // shaped very differently from the default (cover would crop it).
+      heroEl.style.aspectRatio = proj.heroRatio || '';
       heroEl.textContent = '';
       const media = mediaOf(proj);
       const heroImgs = [];
@@ -1002,6 +985,13 @@
       body.className = 'case__study__text__text display';
       body.textContent = proj.intro || proj.description;
       textEl.append(h2, body);
+
+      // textAtEnd moves the descriptor below the rows, for projects that want
+      // the pictures to speak first. The container is the same element either
+      // way, so nothing else has to know.
+      const container = textEl.parentNode;
+      if (proj.textAtEnd) container.insertBefore(textEl, creditsEl);
+      else container.insertBefore(textEl, embedEl);
 
       // Live embed — the published page itself, sitting under the descriptor
       embedEl.textContent = '';

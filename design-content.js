@@ -5,6 +5,8 @@
 // Each project below becomes one card in the left-hand stack.
 //   icon   — path to a square icon (e.g. '/design/arcade-icon.jpg'). Leave ''
 //            and a monogram placeholder is drawn instead.
+//   heroRatio — optional aspect for the hero card, when the artwork is shaped
+//            very differently from the default and cover would crop it.
 //   media  — array of image paths shown in the hero + gallery on the right.
 //            Leave [] and numbered placeholder panels are drawn instead.
 //   gallery — optional images for the gallery row; defaults to `media` when
@@ -25,6 +27,7 @@
 //            descriptor. alignHeights sizes the columns from each card's
 //            ratio so the row bottoms out level without cropping anything.
 //   midRows — the same, but placed between the video and the closer.
+//   textAtEnd — move the descriptor below every row instead of under the hero.
 //   closer — optional images forming the last row, under the video. They sit
 //            side by side in equal columns at their own aspect ratios, so
 //            nothing is cropped.
@@ -47,15 +50,12 @@ const DESIGN = {
   // --- Intro card (top of the stack) ---
   about: {
     heading: 'About me',
-    // Where the "Learn more" button goes; same destination as the Back button.
+    // The closing "Learn more" is a link inside the copy; it lightens on hover
+    // and goes where the Back button goes.
+    text: 'Aayush Jain is a creative technologist working across mediums. '
+        + 'Select brand and design work, credits to Porto Rocha presentation format. ',
     linkLabel: 'Learn more',
     url: '/#content',
-    text: 'Aayush Jain is a creative technologist working across brand, product and design. '
-        + 'The work collected here spans identity and packaging, physical spaces and events, '
-        + 'and fine art in charcoal, print and installation. '
-        + 'He cares most about the early stages: finding the insight that reframes the problem, '
-        + 'then making the thing quickly enough to learn from it. '
-        + 'Currently at Arcade, previously Stanford, Glean and Apple.',
   },
 
   // --- Projects ---
@@ -63,7 +63,7 @@ const DESIGN = {
     {
       key: 'arcade',
       title: 'Arcade',
-      description: 'Placeholder description for the Arcade work.',
+      description: 'Product, brand, and event design at the AI physical product creation platform',
       icon: '/design/arcade-icon.jpeg',
       media: ['/design/arcade-kravet.svg'],
       // A tall page shot that slowly scrolls inside its card. When set, this
@@ -190,10 +190,13 @@ const DESIGN = {
           alignHeights: true,
           items: [
             { image: '/design/arcade-ring-picker.svg', ratio: '1000 / 1088' },
-            { image: '/design/arcade-mirror.svg', ratio: '1000 / 1088' },
             { image: '/design/arcade-cuff-card.svg', ratio: '1000 / 979' },
           ],
         },
+        // Closing line, full width.
+        [
+          { image: '/design/arcade-color.jpg', ratio: '1440 / 840' },
+        ],
       ],
       intro: '',
       credits: [],
@@ -201,7 +204,7 @@ const DESIGN = {
     {
       key: 'chaiwala',
       title: 'CHAIWALA',
-      description: 'Placeholder description for the CHAIWALA work.',
+      description: 'Brand and experience design for my South Asian inspired teahouse popup series',
       icon: '/design/chaiwala-icon.png',
       // The event photographs, cycling on top; the same set closes the page.
       media: [
@@ -327,7 +330,7 @@ const DESIGN = {
     {
       key: 'circle',
       title: 'Circle',
-      description: 'Placeholder description for the Circle work.',
+      description: 'FigBuild 2026 Hackathon winner built using Figma Make',
       icon: '/design/circle-icon.jpg',
       media: ['/design/circle-hero.svg'],
       // Nothing below the embed — the live page is the gallery.
@@ -355,20 +358,179 @@ const DESIGN = {
       credits: [],
     },
     {
-      key: 'stanford-dorm-room',
-      title: 'Stanford Dorm Room',
-      description: 'Placeholder description for the Stanford Dorm Room work.',
-      icon: '',
-      media: [],
+      key: 'foresight',
+      title: 'Foresight',
+      description: 'Brand, design, and story for my agentic human simulation company',
+      icon: '/design/foresight-icon.svg',
+      media: ['/design/foresight-hero.svg'],
+      // The wordmark is the hero only — no tiles repeating it below.
+      gallery: [],
+      rows: [
+        {
+          alignHeights: true,
+          items: [
+            { image: '/design/foresight-testing.svg', ratio: '1255 / 588' },
+            { image: '/design/foresight-mark.svg', ratio: '1 / 1' },
+          ],
+        },
+        // The deck, two slides per row.
+        {
+          alignHeights: true,
+          items: [
+            { image: '/design/foresight-deck-01.jpg', ratio: '16 / 9' },
+            { image: '/design/foresight-deck-02.jpg', ratio: '16 / 9' },
+          ],
+        },
+        {
+          alignHeights: true,
+          items: [
+            { image: '/design/foresight-deck-03.jpg', ratio: '16 / 9' },
+            { image: '/design/foresight-deck-04.jpg', ratio: '16 / 9' },
+          ],
+        },
+        {
+          alignHeights: true,
+          items: [
+            { image: '/design/foresight-deck-05.jpg', ratio: '16 / 9' },
+            { image: '/design/foresight-deck-06.jpg', ratio: '16 / 9' },
+          ],
+        },
+        {
+          alignHeights: true,
+          items: [
+            { image: '/design/foresight-deck-07.jpg', ratio: '16 / 9' },
+            { image: '/design/foresight-deck-08.jpg', ratio: '16 / 9' },
+          ],
+        },
+        {
+          alignHeights: true,
+          items: [
+            { image: '/design/foresight-deck-09.jpg', ratio: '16 / 9' },
+            { image: '/design/foresight-deck-10.jpg', ratio: '16 / 9' },
+          ],
+        },
+        {
+          alignHeights: true,
+          items: [
+            { image: '/design/foresight-deck-11.jpg', ratio: '16 / 9' },
+            { image: '/design/foresight-deck-12.jpg', ratio: '16 / 9' },
+          ],
+        },
+      ],
+      intro: '',
+      credits: [],
+    },
+    {
+      key: 'photography',
+      title: 'Photography',
+      description: 'Creative direction and photography for my friends’ shoots',
+      icon: '/design/photography-icon.jpg',
+      // Every landscape frame in the set, cycling on top.
+      media: [
+        '/design/photo-grad-03.jpg',
+        '/design/photo-grad-06.jpg',
+        '/design/photo-grad-07.jpg',
+        '/design/photo-grad-11.jpg',
+        '/design/photo-art-01.jpg',
+        '/design/photo-art-02.jpg',
+        '/design/photo-art-06.jpg',
+        '/design/photo-art-07.jpg',
+        '/design/photo-art-08.jpg',
+      ],
+      gallery: [],
+      rows: [
+        // --- Graduation ---
+        { alignHeights: true, items: [
+            { image: '/design/photo-grad-03.jpg', ratio: '3 / 2' },
+            { image: '/design/photo-grad-04.jpg', ratio: '2 / 3' },
+        ] },
+        {
+          ratio: '2 / 3',
+          items: [
+            { heading: 'Graduation', text: 'Placeholder description for the graduation shoots.' },
+            { image: '/design/photo-grad-02.jpg', ratio: '2 / 3' },
+            { image: '/design/photo-grad-01.jpg', ratio: '2 / 3' },
+          ],
+        },
+        { ratio: '2 / 3', items: [
+            { image: '/design/photo-grad-05.jpg', ratio: '2 / 3' },
+            { image: '/design/photo-grad-08.jpg', ratio: '2 / 3' },
+            { image: '/design/photo-grad-09.jpg', ratio: '2 / 3' },
+        ] },
+        [
+          { image: '/design/photo-grad-06.jpg', ratio: '3 / 2' },
+        ],
+        { ratio: '2 / 3', items: [
+            { image: '/design/photo-grad-10.jpg', ratio: '2 / 3' },
+            { image: '/design/photo-grad-12.jpg', ratio: '2 / 3' },
+            { image: '/design/photo-grad-13.jpg', ratio: '2 / 3' },
+        ] },
+        { ratio: '3 / 2', items: [
+            { image: '/design/photo-grad-07.jpg', ratio: '3 / 2' },
+            { image: '/design/photo-grad-11.jpg', ratio: '3 / 2' },
+        ] },
+
+        // --- Kosi's art capstone ---
+        {
+          ratio: '2 / 3',
+          items: [
+            { heading: 'Art Capstone', text: 'Placeholder description for Kosi’s art capstone shoot.' },
+            { image: '/design/photo-art-03.jpg', ratio: '2 / 3' },
+          ],
+        },
+        { ratio: '3 / 2', items: [
+            { image: '/design/photo-art-01.jpg', ratio: '3 / 2' },
+            { image: '/design/photo-art-02.jpg', ratio: '3 / 2' },
+        ] },
+        { ratio: '2 / 3', items: [
+            { image: '/design/photo-art-05.jpg', ratio: '2 / 3' },
+            { image: '/design/photo-art-09.jpg', ratio: '2 / 3' },
+        ] },
+        [
+          { image: '/design/photo-art-06.jpg', ratio: '3 / 2' },
+        ],
+        { ratio: '3 / 2', items: [
+            { image: '/design/photo-art-07.jpg', ratio: '3 / 2' },
+            { image: '/design/photo-art-08.jpg', ratio: '3 / 2' },
+        ] },
+      ],
       intro: '',
       credits: [],
     },
     {
       key: 'fine-art',
       title: 'Fine Art',
-      description: 'Placeholder description for the Fine Art work.',
-      icon: '',
+      description: 'Exhibited at Memphis International Airport, sold to Gus’s Fried Chicken',
+      icon: '/design/fine-art-icon.jpg',
       media: [],
+      intro: '',
+      credits: [],
+    },
+    {
+      key: 'stanford-dorm-room',
+      title: 'Stanford Dorm Room',
+      description: 'Turning my college dorm into an inviting hosting space',
+      icon: '/design/dorm-icon.jpg',
+      // The one wide frame in the set opens the page on its own; the four
+      // portraits pair off below, living area first, then the work corners.
+      media: ['/design/dorm-01.jpg'],
+      gallery: [],
+      textAtEnd: true,
+      rows: [
+        [
+          { image: '/design/dorm-02.jpg', ratio: '3 / 4' },
+          { image: '/design/dorm-03.jpg', ratio: '3 / 4' },
+        ],
+        // A portrait beside a landscape, so alignHeights sizes the columns
+        // from their ratios and the pair still bottoms out level.
+        {
+          alignHeights: true,
+          items: [
+            { image: '/design/dorm-06.jpg', ratio: '3 / 4' },
+            { image: '/design/dorm-07.jpg', ratio: '3 / 2' },
+          ],
+        },
+      ],
       intro: '',
       credits: [],
     },
