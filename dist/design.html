@@ -650,14 +650,17 @@
     .intro__name:hover { color: var(--color-white); }
 
     /* The card itself is a .hero, so it inherits that shape and behaviour
-       exactly; this only makes it clickable. A slow push in on hover is the
-       one signal that the block is the way into the work. The card clips, so
-       the image grows inside its own corners. */
-    .intro__media { cursor: pointer; }
+       exactly. Hovering dims it back toward the page and pushes in slightly —
+       the dim is the part that reads at a glance, the push is the polish. */
+    .intro__media {
+      cursor: pointer;
+      transition: opacity 0.35s ease;
+    }
+    .intro__media:hover { opacity: 0.7; }
     .intro__media .hero__slide img {
       transition: transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1);
     }
-    .intro__media:hover .hero__slide img { transform: scale(1.045); }
+    .intro__media:hover .hero__slide img { transform: scale(1.03); }
     @media (prefers-reduced-motion: reduce) {
       .intro__media .hero__slide img { transition: none; }
       .intro__media:hover .hero__slide img { transform: none; }
@@ -685,6 +688,10 @@
         min-height: 0;
         padding: 40px var(--pd);
       }
+      /* Stacked, the card leads and the roster sits under it — the way
+         play.studio orders the same pair on a phone. */
+      .intro__media { order: 1; }
+      .intro__names { order: 2; }
       .intro__name { font-size: clamp(22px, 6vw, 32px); }
     }
 
@@ -734,7 +741,7 @@
     @property --start2 { syntax: '<color>'; inherits: true; initial-value: #343434; }
     @property --end2 { syntax: '<color>'; inherits: true; initial-value: #1c1c1c; }
   </style>
-  <script type="module" crossorigin src="/assets/design-1kSPVWVs.js"></script>
+  <script type="module" crossorigin src="/assets/design-B-IZtiEq.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
 </head>
 <body>
