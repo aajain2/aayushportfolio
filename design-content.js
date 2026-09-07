@@ -88,8 +88,8 @@ const DESIGN = {
             },
             {
               ratio: '1 / 1',
-              heading: 'Waitlist',
-              text: 'Placeholder description for the Arcade waitlist work.',
+              heading: 'New York Consumer Launch',
+              text: 'Arcade wants to be the front door for artists, designers, and creatives, and for many of them their first real introduction to AI. The New York consumer launch ran on that thesis: gather journalists, artists, creatives, and interior designers in one room, because artists follow artists. Guests prompted beforehand, met their finished custom pieces at dinner, then wrote new prompts after the conversation so the night could keep making things people would actually buy.',
             },
             { image: '/design/arcade-pov.jpg', ratio: '1000 / 1088' },
           ],
@@ -116,8 +116,8 @@ const DESIGN = {
             { image: '/design/arcade-prompt.svg', ratio: '840 / 840' },
             {
               ratio: '640 / 920',
-              heading: 'Rings',
-              text: 'Placeholder description for the Arcade ring work.',
+              heading: 'Holiday Campaign',
+              text: 'For the holidays we still treated AI as new for most people, especially our ICP. Best marketing was education: teach prompting by showing /dream and /edit across product lines, then layer materials and making process into the campaign as romance, not as part of the prompt itself. Craft became the lesson plan.',
             },
           ],
         },
@@ -189,8 +189,8 @@ const DESIGN = {
             { image: '/design/arcade-pillow-create.jpg', ratio: '1020 / 663' },
             {
               ratio: '1 / 1',
-              heading: 'Pillows',
-              text: 'Placeholder description for the Arcade pillow work.',
+              heading: 'Composer',
+              text: 'After rounds of user research and iteration, creation settled on an agentic and scrollable Composer. Shoppers do not want a blank canvas or a single answer. They want to scroll a field of options, compare, and steer. The agent carries the conversation while the feed keeps offering more, so taste forms through browsing, not through one perfect prompt.',
             },
             { image: '/design/arcade-pillow-results.jpg', ratio: '1020 / 663' },
           ],
@@ -522,10 +522,13 @@ const DESIGN = {
           { image: '/design/fine-art-egotism.jpg', ratio: '4698 / 2925' },
         ],
         // Twin portraits: same scale, same palette, the same held moment.
-        [
-          { image: '/design/fine-art-masked.jpg', ratio: '2549 / 3389' },
-          { image: '/design/fine-art-snatched.jpg', ratio: '2755 / 3629' },
-        ],
+        {
+          alignHeights: true,
+          items: [
+            { image: '/design/fine-art-masked.jpg', ratio: '2549 / 3389' },
+            { image: '/design/fine-art-snatched.jpg', ratio: '2755 / 3629' },
+          ],
+        },
         // The narrative pair — a figure and a group, both interrupted by colour.
         {
           alignHeights: true,
@@ -538,11 +541,16 @@ const DESIGN = {
         [
           { image: '/design/fine-art-herself-a-stranger-within.jpg', ratio: '3128 / 2398' },
         ],
-        // The print chapter — two high-contrast fields, near-identical shapes.
-        [
-          { image: '/design/fine-art-flux.jpg', ratio: '691 / 500' },
-          { image: '/design/fine-art-drenched.jpg', ratio: '672 / 500' },
-        ],
+        // The print chapter. Flux arrived as a diptych in a single file; its
+        // two panels are separate cards here, levelled against Drenched.
+        {
+          alignHeights: true,
+          items: [
+            { image: '/design/fine-art-flux-a.jpg', ratio: '342 / 500' },
+            { image: '/design/fine-art-flux-b.jpg', ratio: '348 / 500' },
+            { image: '/design/fine-art-drenched.jpg', ratio: '672 / 500' },
+          ],
+        },
         // Alone, full width.
         [
           { image: '/design/fine-art-emergence.jpg', ratio: '1554 / 2562' },
@@ -568,7 +576,7 @@ const DESIGN = {
           alignHeights: true,
           items: [
             { image: '/design/fine-art-work.jpg', ratio: '2852 / 3062' },
-            { image: '/design/fine-art-work-detail.jpg', ratio: '1052 / 2095' },
+            { image: '/design/fine-art-work-detail.jpg', ratio: '1052 / 1363' },
           ],
         },
       ],
@@ -577,7 +585,7 @@ const DESIGN = {
     },
     {
       key: 'stanford-dorm-room',
-      title: 'Stanford Dorm Room',
+      title: 'Dorm Room',
       description: 'Turning my college dorm into an inviting hosting space',
       icon: '/design/dorm-icon.jpg',
       // The one wide frame in the set opens the page on its own; the four

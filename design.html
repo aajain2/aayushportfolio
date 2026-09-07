@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -571,8 +571,9 @@
       align-items: center;
       justify-content: center;
       row-gap: var(--pd2);
-      padding: var(--pd) clamp(var(--pd), 8%, 72px);
+      padding: var(--pd) clamp(var(--pd), 6%, 32px);
       text-align: center;
+      overflow-y: auto;
       background-color: var(--color-gray10);
       transition: background-color 0.5s;
     }
@@ -606,6 +607,86 @@
     .case__study__credits:empty { display: none; }
     .case__study__credits__row { display: flex; justify-content: space-between; column-gap: 24px; }
     .case__study__credits__row span:first-child { color: var(--color-gray50); }
+
+    /* ===== INTRO — the /design homepage =====
+       Arriving with no project named, a visitor gets only this: every project
+       named down the left with one lit, and the media cards cross-fading
+       beside it. The whole case-study layout, nav column included, stays out
+       of the way until they click in. */
+    .wrapper.is-intro .nav { display: none; }
+    .wrapper.is-intro .page__container > *:not(.intro) { display: none; }
+    .wrapper.is-intro .page__container { padding: 0; }
+
+    /* An author `display` beats the UA's [hidden] rule, so say it explicitly. */
+    .intro[hidden] { display: none; }
+
+    .intro {
+      display: grid;
+      grid-template-columns: auto minmax(0, 620px);
+      justify-content: center;
+      /* 172px of clear space between the names and the media at 1440, which
+         is what play.studio leaves between its list and its block. */
+      gap: clamp(40px, 12vw, 180px);
+      align-items: center;
+      min-height: 100svh;
+      /* Held in from the edges: the pair sits as a block in the middle rather
+         than stretching the full width. */
+      padding: var(--pd) clamp(var(--pd), 8vw, 160px);
+    }
+
+    .intro__names { display: flex; flex-flow: column; align-items: flex-start; }
+
+    .intro__name {
+      font-family: var(--font-display);
+      font-size: clamp(24px, 2.7vw, 40px);
+      line-height: 1.28;
+      letter-spacing: 0.2px;
+      text-align: left;
+      color: var(--color-gray30);
+      cursor: pointer;
+      transition: color 0.9s ease;
+    }
+    .intro__name.selected,
+    .intro__name:hover { color: var(--color-white); }
+
+    /* The card itself is a .hero, so it inherits that shape and behaviour
+       exactly; this only makes it clickable. A slow push in on hover is the
+       one signal that the block is the way into the work. The card clips, so
+       the image grows inside its own corners. */
+    .intro__media { cursor: pointer; }
+    .intro__media .hero__slide img {
+      transition: transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+    .intro__media:hover .hero__slide img { transform: scale(1.045); }
+    @media (prefers-reduced-motion: reduce) {
+      .intro__media .hero__slide img { transition: none; }
+      .intro__media:hover .hero__slide img { transform: none; }
+    }
+
+    /* Two stacked layers cross-fade, both moving at once, rather than the
+       card blanking between projects. Timing taken from play.studio: 1.5s on
+       easeOutExpo, with the outgoing layer parked just above zero so it stays
+       composited and the next fade starts instantly. */
+    .intro__layer {
+      position: absolute;
+      inset: 0;
+      opacity: 0.001;
+      transition: opacity 1.1s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+    .intro__layer.selected { opacity: 1; }
+    @media (prefers-reduced-motion: reduce) {
+      .intro__layer { transition: none; }
+    }
+
+    @media (max-width: 768px) {
+      .intro {
+        grid-template-columns: 1fr;
+        row-gap: 32px;
+        min-height: 0;
+        padding: 40px var(--pd);
+      }
+      .intro__name { font-size: clamp(22px, 6vw, 32px); }
+    }
 
     /* ===== NARROW (still a sidebar) ===== */
     /* Porto Rocha runs two breakpoints, not one: at 768px the type and the
@@ -658,7 +739,7 @@
 
   <audio id="bg-audio" src="/song.mp3" loop></audio>
 
-  <main class="wrapper">
+  <main class="wrapper" id="wrapper">
 
     <div class="nav">
       <div class="nav__inner">
@@ -694,6 +775,11 @@
 
     <div class="content">
       <div class="page__container" id="page-container">
+        <section class="intro" id="intro" hidden>
+          <div class="intro__names" id="intro-names"></div>
+          <div class="page__card hero intro__media" id="intro-media"></div>
+        </section>
+
         <div class="page__card hero" id="hero"></div>
         <div class="case__study__text" id="case-text"></div>
         <div class="page__card case__study__embed" id="case-embed"></div>
@@ -735,8 +821,9 @@
 
     // ===== Theme =====
     const root = document.documentElement;
+    // Light is the default here; only an explicit saved choice overrides it.
     const savedTheme = localStorage.getItem('designTheme');
-    if (savedTheme === 'light') root.classList.replace('dark', 'light');
+    if (savedTheme === 'dark') root.classList.replace('light', 'dark');
 
     document.getElementById('theme-toggle').addEventListener('click', () => {
       const light = root.classList.toggle('light');
@@ -965,6 +1052,29 @@
       }, 700);
     }
 
+    // Builds a project's media card. The homepage roster uses this too, so a
+    // block there is the same markup, the same deferred loading and the same
+    // 700ms cut between frames as the hero inside the case study.
+    // A project may set its own ratio when its artwork is shaped very
+    // differently from the default (cover would crop it).
+    function buildHero(el, proj) {
+      if (!el.classList.contains('intro__layer')) el.style.aspectRatio = proj.heroRatio || '';
+      el.textContent = '';
+      const media = mediaOf(proj);
+      const imgs = [];
+      const frames = media.map((src, n) => {
+        const slide = document.createElement('div');
+        slide.className = 'hero__slide' + (n === 0 ? ' selected' : '');
+        const m = makeMedia(src, proj.title + ' — ' + (n + 1), true);
+        if (m.tagName === 'IMG') imgs.push(m);
+        slide.appendChild(m);
+        el.appendChild(slide);
+        return slide;
+      });
+      loadFrames(imgs, media.filter(Boolean));
+      return frames;
+    }
+
     function renderRows(container, list, proj) {
       container.textContent = '';
       (list || []).forEach(row => {
@@ -993,7 +1103,6 @@
             const h3 = document.createElement('h3');
             h3.textContent = item.heading || proj.title;
             const body = document.createElement('p');
-            body.className = 'display';
             body.textContent = item.text;
             cell.append(h3, body);
           } else if (item.flash) {
@@ -1045,22 +1154,8 @@
       cardEls.forEach((c, n) => c.classList.toggle('selected', n === i));
       history.replaceState(null, '', '#' + proj.key);
 
-      // Hero slideshow — a project may set its own ratio when its artwork is
-      // shaped very differently from the default (cover would crop it).
-      heroEl.style.aspectRatio = proj.heroRatio || '';
-      heroEl.textContent = '';
-      const media = mediaOf(proj);
-      const heroImgs = [];
-      slides = media.map((src, n) => {
-        const slide = document.createElement('div');
-        slide.className = 'hero__slide' + (n === 0 ? ' selected' : '');
-        const el = makeMedia(src, proj.title + ' — ' + (n + 1), true);
-        if (el.tagName === 'IMG') heroImgs.push(el);
-        slide.appendChild(el);
-        heroEl.appendChild(slide);
-        return slide;
-      });
-      loadFrames(heroImgs, media.filter(Boolean));
+      // Hero slideshow
+      slides = buildHero(heroEl, proj);
 
       // Text block
       textEl.textContent = '';
@@ -1256,9 +1351,98 @@
 
     paintAudio();
 
-    // Deep-link support: /design#chaiwala opens that project
+    // ===== Intro =====
+    // The homepage: names on the left, every project's media cross-fading on
+    // the right, holding on each in turn. Clicking either way in hands over to
+    // the case-study layout.
+    const INTRO_HOLD = 2600;
+    const INTRO_FADE = 1500;   // must match the .intro__layer transition
+
+    const wrapperEl = document.getElementById('wrapper');
+    const introEl = document.getElementById('intro');
+    const introNamesEl = document.getElementById('intro-names');
+    const introMediaEl = document.getElementById('intro-media');
+    let introAt = 0;
+    let introTimer = null;
+
+    const introNames = D.projects.map((proj, i) => {
+      const el = document.createElement('button');
+      el.type = 'button';
+      el.className = 'intro__name';
+      el.textContent = proj.title;
+      el.addEventListener('click', () => enterProject(i));
+      introNamesEl.appendChild(el);
+      return el;
+    });
+
+    // Two layers, so a project fades in over the one it replaces instead of
+    // the card blanking between them. Each keeps its own flash interval.
+    const introLayers = [0, 1].map(() => {
+      const el = document.createElement('div');
+      el.className = 'intro__layer';
+      introMediaEl.appendChild(el);
+      return el;
+    });
+    const introFlash = [null, null];
+    let introFront = 0;
+    let introRetire = null;
+
+    function paintIntro(i, immediate) {
+      introAt = i;
+      introNames.forEach((el, n) => el.classList.toggle('selected', n === i));
+
+      const back = immediate ? introFront : 1 - introFront;
+      clearTimeout(introRetire);
+      clearInterval(introFlash[back]);
+
+      // Same builder the case study uses, so a project whose hero flashes
+      // between several images flashes here too, at the same 700ms.
+      const frames = buildHero(introLayers[back], D.projects[i]);
+      introFlash[back] = frames.length > 1 ? cycle(frames) : null;
+
+      if (immediate) {
+        introLayers[back].classList.add('selected');
+        return;
+      }
+
+      const front = introFront;
+      introFront = back;
+      // Both layers move together — that overlap is the whole effect.
+      introLayers[back].classList.add('selected');
+      introLayers[front].classList.remove('selected');
+      // Only stop the outgoing flash once it has actually faded away.
+      introRetire = setTimeout(() => {
+        clearInterval(introFlash[front]);
+        introFlash[front] = null;
+        introLayers[front].textContent = '';
+      }, INTRO_FADE);
+    }
+
+    function enterProject(i) {
+      clearInterval(introTimer);
+      introFlash.forEach(clearInterval);
+      clearTimeout(introRetire);
+      introTimer = null;
+      introEl.hidden = true;
+      wrapperEl.classList.remove('is-intro');
+      select(i, false);
+    }
+
+    introMediaEl.addEventListener('click', () => enterProject(introAt));
+
+    function startIntro() {
+      wrapperEl.classList.add('is-intro');
+      introEl.hidden = false;
+      paintIntro(0, true);
+      introTimer = setInterval(() => {
+        if (!document.hidden) paintIntro((introAt + 1) % D.projects.length);
+      }, INTRO_HOLD);
+    }
+
+    // Deep-link support: /design#chaiwala skips the intro and opens that project
     const fromHash = D.projects.findIndex(p => '#' + p.key === window.location.hash);
-    select(fromHash >= 0 ? fromHash : 0, false);
+    if (fromHash >= 0) select(fromHash, false);
+    else { select(0, false); startIntro(); }
   </script>
 
 </body>
