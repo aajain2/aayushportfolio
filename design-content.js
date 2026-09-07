@@ -71,11 +71,6 @@ const DESIGN = {
       scroller: '/design/arcade-careers-page.jpg',
       gallery: ['/design/arcade-cyanotype.jpg'],
       video: '/design/arcade-reel.mp4',
-      closer: [
-        '/design/arcade-gallery.jpg',
-        '/design/arcade-prompt.svg',
-        '/design/arcade-card.svg',
-      ],
       // Sits between the reel and the closer: the waitlist flow cycling on
       // the left, a note in the middle, and the campaign frame on the right.
       midRows: [
@@ -110,6 +105,19 @@ const DESIGN = {
           items: [
             { image: '/design/arcade-ig-bucket.svg', ratio: '1209 / 1512' },
             { image: '/design/arcade-ig-dream.svg', ratio: '1080 / 1350' },
+          ],
+        },
+        // Was the closer row; a row so the last cell can carry a note.
+        {
+          alignHeights: true,
+          items: [
+            { image: '/design/arcade-gallery.jpg', ratio: '2048 / 1194' },
+            { image: '/design/arcade-prompt.svg', ratio: '840 / 840' },
+            {
+              ratio: '640 / 920',
+              heading: 'Rings',
+              text: 'Placeholder description for the Arcade ring work.',
+            },
           ],
         },
       ],
@@ -500,7 +508,7 @@ const DESIGN = {
     {
       key: 'fine-art',
       title: 'Fine Art',
-      description: 'Exhibited at Memphis International Airport, sold to Gus’s Fried Chicken',
+      description: 'Exhibited at Pratt, Memphis Airport, sold to Gus’s Fried Chicken',
       icon: '/design/fine-art-icon.jpg',
       media: [],
       intro: '',

@@ -1,3 +1,25 @@
 {
-  "cleanUrls": true
+  "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/art",
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/artwork",
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/art.html",
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/artwork.html",
+      "destination": "/",
+      "permanent": false
+    }
+  ]
 }

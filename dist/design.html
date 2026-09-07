@@ -275,6 +275,9 @@
     .nav__cards { display: flex; flex-flow: column; row-gap: 8px; }
 
     .nav__card { pointer-events: none; }
+    /* Cards past the foot of the nav fold into a stack, so it reads as
+       "there is more below" rather than just clipping. */
+    .nav__card__inner { transform-origin: 50% 100%; will-change: transform; }
 
     .nav__card__inner {
       position: relative;
@@ -630,7 +633,7 @@
     @property --start2 { syntax: '<color>'; inherits: true; initial-value: #343434; }
     @property --end2 { syntax: '<color>'; inherits: true; initial-value: #1c1c1c; }
   </style>
-  <script type="module" crossorigin src="/assets/design-CLMy8Zhc.js"></script>
+  <script type="module" crossorigin src="/assets/design-BK_gUX0f.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
 </head>
 <body>

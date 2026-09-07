@@ -275,6 +275,9 @@
     .nav__cards { display: flex; flex-flow: column; row-gap: 8px; }
 
     .nav__card { pointer-events: none; }
+    /* Cards past the foot of the nav fold into a stack, so it reads as
+       "there is more below" rather than just clipping. */
+    .nav__card__inner { transform-origin: 50% 100%; will-change: transform; }
 
     .nav__card__inner {
       position: relative;
@@ -792,6 +795,49 @@
       return card;
     });
 
+    // ===== Folded card stack =====
+    // The nav scrolls inside its own sticky column. Any card that would run
+    // past the bottom is pinned there instead, each one a little smaller and a
+    // little lower than the one in front, so the overflow reads as a deck.
+    const navEl = document.querySelector('.nav');
+    const PEEK = 10;     // how far each folded card shows below the one above
+    const SHRINK = 0.05; // scale lost per card of depth
+    const MAX_DEPTH = 4;
+
+    function foldCards() {
+      const inners = cardsEl.querySelectorAll('.nav__card__inner');
+      if (window.matchMedia('(max-width: 768px)').matches) {
+        inners.forEach(el => { el.style.transform = ''; });
+        return;
+      }
+      const navBottom = navEl.getBoundingClientRect().bottom;
+      // Measure the wrapper, not the inner: the inner is the thing being
+      // transformed, so measuring it would feed its own offset back in.
+      cardsEl.querySelectorAll('.nav__card').forEach(card => {
+        const el = card.querySelector('.nav__card__inner');
+        if (!el) return;
+        const r = card.getBoundingClientRect();
+        // where this card would sit if it were the last fully visible one
+        const over = r.top - (navBottom - r.height);
+        if (over <= 0) {
+          el.style.transform = '';
+          return;
+        }
+        const depth = Math.min(over / r.height, MAX_DEPTH);
+        // The front card of the stack stops short of the bottom, and each card
+        // behind it ends a little lower, so they peek out from underneath.
+        const bottom = navBottom - (MAX_DEPTH - depth) * PEEK;
+        const scale = Math.max(1 - depth * SHRINK, 0.78);
+        el.style.transform =
+          'translateY(' + (bottom - r.bottom).toFixed(2) + 'px) scale(' + scale.toFixed(3) + ')';
+      });
+    }
+
+    navEl.addEventListener('scroll', () => requestAnimationFrame(foldCards), { passive: true });
+    window.addEventListener('resize', foldCards);
+    new ResizeObserver(foldCards).observe(cardsEl);
+    foldCards();
+
     // ===== Content panel =====
     const heroEl = document.getElementById('hero');
     const textEl = document.getElementById('case-text');
@@ -1112,8 +1158,14 @@
 
       restart();
 
-      if (scroll && window.matchMedia('(max-width: 768px)').matches) {
-        document.querySelector('.content').scrollIntoView({ behavior: 'smooth' });
+      // A newly picked tab starts at the top of its own page, rather than
+      // leaving you wherever the previous (often much longer) tab was scrolled.
+      if (scroll) {
+        if (window.matchMedia('(max-width: 768px)').matches) {
+          document.querySelector('.content').scrollIntoView({ behavior: 'smooth' });
+        } else {
+          window.scrollTo({ top: 0 });
+        }
       }
     }
 
