@@ -851,7 +851,6 @@
     aboutLink.href = D.about.url;
     aboutLink.textContent = D.about.linkLabel;
     aboutP.appendChild(aboutLink);
-    aboutP.appendChild(document.createTextNode('.'));
     aboutInfo.append(aboutH2, aboutP);
     aboutInner.appendChild(aboutInfo);
 
@@ -1369,7 +1368,7 @@
       const el = document.createElement('button');
       el.type = 'button';
       el.className = 'intro__name';
-      el.textContent = proj.title;
+      el.textContent = proj.listTitle || proj.title;
       el.addEventListener('click', () => enterProject(i));
       introNamesEl.appendChild(el);
       return el;

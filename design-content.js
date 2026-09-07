@@ -213,6 +213,8 @@ const DESIGN = {
     {
       key: 'chaiwala',
       title: 'CHAIWALA',
+      // How the homepage roster lists it; the nav card keeps the caps lockup.
+      listTitle: 'Chaiwala',
       description: 'Brand and experience design for my South Asian teahouse popup series',
       icon: '/design/chaiwala-icon.png',
       // The event photographs, cycling on top; the same set closes the page.
