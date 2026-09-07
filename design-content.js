@@ -433,7 +433,7 @@ const DESIGN = {
     },
     {
       key: 'photography',
-      title: 'Photography',
+      title: 'Photos',
       description: 'Creative direction and photography for my friends’ shoots',
       icon: '/design/photography-icon.jpg',
       // Every landscape frame in the set, cycling on top.
@@ -543,13 +543,13 @@ const DESIGN = {
         [
           { image: '/design/fine-art-herself-a-stranger-within.jpg', ratio: '3128 / 2398' },
         ],
-        // The print chapter. Flux arrived as a diptych in a single file; its
-        // two panels are separate cards here, levelled against Drenched.
+        // The print chapter. Flux is one work whose two panels belong to each
+        // other, so it stays a single card — splitting it put a gap and two
+        // rounded edges through the middle of the piece.
         {
           alignHeights: true,
           items: [
-            { image: '/design/fine-art-flux-a.jpg', ratio: '342 / 500' },
-            { image: '/design/fine-art-flux-b.jpg', ratio: '348 / 500' },
+            { image: '/design/fine-art-flux.jpg', ratio: '691 / 500' },
             { image: '/design/fine-art-drenched.jpg', ratio: '672 / 500' },
           ],
         },
@@ -587,7 +587,7 @@ const DESIGN = {
     },
     {
       key: 'stanford-dorm-room',
-      title: 'Dorm Room',
+      title: 'Dorm',
       description: 'Turning my college dorm into an inviting hosting space',
       icon: '/design/dorm-icon.jpg',
       // The one wide frame in the set opens the page on its own; the four

@@ -114,67 +114,42 @@
     @media (max-width: 768px) {
       body { font-size: 13.5px; letter-spacing: -0.31px; }
       .display { font-size: 16px; letter-spacing: 0.25px; line-height: 130%; }
-      .nav__clock { font-size: 23px; letter-spacing: 0.45px; line-height: 27px; }
     }
 
-    /* ===== SHELL ===== */
-    .wrapper { display: flex; }
-    .content { flex: auto; min-width: 0; }
-
-    /* ===== NAV (left column) ===== */
-    .nav {
-      flex-shrink: 0;
+    /* ===== PROJECT SHELL ===== */
+    .wrapper.is-loading { opacity: 0; }
+    :root { --project-header-height: 56px; }
+    .content { min-width: 0; }
+    .wrapper:not(.is-intro) .content { padding: 0 var(--pd2) var(--pd2); }
+    .project-header {
       position: sticky;
       top: 0;
-      max-height: 100svh;
-      overflow-y: auto;
+      z-index: 30;
+      height: var(--project-header-height);
       padding: var(--pd2);
-      padding-right: 0;
-      scrollbar-width: none;
-    }
-    .nav::-webkit-scrollbar { display: none; }
-
-    .nav__inner {
-      width: clamp(368px, calc(346.667px + 0.0277778 * 100vw), 400px);
-    }
-
-    .nav__top__inner { display: flex; flex-flow: column; }
-
-    .nav__top__top {
       display: flex;
-      flex: 1;
       align-items: center;
       justify-content: space-between;
+      gap: var(--pd2);
+      background: var(--color-black);
+      transition: background-color 0.5s;
     }
-
-    .nav__top__top__right { display: flex; position: relative; }
-
-    .nav__top__middle {
-      display: flex;
-      flex: auto;
-      flex-flow: column;
-      align-items: center;
-      row-gap: 48px;
-      padding: 74px 0;
+    .wrapper.is-intro .project-header { display: none; }
+    .project-header__right { display: flex; align-items: center; gap: var(--pd2); }
+    button:focus-visible, a:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 5px;
     }
-
-    .nav__wordmark {
-      cursor: pointer;
-      margin: -10px;
-      padding: 10px;
-      font-family: var(--font-display);
-      font-size: 27px;
-      line-height: 1;
-      letter-spacing: 0.2px;
-      white-space: nowrap;
-      transition: color 0.5s;
+    .hero.media-transition {
+      position: fixed;
+      z-index: 20;
+      pointer-events: none;
+      transform-origin: top left;
+      margin: 0;
     }
-
-    .nav__clock {
-      cursor: default;
-      text-align: center;
-      font-variant-numeric: tabular-nums;
-    }
+    .wrapper.is-transitioning { pointer-events: none; }
+    .wrapper.is-transitioning #hero { visibility: hidden; }
+    .wrapper.is-transitioning .page__container > :not(.hero):not(.intro) { opacity: 0; }
 
     /* ===== BUTTONS ===== */
     .page__button {
@@ -182,189 +157,26 @@
       align-items: center;
       justify-content: center;
       height: 40px;
-      padding: 0 16px;
-      column-gap: var(--pd2);
-      border-radius: 40px;
-      background-color: var(--color-gray10);
+      font-family: 'Kalice Trial', serif;
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.18;
+      letter-spacing: -0.005em;
+      white-space: nowrap;
       cursor: pointer;
-      transition: background-color 0.5s;
+      transition: opacity 0.3s;
     }
-    .page__button:hover { background-color: var(--color-gray10-hover); }
+    .page__button:hover { opacity: 0.5; }
 
-    .page__button__icon__back {
-      flex-shrink: 0;
-      width: 7px;
-      height: 7px;
-      border: 1.5px solid var(--color-white);
-      border-bottom: none;
-      border-right: none;
-      transform: rotate(-45deg);
-      transition: border-color 0.5s;
+    @media (max-width: 383px) {
+      :root { --project-header-height: 104px; }
+      .project-header { flex-wrap: wrap; }
+      .project-header__right { margin-left: auto; }
     }
-
-    /* Light-mode toggle */
-    .nav__light__mode {
-      width: 62px;
-      height: 38px;
-      padding: 3px;
-      border-radius: 38px;
-      background-color: var(--color-toggle);
-      cursor: pointer;
-      transition: background-color 0.5s, transform 0.5s;
-      will-change: transform;
-    }
-    .nav__light__mode:hover { background-color: var(--color-toggle-hover); }
-    .nav__top__top__right.has-gallery .nav__light__mode { transform: translateX(-42px); }
-
-    .nav__light__mode__knob {
-      aspect-ratio: 1;
-      height: 100%;
-      border-radius: 50%;
-      background-color: var(--color-gray10);
-      transition: background-color 0.5s, transform 0.5s;
-    }
-    html.dark .nav__light__mode__knob { transform: translateX(23px); }
-    html.light .nav__light__mode__knob { background-color: var(--color-black); }
-
-    /* Gallery play/pause */
-    .nav__gallery__mode {
-      position: absolute;
-      top: 0;
-      right: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background-color: var(--color-toggle);
-      cursor: pointer;
-      transition: background-color 0.5s, opacity 0.3s 0.25s;
-      will-change: opacity;
-    }
-    .nav__gallery__mode:hover { background-color: var(--color-toggle-hover); }
-    .nav__top__top__right:not(.has-gallery) .nav__gallery__mode {
-      opacity: 0;
-      pointer-events: none;
-      transition: background-color 0.5s, opacity 0.2s;
-    }
-
-    .nav__gallery__mode__play {
-      width: 0;
-      height: 0;
-      border-style: solid;
-      border-width: 4.5px 0 4.5px 7.5px;
-      border-color: transparent transparent transparent var(--color-white);
-      transform: translateX(1px);
-      transition: border-color 0.5s;
-    }
-    .nav__gallery__mode.playing .nav__gallery__mode__play {
-      width: 7px;
-      height: 9px;
-      border: none;
-      transform: none;
-      background-color: var(--color-white);
-      -webkit-mask: linear-gradient(#000 0 0) left / 2.5px 100% no-repeat,
-                    linear-gradient(#000 0 0) right / 2.5px 100% no-repeat;
-              mask: linear-gradient(#000 0 0) left / 2.5px 100% no-repeat,
-                    linear-gradient(#000 0 0) right / 2.5px 100% no-repeat;
-      transition: background-color 0.5s;
-    }
-
-    /* ===== CARD STACK ===== */
-    .nav__cards {
-      display: flex;
-      flex-flow: column;
-      row-gap: 8px;
-      /* Trailing space so the last card can clear the fold zone. The fold
-         starts half a card early, so this must exceed h/2 (~49px) minus the
-         nav's own bottom padding, or the stack never flattens at the end. */
-      padding-bottom: 60px;
-    }
-
-    .nav__card { pointer-events: none; }
-    /* Cards past the foot of the nav fold into a stack, so it reads as
-       "there is more below" rather than just clipping. */
-    .nav__card__inner { transform-origin: 50% 100%; will-change: transform, opacity; }
-
-    .nav__card__inner {
-      position: relative;
-      display: flex;
-      min-height: 98px;
-      padding: 16px;
-      column-gap: 12px;
-      border-radius: 10px;
-      overflow: hidden;
-      pointer-events: auto;
-      background-color: var(--color-card);
-      transition: background-color 0.5s;
-      width: 100%;
-      text-align: left;
-      cursor: pointer;
-    }
-
-    .nav__card__inner::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-color: var(--color-gray10);
-      opacity: 0;
-      transition: opacity 0.5s;
-      pointer-events: none;
-    }
-    .nav__card__inner:hover::after { opacity: 1; }
-    .nav__card.selected .nav__card__inner::after { opacity: 1; }
-
-    .nav__card__img {
-      position: relative;
-      flex-shrink: 0;
-      width: 65px;
-      height: 65px;
-      border-radius: 10px;
-      overflow: hidden;
-      background-color: var(--color-gray10);
-    }
-    .nav__card__img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-
-    .nav__card__bg {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--font-display);
-      font-size: 20px;
-      letter-spacing: 0.45px;
-      color: var(--color-gray50);
-      background: radial-gradient(76.17% 129.78% at 23.83% 65.4%, var(--start2) 0, var(--end2) 100%);
-      transition: --start2 0.5s, --end2 0.5s;
-    }
-
-    .nav__card__info { position: relative; min-width: 0; }
-    .nav__card__info h2 { color: var(--color-white); }
-    .nav__card__info p { color: var(--color-gray50); }
-
-    /* About card */
-    .nav__card__about .nav__card__inner {
-      cursor: default;
-      align-items: flex-start;
-      height: auto;
-    }
-    .nav__card__about .nav__card__inner::after { display: none; }
-    .nav__card__about .nav__card__info h2 { margin-bottom: 2px; }
-
-    .nav__card__about__link {
-      color: var(--color-gray50);
-      pointer-events: auto;
-      cursor: pointer;
-      transition: color 0.3s ease;
-    }
-    .nav__card__about__link:hover { color: var(--color-white); }
-
 
     /* ===== CONTENT (right column) ===== */
     .page__container {
-      padding: var(--pd2);
+      padding: 0;
       opacity: 1;
       transition: opacity 0.45s cubic-bezier(0.25, 0.1, 0.25, 1);
     }
@@ -391,6 +203,11 @@
       border-radius: var(--br2);
     }
 
+    .wrapper:not(.is-intro) #hero {
+      height: calc(100svh - var(--project-header-height) - var(--pd2));
+      aspect-ratio: auto;
+    }
+
     .hero__slide {
       position: absolute;
       inset: 0;
@@ -406,6 +223,7 @@
       height: calc(100% + 6px);
       margin: -3px;
       object-fit: cover;
+      object-position: center center;
       display: block;
     }
 
@@ -565,15 +383,21 @@
     .case__study__row__frame { position: absolute; inset: 0; }
     .case__study__row__frame:not(.selected) { visibility: hidden; }
 
+    /* Descriptor cards, measured off Porto Rocha: a flat 16px buffer on every
+       side, text set from the top left, and no fixed ratio — the card takes
+       the height its text needs, so nothing is ever cut off or left to
+       scroll. It still stretches to the row when there is room to spare. */
     .case__study__row__text {
       display: flex;
       flex-flow: column;
-      align-items: center;
-      justify-content: center;
+      align-items: flex-start;
+      justify-content: flex-start;
+      align-self: stretch;
+      aspect-ratio: auto;
       row-gap: var(--pd2);
-      padding: var(--pd) clamp(var(--pd), 6%, 32px);
-      text-align: center;
-      overflow-y: auto;
+      padding: var(--pd);
+      text-align: left;
+      overflow: visible;
       background-color: var(--color-gray10);
       transition: background-color 0.5s;
     }
@@ -613,7 +437,6 @@
        named down the left with one lit, and the media cards cross-fading
        beside it. The whole case-study layout, nav column included, stays out
        of the way until they click in. */
-    .wrapper.is-intro .nav { display: none; }
     .wrapper.is-intro .page__container > *:not(.intro) { display: none; }
     .wrapper.is-intro .page__container { padding: 0; }
 
@@ -622,25 +445,25 @@
 
     .intro {
       display: grid;
-      grid-template-columns: auto minmax(0, 620px);
+      grid-template-columns: auto minmax(0, 43.0556vw);
       justify-content: center;
-      /* 172px of clear space between the names and the media at 1440, which
-         is what play.studio leaves between its list and its block. */
-      gap: clamp(40px, 12vw, 180px);
+      /* Preserve the 1440px composition as the viewport grows. */
+      gap: 12vw;
       align-items: center;
       min-height: 100svh;
       /* Held in from the edges: the pair sits as a block in the middle rather
          than stretching the full width. */
-      padding: var(--pd) clamp(var(--pd), 8vw, 160px);
+      padding: var(--pd) 8vw;
     }
 
     .intro__names { display: flex; flex-flow: column; align-items: flex-start; }
+    .intro__name { white-space: nowrap; }
 
     .intro__name {
       font-family: var(--font-display);
-      font-size: clamp(24px, 2.7vw, 40px);
+      font-size: max(24px, 2.7vw);
       line-height: 1.28;
-      letter-spacing: 0.2px;
+      letter-spacing: 0.005em;
       text-align: left;
       color: var(--color-gray30);
       cursor: pointer;
@@ -649,22 +472,32 @@
     .intro__name.selected,
     .intro__name:hover { color: var(--color-white); }
 
+    /* Hover takes priority over the rotating preview's selected name. */
+    .intro__names:has(.intro__name:hover) .intro__name {
+      color: var(--color-gray30);
+      transition: none;
+    }
+    .intro__names:has(.intro__name:hover) .intro__name:hover {
+      color: var(--color-white);
+    }
+
     /* The card itself is a .hero, so it inherits that shape and behaviour
-       exactly. Hovering dims it back toward the page and pushes in slightly —
-       the dim is the part that reads at a glance, the push is the polish. */
-    .intro__media {
-      cursor: pointer;
-      transition: opacity 0.35s ease;
+       exactly. Hover is the same tint the nav cards use — an overlay rather
+       than opacity on the card, because the card's own opacity would multiply
+       against the layers cross-fading inside it and the tint would drift as
+       they moved. */
+    .intro__media { cursor: pointer; display: block; text-align: inherit; }
+    .intro__media::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background-color: var(--color-gray10);
+      opacity: 0;
+      transition: opacity 0.4s;
+      pointer-events: none;
     }
-    .intro__media:hover { opacity: 0.7; }
-    .intro__media .hero__slide img {
-      transition: transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1);
-    }
-    .intro__media:hover .hero__slide img { transform: scale(1.03); }
-    @media (prefers-reduced-motion: reduce) {
-      .intro__media .hero__slide img { transition: none; }
-      .intro__media:hover .hero__slide img { transform: none; }
-    }
+    .intro__media:hover::after { opacity: 1; }
 
     /* Two stacked layers cross-fade, both moving at once, rather than the
        card blanking between projects. Timing taken from play.studio: 1.5s on
@@ -695,47 +528,15 @@
       .intro__name { font-size: clamp(22px, 6vw, 32px); }
     }
 
-    /* ===== NARROW (still a sidebar) ===== */
-    /* Porto Rocha runs two breakpoints, not one: at 768px the type and the
-       card stack tighten while the layout stays two columns, and only below
-       656px does the nav drop above the content. */
     @media (max-width: 768px) {
-      .nav__top__middle { row-gap: 24px; padding: 56px 0; }
-      .nav__wordmark { font-size: 22px; }
-
-      .nav__cards { row-gap: 6px; }
-      .nav__card__inner { min-height: 80px; padding: 12px; column-gap: 9px; }
-      .nav__card__img { width: 56px; height: 56px; }
-      .nav__card__about .nav__card__inner { height: auto; }
-
-      .nav__light__mode { width: 55px; height: 33px; }
-      html.dark .nav__light__mode__knob { transform: translateX(22px); }
-      .nav__top__top__right.has-gallery .nav__light__mode { transform: translateX(-37px); }
-      .nav__gallery__mode { width: 33px; height: 33px; }
-      .nav__gallery__mode__play { border-width: 3.5px 0 3.5px 5.5px; }
-
       .case__study__text { padding: 56px var(--pd); }
       .case__study__gallery,
       .case__study__sheets { grid-template-columns: 1fr; }
       .case__study__closer__item { flex: 1 1 100%; }
       .case__study__row { grid-template-columns: 1fr; }
     }
-
-    /* ===== STACKED ===== */
-    /* The nav leaves the sidebar and sits above the content. Porto Rocha
-       drops the container's top gutter to 2px here, since the nav's own 8px
-       bottom padding already separates the two. */
-    @media (max-width: 656px) {
-      .wrapper { flex-flow: column; }
-
-      .nav {
-        position: static;
-        max-height: none;
-        padding-right: var(--pd2);
-      }
-      .nav__inner { width: auto; }
-
-      .page__container { padding-top: 2px; }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition-duration: 0s !important; }
     }
 
     @property --start2 { syntax: '<color>'; inherits: true; initial-value: #343434; }
@@ -744,47 +545,21 @@
 </head>
 <body>
 
-  <audio id="bg-audio" src="/song.mp3" loop></audio>
+  <main class="wrapper is-loading" id="wrapper">
 
-  <main class="wrapper" id="wrapper">
-
-    <div class="nav">
-      <div class="nav__inner">
-
-        <header class="nav__top">
-          <div class="nav__top__inner">
-            <div class="nav__top__top">
-              <a class="page__button" id="back-btn" href="/#content">
-                <div class="page__button__icon__back"></div>
-                <p id="back-label">Back</p>
-              </a>
-              <div class="nav__top__top__right has-gallery" id="nav-actions">
-                <div class="nav__light__mode" id="theme-toggle" role="button" aria-label="Toggle light mode">
-                  <div class="nav__light__mode__knob"></div>
-                </div>
-                <div class="nav__gallery__mode" id="audio-toggle" role="button" aria-label="Play music">
-                  <div class="nav__gallery__mode__play"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="nav__top__middle">
-              <a class="nav__wordmark" href="/design"><h1 id="wordmark">Aayush Jain</h1></a>
-              <div class="nav__clock display"><p id="clock"></p></div>
-            </div>
-          </div>
-        </header>
-
-        <nav class="nav__cards" id="nav-cards"></nav>
-
+    <header class="project-header">
+      <a class="page__button" id="back-btn" href="/design">{back to all projects}</a>
+      <div class="project-header__right">
+        <a class="page__button" href="/#content">{home}</a>
+        <a class="page__button" id="next-btn" href="/design">{next project}</a>
       </div>
-    </div>
+    </header>
 
     <div class="content">
       <div class="page__container" id="page-container">
         <section class="intro" id="intro" hidden>
-          <div class="intro__names" id="intro-names"></div>
-          <div class="page__card hero intro__media" id="intro-media"></div>
+          <nav class="intro__names" id="intro-names" aria-label="All projects"></nav>
+          <button type="button" class="page__card hero intro__media" id="intro-media" aria-label="Open selected project"></button>
         </section>
 
         <div class="page__card hero" id="hero"></div>
@@ -807,25 +582,6 @@
     import D from './design-content.js';
 
     document.title = D.siteTitle;
-    document.getElementById('wordmark').textContent = D.wordmark;
-    document.getElementById('back-label').textContent = D.backLabel;
-    document.getElementById('back-btn').href = D.backUrl;
-
-    // ===== Clock =====
-    const clockEl = document.getElementById('clock');
-    function tickClock() {
-      const now = new Date();
-      const day = now.toLocaleDateString('en-US', {
-        weekday: 'long', month: 'long', day: 'numeric', timeZone: D.timeZone,
-      });
-      const time = now.toLocaleTimeString('en-GB', {
-        hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false, timeZone: D.timeZone,
-      });
-      clockEl.innerHTML = day + '<br>' + D.city + ', ' + time;
-    }
-    tickClock();
-    setInterval(tickClock, 1000);
-
     // ===== Theme =====
     // Light is the default; only an explicit choice made here overrides it.
     // The key is versioned because the site used to open dark: anyone still
@@ -837,132 +593,6 @@
     localStorage.removeItem('designTheme');
 
     if (localStorage.getItem(THEME_KEY) === 'dark') root.classList.replace('light', 'dark');
-
-    document.getElementById('theme-toggle').addEventListener('click', () => {
-      const light = root.classList.toggle('light');
-      root.classList.toggle('dark', !light);
-      localStorage.setItem(THEME_KEY, light ? 'light' : 'dark');
-    });
-
-    // ===== Card stack =====
-    const cardsEl = document.getElementById('nav-cards');
-
-    // Intro card
-    const aboutCard = document.createElement('div');
-    aboutCard.className = 'nav__card nav__card__about';
-    const aboutInner = document.createElement('div');
-    aboutInner.className = 'nav__card__inner';
-    const aboutInfo = document.createElement('div');
-    aboutInfo.className = 'nav__card__info';
-    const aboutH2 = document.createElement('h2');
-    aboutH2.textContent = D.about.heading;
-    const aboutP = document.createElement('p');
-    aboutP.textContent = D.about.text;
-    // "Learn more" closes the sentence as a link rather than a separate button
-    const aboutLink = document.createElement('a');
-    aboutLink.className = 'nav__card__about__link';
-    aboutLink.href = D.about.url;
-    aboutLink.textContent = D.about.linkLabel;
-    aboutP.appendChild(aboutLink);
-    aboutInfo.append(aboutH2, aboutP);
-    aboutInner.appendChild(aboutInfo);
-
-    aboutCard.appendChild(aboutInner);
-    cardsEl.appendChild(aboutCard);
-
-    // Project cards — z-index descends so each card stacks under the one above
-    const cardEls = D.projects.map((proj, i) => {
-      const card = document.createElement('div');
-      card.className = 'nav__card';
-      card.style.zIndex = String(D.projects.length - i);
-
-      const inner = document.createElement('button');
-      inner.type = 'button';
-      inner.className = 'nav__card__inner';
-
-      const img = document.createElement('div');
-      img.className = 'nav__card__img';
-      if (proj.icon) {
-        const el = document.createElement('img');
-        el.src = proj.icon;
-        el.alt = '';
-        el.width = 65;
-        el.height = 65;
-        el.loading = i < 4 ? 'eager' : 'lazy';
-        img.appendChild(el);
-      } else {
-        const bg = document.createElement('div');
-        bg.className = 'nav__card__bg';
-        bg.textContent = proj.title.charAt(0).toUpperCase();
-        img.appendChild(bg);
-      }
-      inner.appendChild(img);
-
-      const info = document.createElement('div');
-      info.className = 'nav__card__info';
-      const h2 = document.createElement('h2');
-      h2.textContent = proj.title;
-      const p = document.createElement('p');
-      p.textContent = proj.description;
-      info.append(h2, p);
-      inner.appendChild(info);
-
-      inner.addEventListener('click', () => select(i, true));
-
-      card.appendChild(inner);
-      cardsEl.appendChild(card);
-      return card;
-    });
-
-    // ===== Card fold =====
-    // Porto Rocha's deck, measured off their site rather than guessed. As a
-    // card reaches the foot of the nav's visible box it lifts, scales toward
-    // half size and fades out, so the stack folds into itself instead of
-    // clipping. Every constant falls out of the card pitch: the lift is two
-    // cards' worth, the fold starts half a card early, and the fade covers the
-    // last 30% of the travel. Reproduces their curve to within 0.005px.
-    const navEl = document.querySelector('.nav');
-    const FOLD_FADE = 0.3;
-    let foldQueued = false;
-
-    function foldCards() {
-      foldQueued = false;
-      const unit = cardEls[0] && cardEls[0].querySelector('.nav__card__inner');
-      if (!unit) return;
-
-      const h = unit.offsetHeight;
-      const pitch = h + (parseFloat(getComputedStyle(cardsEl).rowGap) || 0);
-      const start = h / 2;
-      const lift = pitch * 2;
-      const range = lift + start;
-      // The nav is its own scroll box on desktop and part of the page once
-      // stacked, so fold against whichever edge the reader actually sees.
-      const foot = Math.min(navEl.getBoundingClientRect().bottom, window.innerHeight);
-
-      cardsEl.querySelectorAll('.nav__card').forEach(card => {
-        const el = card.querySelector('.nav__card__inner');
-        if (!el) return;
-        // Measure the wrapper, not the inner: the inner carries the transform,
-        // so measuring it would feed its own offset back in.
-        const gap = foot - card.getBoundingClientRect().bottom;
-        const u = Math.min(1, Math.max(0, (start - gap) / range));
-        el.style.transform =
-          'translateY(' + (-lift * u).toFixed(2) + 'px) scale(' + (1 - 0.5 * u).toFixed(4) + ')';
-        el.style.opacity = Math.min(1, Math.max(0, (1 - u) / FOLD_FADE)).toFixed(4);
-      });
-    }
-
-    function queueFold() {
-      if (foldQueued) return;
-      foldQueued = true;
-      requestAnimationFrame(foldCards);
-    }
-
-    navEl.addEventListener('scroll', queueFold, { passive: true });
-    window.addEventListener('scroll', queueFold, { passive: true });
-    window.addEventListener('resize', queueFold);
-    new ResizeObserver(queueFold).observe(cardsEl);
-    foldCards();
 
     // ===== Content panel =====
     const heroEl = document.getElementById('hero');
@@ -1055,7 +685,7 @@
 
     // Hard cuts at Porto Rocha's 700ms, held still while the tab is hidden.
     function cycle(frames) {
-      let i = 0;
+      let i = Math.max(0, frames.findIndex(frame => frame.classList.contains('selected')));
       return setInterval(() => {
         if (document.hidden) return;
         frames[i].classList.remove('selected');
@@ -1148,7 +778,7 @@
 
     const panelEl = document.getElementById('page-container');
 
-    // Fade the panel up whenever its contents are swapped, so a new tab eases
+    // Fade the panel up whenever its contents are swapped, so a project eases
     // in rather than snapping straight to the new images.
     function fadeInPanel() {
       panelEl.classList.add('is-entering');
@@ -1161,10 +791,15 @@
       if (i === current) return;
       current = i;
       const proj = D.projects[i];
-      fadeInPanel();
+      const nextProject = D.projects[(i + 1) % D.projects.length];
+      nextBtn.href = '/design#' + nextProject.key;
+      if (!wrapperEl.classList.contains('is-loading')) fadeInPanel();
 
-      cardEls.forEach((c, n) => c.classList.toggle('selected', n === i));
-      history.replaceState(null, '', '#' + proj.key);
+      introNames.forEach((el, n) => {
+        el.classList.toggle('selected', n === i);
+        if (n === i) el.setAttribute('aria-current', 'page');
+        else el.removeAttribute('aria-current');
+      });
 
       // Hero slideshow
       slides = buildHero(heroEl, proj);
@@ -1202,7 +837,7 @@
       // hero `media` when the two should differ.
       galleryEl.textContent = '';
       if (proj.scroller) galleryEl.appendChild(makeScroller(proj.scroller));
-      const tiles = proj.gallery || (proj.scroller ? [] : media);
+      const tiles = proj.gallery || (proj.scroller ? [] : mediaOf(proj));
       tiles.forEach((src, n) => {
         const item = document.createElement('figure');
         item.className = 'page__card case__study__gallery__item';
@@ -1306,62 +941,13 @@
 
       restart();
 
-      // A newly picked tab starts at the top of its own page, rather than
-      // leaving you wherever the previous (often much longer) tab was scrolled.
-      if (scroll) {
-        if (window.matchMedia('(max-width: 768px)').matches) {
-          document.querySelector('.content').scrollIntoView({ behavior: 'smooth' });
-        } else {
-          window.scrollTo({ top: 0 });
-        }
-      }
+      if (scroll) window.scrollTo({ top: 0, behavior: 'instant' });
     }
 
     function restart() {
       clearInterval(timer);
       if (slides.length > 1) timer = cycle(slides);
     }
-
-    // Background music — same track and same localStorage keys as the homepage,
-    // so playback carries across pages in either direction.
-    const audio = document.getElementById('bg-audio');
-    const audioToggle = document.getElementById('audio-toggle');
-
-    function paintAudio() {
-      const on = !audio.paused;
-      audioToggle.classList.toggle('playing', on);
-      audioToggle.setAttribute('aria-label', on ? 'Pause music' : 'Play music');
-    }
-
-    if (localStorage.getItem('audioPlaying') === 'true') {
-      audio.currentTime = parseFloat(localStorage.getItem('audioTime')) || 0;
-      audio.play().then(paintAudio).catch(() => {});
-    }
-
-    audioToggle.addEventListener('click', () => {
-      if (audio.paused) {
-        audio.play();
-        localStorage.setItem('audioPlaying', 'true');
-      } else {
-        audio.pause();
-        localStorage.setItem('audioPlaying', 'false');
-      }
-      paintAudio();
-    });
-
-    audio.addEventListener('play', paintAudio);
-    audio.addEventListener('pause', paintAudio);
-
-    setInterval(() => {
-      if (!audio.paused) localStorage.setItem('audioTime', audio.currentTime);
-    }, 500);
-
-    window.addEventListener('beforeunload', () => {
-      localStorage.setItem('audioPlaying', String(!audio.paused));
-      localStorage.setItem('audioTime', audio.currentTime);
-    });
-
-    paintAudio();
 
     // ===== Intro =====
     // The homepage: names on the left, every project's media cross-fading on
@@ -1376,6 +962,7 @@
     const introMediaEl = document.getElementById('intro-media');
     let introAt = 0;
     let introTimer = null;
+    let hoveredIntro = -1;
 
     const introNames = D.projects.map((proj, i) => {
       const el = document.createElement('button');
@@ -1383,6 +970,18 @@
       el.className = 'intro__name';
       el.textContent = proj.listTitle || proj.title;
       el.addEventListener('click', () => enterProject(i));
+      el.addEventListener('pointerenter', event => {
+        if (event.pointerType === 'touch' || transitioning || !wrapperEl.classList.contains('is-intro')) return;
+        hoveredIntro = i;
+        clearInterval(introTimer);
+        introTimer = null;
+        if (introAt !== i) paintIntro(i);
+      });
+      el.addEventListener('pointerleave', () => {
+        if (hoveredIntro !== i) return;
+        hoveredIntro = -1;
+        if (!transitioning && wrapperEl.classList.contains('is-intro')) scheduleIntroRotation();
+      });
       introNamesEl.appendChild(el);
       return el;
     });
@@ -1399,8 +998,18 @@
     let introFront = 0;
     let introRetire = null;
 
-    function paintIntro(i, immediate) {
+    function restoreFrame(frames, project, src) {
+      const index = mediaOf(project).indexOf(src);
+      if (index < 0) return;
+      frames.forEach((slide, n) => {
+        slide.classList.toggle('selected', n === index);
+        if (n === index) slide.querySelector('img').src = src;
+      });
+    }
+
+    function paintIntro(i, immediate, frameSrc) {
       introAt = i;
+      introMediaEl.setAttribute('aria-label', 'Open ' + D.projects[i].title);
       introNames.forEach((el, n) => el.classList.toggle('selected', n === i));
 
       const back = immediate ? introFront : 1 - introFront;
@@ -1409,7 +1018,9 @@
 
       // Same builder the case study uses, so a project whose hero flashes
       // between several images flashes here too, at the same 700ms.
+      if (immediate) introLayers.forEach(el => el.classList.remove('selected'));
       const frames = buildHero(introLayers[back], D.projects[i]);
+      restoreFrame(frames, D.projects[i], frameSrc);
       introFlash[back] = frames.length > 1 ? cycle(frames) : null;
 
       if (immediate) {
@@ -1430,31 +1041,193 @@
       }, INTRO_FADE);
     }
 
-    function enterProject(i) {
+    const backBtn = document.getElementById('back-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let transitioning = false;
+    let pendingLocation = false;
+
+    function stopIntro() {
       clearInterval(introTimer);
       introFlash.forEach(clearInterval);
       clearTimeout(introRetire);
       introTimer = null;
-      introEl.hidden = true;
-      wrapperEl.classList.remove('is-intro');
-      select(i, false);
+    }
+
+    // A fixed copy carries the actual preview frame between the two layouts.
+    // Resize only the fixed copy so object-fit keeps the artwork proportional
+    // and crops it from the center as the expanded hero reaches its height cap.
+    async function morphMedia(source, target, changeLayout, after) {
+      if (transitioning) return;
+      transitioning = true;
+      const from = source.getBoundingClientRect();
+      const copy = source.cloneNode(true);
+      copy.removeAttribute('id');
+      copy.removeAttribute('aria-label');
+      copy.setAttribute('aria-hidden', 'true');
+      copy.classList.add('media-transition');
+      Object.assign(copy.style, {
+        left: from.left + 'px', top: from.top + 'px',
+        width: from.width + 'px', height: from.height + 'px',
+      });
+      changeLayout();
+      const to = target.getBoundingClientRect();
+      if (!reducedMotion.matches && from.width && to.width) {
+        document.body.appendChild(copy);
+        target.style.visibility = 'hidden';
+        wrapperEl.classList.add('is-transitioning');
+        const timing = { duration: 950, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' };
+        const mediaAnimation = copy.animate([
+          { transform: 'translate(0, 0)', width: from.width + 'px', height: from.height + 'px' },
+          { transform: `translate(${to.left - from.left}px, ${to.top - from.top}px)`, width: to.width + 'px', height: to.height + 'px' },
+        ], { ...timing, fill: 'forwards' });
+        if (wrapperEl.classList.contains('is-intro')) {
+          introNamesEl.animate([{ opacity: 0 }, { opacity: 1 }], timing);
+        }
+        await Promise.allSettled([mediaAnimation.finished]);
+        copy.remove();
+        target.style.visibility = '';
+        wrapperEl.classList.remove('is-transitioning');
+        if (!wrapperEl.classList.contains('is-intro')) {
+          [...panelEl.children].filter(el => el !== heroEl && el !== introEl).forEach(el => {
+            el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 350, easing: 'ease-out' });
+          });
+        }
+      }
+      transitioning = false;
+      after?.();
+      if (pendingLocation) {
+        pendingLocation = false;
+        followLocation();
+      }
+    }
+
+    function enterProject(i, updateHistory = true) {
+      if (transitioning) return;
+      if (!wrapperEl.classList.contains('is-intro')) {
+        select(i, true);
+        if (updateHistory && location.hash !== '#' + D.projects[i].key)
+          history.pushState(null, '', '#' + D.projects[i].key);
+        return;
+      }
+      stopIntro();
+      // A click on a different name should expand that project's artwork.
+      if (introAt !== i) paintIntro(i, true);
+      stopIntro();
+      const visibleFrame = introLayers[introFront].querySelector('.hero__slide.selected img');
+      const visibleSrc = visibleFrame?.getAttribute('src');
+      morphMedia(introMediaEl, heroEl, () => {
+        introEl.hidden = true;
+        wrapperEl.classList.remove('is-intro');
+        select(i, false);
+        clearInterval(timer);
+        // Keep the slideshow on the same frame throughout the expansion.
+        restoreFrame(slides, D.projects[i], visibleSrc);
+        window.scrollTo({ top: 0, behavior: 'instant' });
+        if (updateHistory) history.pushState(null, '', '#' + D.projects[i].key);
+      }, () => {
+        restart();
+        backBtn.focus({ preventScroll: true });
+      });
     }
 
     introMediaEl.addEventListener('click', () => enterProject(introAt));
 
-    function startIntro() {
+    function startIntro(i = 0, frameSrc, run = true) {
+      stopIntro();
       wrapperEl.classList.add('is-intro');
       introEl.hidden = false;
-      paintIntro(0, true);
-      introTimer = setInterval(() => {
+      introNames.forEach(el => el.removeAttribute('aria-current'));
+      introLayers.forEach(el => el.classList.remove('selected'));
+      paintIntro(i, true, frameSrc);
+      stopIntro();
+      if (run) resumeIntro();
+    }
+
+    function resumeIntro() {
+      stopIntro();
+      const frames = [...introLayers[introFront].querySelectorAll('.hero__slide')];
+      if (frames.length > 1) introFlash[introFront] = cycle(frames);
+      scheduleIntroRotation();
+    }
+
+    function scheduleIntroRotation() {
+      clearInterval(introTimer);
+      introTimer = null;
+      if (hoveredIntro >= 0) return;
+      if (!reducedMotion.matches) introTimer = setInterval(() => {
         if (!document.hidden) paintIntro((introAt + 1) % D.projects.length);
       }, INTRO_HOLD);
     }
 
-    // Deep-link support: /design#chaiwala skips the intro and opens that project
-    const fromHash = D.projects.findIndex(p => '#' + p.key === window.location.hash);
-    if (fromHash >= 0) select(fromHash, false);
-    else { select(0, false); startIntro(); }
+    function backToProjects(updateHistory = true) {
+      if (transitioning || wrapperEl.classList.contains('is-intro')) return;
+      const selected = current;
+      const visibleSrc = heroEl.querySelector('.hero__slide.selected img')?.getAttribute('src');
+      // Bring a scrolled case study back to its hero before the return motion.
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      morphMedia(heroEl, introMediaEl, () => {
+        clearInterval(timer);
+        clearInterval(flashTimer);
+        rowTimers.forEach(clearInterval);
+        videoEl.querySelector('video')?.pause();
+        if (videoObserver) videoObserver.disconnect();
+        embedEl.textContent = '';
+        current = -1;
+        startIntro(selected, visibleSrc, false);
+        window.scrollTo({ top: 0, behavior: 'instant' });
+        if (updateHistory) history.pushState(null, '', location.pathname + location.search);
+      }, () => {
+        resumeIntro();
+        introNames[selected].focus({ preventScroll: true });
+      });
+    }
+
+    nextBtn.addEventListener('click', event => {
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      event.preventDefault();
+      enterProject((current + 1) % D.projects.length);
+    });
+
+    backBtn.addEventListener('click', event => {
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      event.preventDefault();
+      backToProjects();
+    });
+
+    function followLocation() {
+      if (transitioning) { pendingLocation = true; return; }
+      const i = D.projects.findIndex(p => '#' + p.key === location.hash);
+      if (i >= 0) enterProject(i, false);
+      else backToProjects(false);
+    }
+    window.addEventListener('popstate', followLocation);
+    window.addEventListener('hashchange', followLocation);
+
+    const fromHash = D.projects.findIndex(p => '#' + p.key === location.hash);
+    if (fromHash >= 0) {
+      select(fromHash, false);
+    } else startIntro();
+
+    // Reveal once the initial layout is ready, without replaying on project changes.
+    const firstImage = (fromHash >= 0 ? heroEl : introLayers[introFront]).querySelector('img');
+    const arrivalReady = Promise.all([
+      document.fonts.ready,
+      firstImage ? firstImage.decode().catch(() => {}) : Promise.resolve(),
+    ]);
+    Promise.race([
+      arrivalReady,
+      new Promise(resolve => setTimeout(resolve, 350)),
+    ]).then(() => {
+      wrapperEl.classList.remove('is-loading');
+      if (!reducedMotion.matches) {
+        wrapperEl.animate([{ opacity: 0 }, { opacity: 1 }], {
+          duration: 350,
+          easing: 'ease-out',
+        });
+      }
+    });
+
   </script>
 
 </body>
