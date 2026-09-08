@@ -294,6 +294,7 @@
     }
     .case__study__full-row:not(:has(img)) { grid-template-columns: minmax(0, 1fr); }
     @media (min-width: 769px) {
+      .case__study__full-row--equal-columns,
       .case__study__full-row--half:not(:has(img)) {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
@@ -728,6 +729,7 @@
       fullCaseRowEl.style.removeProperty('--full-columns');
       const width = fullCaseRowEl.clientWidth;
       if (fullCaseRowEl.hidden || fullCaseLogoEl.hidden || width <= 768) return;
+      if (fullCaseRowEl.classList.contains('case__study__full-row--equal-columns')) return;
       const measure = fullCaseEl.cloneNode(true);
       measure.removeAttribute('id');
       measure.removeAttribute('tabindex');
@@ -753,7 +755,6 @@
           break;
         }
       }
-      bestSide = Math.round(bestSide * Number(fullCaseLogoEl.dataset.widthMultiplier || 1));
       fullCaseRowEl.style.setProperty('--full-columns', fullCaseRowEl.classList.contains('case__study__full-row--logo-left')
         ? `${bestSide}px minmax(0, 1fr)`
         : `minmax(0, 1fr) ${bestSide}px`);
@@ -1013,6 +1014,7 @@
       fullCaseRowEl.prepend(fullCaseEl);
       fullCaseRowEl.classList.toggle('case__study__full-row--logo-left', proj.caseStudyLogoPosition === 'left');
       fullCaseRowEl.classList.toggle('case__study__full-row--half', !!proj.caseStudyHalfWidth);
+      fullCaseRowEl.classList.toggle('case__study__full-row--equal-columns', !!proj.caseStudyEqualColumns);
       if (proj.caseStudyLogoPosition === 'left') fullCaseRowEl.prepend(fullCaseLogoEl);
       fullCaseEl.hidden = !proj.caseStudy?.length;
       const inlineCaseStudy = (proj.rows || []).some(row =>
@@ -1021,7 +1023,6 @@
       fullCaseLogoEl.textContent = '';
       fullCaseLogoEl.hidden = fullCaseEl.hidden || !!proj.hideCaseStudyLogo || !(proj.caseStudyImage || proj.icon);
       fullCaseLogoEl.dataset.ratio = proj.caseStudyImageRatio || '1 / 1';
-      fullCaseLogoEl.dataset.widthMultiplier = proj.caseStudyImageWidthMultiplier || 1;
       fullCaseLogoEl.style.setProperty('--case-image-ratio', fullCaseLogoEl.dataset.ratio);
       if (!fullCaseLogoEl.hidden) {
         const logo = document.createElement('img');

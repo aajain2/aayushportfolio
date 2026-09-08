@@ -68,7 +68,7 @@ const DESIGN = {
       caseStudyImageRatio: '1440 / 840',
       caseStudyImageAlt: 'Arcade turns your thoughts into things.',
       caseStudyLogoPosition: 'left',
-      caseStudyImageWidthMultiplier: 1.15,
+      caseStudyEqualColumns: true,
       overview: "Arcade is the first AI physical product creation platform and marketplace, inviting people to “turn your thoughts into things.” I led design across product, brand, campaigns, and events to make that unfamiliar possibility approachable. The work connects AI with the warmth of handmade goods, helping shoppers discover their taste and giving artists new ways to bring theirs into the world.",
       caseStudy: [
         "Arcade is the first AI physical product creation platform and marketplace, built around a simple invitation: “turn your thoughts into things.” An idea can become a piece of jewelry, an object for the home, or a product someone else discovers and buys. Its ambition is to shape and lead this emerging category, defining how people move between imagination, creation, and commerce.",
