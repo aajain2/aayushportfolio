@@ -2,7 +2,7 @@
 <html lang="en" class="light">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Aayush Jain</title>
   <link rel="icon" type="image/png" href="assets/favicon.png">
   <link rel="apple-touch-icon" href="assets/favicon.png">
@@ -167,6 +167,11 @@
       transition: opacity 0.3s;
     }
     .page__button:hover { opacity: 0.5; }
+    .page__button:focus { outline: none; }
+    .page__button:focus-visible {
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
 
     @media (max-width: 383px) {
       :root { --project-header-height: 104px; }
@@ -278,14 +283,14 @@
     .case__study__full p + p { margin-top: 1em; }
     .case__study__full-row {
       display: grid;
-      grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+      grid-template-columns: var(--full-columns, minmax(0, 2fr) minmax(0, 1fr));
       gap: var(--pd2);
       margin-top: var(--pd2);
       align-items: stretch;
     }
     .case__study__full-row[hidden] { display: none; }
     .case__study__full-row--logo-left {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+      grid-template-columns: var(--full-columns, minmax(0, 1fr) minmax(0, 2fr));
     }
     .case__study__full-row:not(:has(img)) { grid-template-columns: minmax(0, 1fr); }
     @media (min-width: 769px) {
@@ -427,7 +432,7 @@
     .case__study__row {
       display: grid;
       gap: var(--pd2);
-      grid-template-columns: repeat(var(--cols), 1fr);
+      grid-template-columns: var(--row-columns, repeat(var(--cols), minmax(0, 1fr)));
       align-items: start;
     }
 
@@ -589,11 +594,39 @@
     }
 
     @media (max-width: 768px) {
+      .wrapper:not(.is-intro) #hero {
+        height: auto;
+        aspect-ratio: var(--hero-mobile-ratio, 1496 / 998);
+      }
+      .hero__slide img {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        object-fit: contain;
+      }
       .case__study__text { padding: 56px var(--pd); }
       .case__study__gallery,
-      .case__study__sheets { grid-template-columns: 1fr; }
+      .case__study__sheets,
+      .case__study__row,
+      .case__study__full-row,
+      .case__study__full-row--logo-left { grid-template-columns: minmax(0, 1fr); }
+      .case__study__row > *,
+      .case__study__full-row > * { min-width: 0; }
       .case__study__closer__item { flex: 1 1 100%; }
-      .case__study__row { grid-template-columns: 1fr; }
+      .case__study__gallery__item,
+      .case__study__scroller,
+      .case__study__video { aspect-ratio: auto; }
+      .case__study__gallery__item img,
+      .case__study__scroller img,
+      .case__study__video video {
+        position: static;
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+      }
+      .case__study__scroller.ready img { animation: none; }
+      .case__study__row__cell img,
+      .case__study__flash__frame img { object-fit: contain; }
     }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { transition-duration: 0s !important; }
@@ -677,7 +710,7 @@
     // Keep the cards side by side. Choose the closest height match possible
     // without stretching the square logo or clipping the text.
     function alignFullCaseCards() {
-      fullCaseRowEl.style.gridTemplateColumns = '';
+      fullCaseRowEl.style.removeProperty('--full-columns');
       const width = fullCaseRowEl.clientWidth;
       if (fullCaseRowEl.hidden || fullCaseLogoEl.hidden || width <= 768) return;
       const measure = fullCaseEl.cloneNode(true);
@@ -705,9 +738,9 @@
           break;
         }
       }
-      fullCaseRowEl.style.gridTemplateColumns = fullCaseRowEl.classList.contains('case__study__full-row--logo-left')
+      fullCaseRowEl.style.setProperty('--full-columns', fullCaseRowEl.classList.contains('case__study__full-row--logo-left')
         ? `${bestSide}px minmax(0, 1fr)`
-        : `minmax(0, 1fr) ${bestSide}px`;
+        : `minmax(0, 1fr) ${bestSide}px`);
       measure.remove();
     }
     let fullCaseWidth = 0;
@@ -814,6 +847,7 @@
     // differently from the default (cover would crop it).
     function buildHero(el, proj) {
       if (!el.classList.contains('intro__layer')) el.style.aspectRatio = proj.heroRatio || '';
+      el.style.removeProperty('--hero-mobile-ratio');
       el.textContent = '';
       const media = mediaOf(proj);
       const imgs = [];
@@ -821,6 +855,13 @@
         const slide = document.createElement('div');
         slide.className = 'hero__slide' + (n === 0 ? ' selected' : '');
         const m = makeMedia(src, proj.title + ' — ' + (n + 1), true);
+        if (n === 0 && m.tagName === 'IMG') {
+          m.addEventListener('load', () => {
+            if (m.naturalWidth && m.naturalHeight) {
+              el.style.setProperty('--hero-mobile-ratio', `${m.naturalWidth} / ${m.naturalHeight}`);
+            }
+          }, { once: true });
+        }
         if (m.tagName === 'IMG') imgs.push(m);
         slide.appendChild(m);
         el.appendChild(slide);
@@ -841,10 +882,10 @@
         // alignHeights: widths follow each cell's aspect ratio, so every cell
         // in the row resolves to the same height without cropping anything.
         if (row.alignHeights) {
-          rowEl.style.gridTemplateColumns = items.map(it => {
+          rowEl.style.setProperty('--row-columns', items.map(it => {
             const [w, h] = (it.ratio || row.ratio || '4 / 3').split('/').map(Number);
             return (w / h) + 'fr';
-          }).join(' ');
+          }).join(' '));
         }
 
         items.forEach(item => {
@@ -1155,7 +1196,7 @@
       el.type = 'button';
       el.className = 'intro__name';
       el.textContent = proj.listTitle || proj.title;
-      el.addEventListener('click', () => enterProject(i));
+      el.addEventListener('click', event => enterProject(i, true, event.detail === 0));
       el.addEventListener('pointerenter', event => {
         if (event.pointerType === 'touch' || transitioning || !wrapperEl.classList.contains('is-intro')) return;
         hoveredIntro = i;
@@ -1288,7 +1329,7 @@
       }
     }
 
-    function enterProject(i, updateHistory = true) {
+    function enterProject(i, updateHistory = true, focusNavigation = false) {
       if (transitioning) return;
       if (!wrapperEl.classList.contains('is-intro')) {
         select(i, true);
@@ -1313,11 +1354,11 @@
         if (updateHistory) history.pushState(null, '', '#' + D.projects[i].key);
       }, () => {
         restart();
-        backBtn.focus({ preventScroll: true });
+        if (focusNavigation) backBtn.focus({ preventScroll: true });
       });
     }
 
-    introMediaEl.addEventListener('click', () => enterProject(introAt));
+    introMediaEl.addEventListener('click', event => enterProject(introAt, true, event.detail === 0));
 
     function startIntro(i = 0, frameSrc, run = true) {
       stopIntro();
@@ -1346,7 +1387,7 @@
       }, INTRO_HOLD);
     }
 
-    function backToProjects(updateHistory = true) {
+    function backToProjects(updateHistory = true, focusNavigation = false) {
       if (transitioning || wrapperEl.classList.contains('is-intro')) return;
       const selected = current;
       const visibleSrc = heroEl.querySelector('.hero__slide.selected img')?.getAttribute('src');
@@ -1365,7 +1406,7 @@
         if (updateHistory) history.pushState(null, '', location.pathname + location.search);
       }, () => {
         resumeIntro();
-        introNames[selected].focus({ preventScroll: true });
+        if (focusNavigation) introNames[selected].focus({ preventScroll: true });
       });
     }
 
@@ -1378,7 +1419,7 @@
     backBtn.addEventListener('click', event => {
       if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
       event.preventDefault();
-      backToProjects();
+      backToProjects(true, event.detail === 0);
     });
 
     function followLocation() {

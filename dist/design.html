@@ -2,7 +2,7 @@
 <html lang="en" class="light">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Aayush Jain</title>
   <link rel="icon" type="image/png" href="/assets/favicon-DSqbWA3t.png">
   <link rel="apple-touch-icon" href="/assets/favicon-DSqbWA3t.png">
@@ -167,6 +167,11 @@
       transition: opacity 0.3s;
     }
     .page__button:hover { opacity: 0.5; }
+    .page__button:focus { outline: none; }
+    .page__button:focus-visible {
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
 
     @media (max-width: 383px) {
       :root { --project-header-height: 104px; }
@@ -278,14 +283,14 @@
     .case__study__full p + p { margin-top: 1em; }
     .case__study__full-row {
       display: grid;
-      grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+      grid-template-columns: var(--full-columns, minmax(0, 2fr) minmax(0, 1fr));
       gap: var(--pd2);
       margin-top: var(--pd2);
       align-items: stretch;
     }
     .case__study__full-row[hidden] { display: none; }
     .case__study__full-row--logo-left {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+      grid-template-columns: var(--full-columns, minmax(0, 1fr) minmax(0, 2fr));
     }
     .case__study__full-row:not(:has(img)) { grid-template-columns: minmax(0, 1fr); }
     @media (min-width: 769px) {
@@ -427,7 +432,7 @@
     .case__study__row {
       display: grid;
       gap: var(--pd2);
-      grid-template-columns: repeat(var(--cols), 1fr);
+      grid-template-columns: var(--row-columns, repeat(var(--cols), minmax(0, 1fr)));
       align-items: start;
     }
 
@@ -589,11 +594,39 @@
     }
 
     @media (max-width: 768px) {
+      .wrapper:not(.is-intro) #hero {
+        height: auto;
+        aspect-ratio: var(--hero-mobile-ratio, 1496 / 998);
+      }
+      .hero__slide img {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        object-fit: contain;
+      }
       .case__study__text { padding: 56px var(--pd); }
       .case__study__gallery,
-      .case__study__sheets { grid-template-columns: 1fr; }
+      .case__study__sheets,
+      .case__study__row,
+      .case__study__full-row,
+      .case__study__full-row--logo-left { grid-template-columns: minmax(0, 1fr); }
+      .case__study__row > *,
+      .case__study__full-row > * { min-width: 0; }
       .case__study__closer__item { flex: 1 1 100%; }
-      .case__study__row { grid-template-columns: 1fr; }
+      .case__study__gallery__item,
+      .case__study__scroller,
+      .case__study__video { aspect-ratio: auto; }
+      .case__study__gallery__item img,
+      .case__study__scroller img,
+      .case__study__video video {
+        position: static;
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+      }
+      .case__study__scroller.ready img { animation: none; }
+      .case__study__row__cell img,
+      .case__study__flash__frame img { object-fit: contain; }
     }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { transition-duration: 0s !important; }
@@ -602,7 +635,7 @@
     @property --start2 { syntax: '<color>'; inherits: true; initial-value: #343434; }
     @property --end2 { syntax: '<color>'; inherits: true; initial-value: #1c1c1c; }
   </style>
-  <script type="module" crossorigin src="/assets/design-C7CBBf9N.js"></script>
+  <script type="module" crossorigin src="/assets/design-CDKqO0qb.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
 </head>
 <body>
