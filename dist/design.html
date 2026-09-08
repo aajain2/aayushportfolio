@@ -588,7 +588,7 @@
       }
       /* Stacked, the card leads and the roster sits under it — the way
          play.studio orders the same pair on a phone. */
-      .intro__media { order: 1; aspect-ratio: 3 / 2; background: transparent; }
+      .intro__media { order: 1; aspect-ratio: 3 / 2; }
       .intro__names { order: 2; }
       .intro__name { font-size: clamp(22px, 6vw, 32px); }
     }
@@ -618,9 +618,11 @@
         height: auto;
         margin: 0;
       }
-      /* Homepage previews keep a steady footprint as projects rotate. */
+      /* Every homepage preview fills the same rounded card as the photos. */
+      .intro__media .intro__layer,
+      .intro__media .hero__slide { border-radius: inherit; overflow: hidden; }
       .intro__media .hero__slide { position: absolute; inset: 0; }
-      .intro__media .hero__slide img { height: 100%; object-fit: contain; }
+      .intro__media .hero__slide img { height: 100%; object-fit: cover; border-radius: inherit; }
       .case__study__text { padding: 56px var(--pd); }
       .case__study__gallery,
       .case__study__sheets,
