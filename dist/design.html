@@ -250,6 +250,63 @@
     /* display:flex above would otherwise beat the UA rule for [hidden] */
     .case__study__text[hidden] { display: none; }
     .case__study__text h2 { color: var(--color-gray50); }
+    .case__study__full {
+      padding: var(--pd);
+      background: var(--color-gray10);
+      border-radius: var(--br2);
+      text-align: left;
+      align-items: flex-start;
+    }
+    .case__study__text--overview a,
+    .case__study__row__text a {
+      text-decoration: none;
+      transition: color 180ms ease;
+    }
+    .case__study__text--overview a:hover,
+    .case__study__text--overview a:focus-visible,
+    .case__study__row__text a:hover,
+    .case__study__row__text a:focus-visible { color: var(--color-gray50); }
+    @media (prefers-reduced-motion: reduce) {
+      .case__study__text--overview a,
+      .case__study__row__text a { transition: none; }
+    }
+    .case__study__full {
+      scroll-margin-top: calc(var(--project-header-height) + 8px);
+    }
+    .case__study__full[hidden] { display: none; }
+    .case__study__full h2 { color: var(--color-gray50); margin-bottom: var(--pd2); }
+    .case__study__full p + p { margin-top: 1em; }
+    .case__study__full-row {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+      gap: var(--pd2);
+      margin-top: var(--pd2);
+      align-items: stretch;
+    }
+    .case__study__full-row[hidden] { display: none; }
+    .case__study__full-row--logo-left {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    }
+    .case__study__full-row:not(:has(img)) { grid-template-columns: minmax(0, 1fr); }
+    @media (min-width: 769px) {
+      .case__study__full-row--half:not(:has(img)) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+    .case__study__full-logo {
+      position: relative;
+      overflow: hidden;
+      padding: 0;
+      aspect-ratio: var(--case-image-ratio, 1 / 1);
+      align-self: start;
+      background: #f5f5f0;
+    }
+    .case__study__full-logo img {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
 
     .case__study__gallery {
       display: grid;
@@ -542,7 +599,7 @@
     @property --start2 { syntax: '<color>'; inherits: true; initial-value: #343434; }
     @property --end2 { syntax: '<color>'; inherits: true; initial-value: #1c1c1c; }
   </style>
-  <script type="module" crossorigin src="/assets/design-C3RJAeu2.js"></script>
+  <script type="module" crossorigin src="/assets/design-o8Vujq3l.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
 </head>
 <body>
@@ -574,6 +631,10 @@
         <div class="case__study__rows" id="case-rows-mid"></div>
         <div class="case__study__closer" id="case-closer"></div>
         <div class="case__study__rows" id="case-rows"></div>
+        <div class="case__study__full-row" id="case-full-row" hidden>
+          <section class="page__card case__study__full" id="case-full" tabindex="-1" hidden></section>
+          <figure class="page__card case__study__full-logo" id="case-full-logo" hidden></figure>
+        </div>
         <div class="case__study__credits" id="case-credits"></div>
       </div>
     </div>

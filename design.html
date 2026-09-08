@@ -250,6 +250,63 @@
     /* display:flex above would otherwise beat the UA rule for [hidden] */
     .case__study__text[hidden] { display: none; }
     .case__study__text h2 { color: var(--color-gray50); }
+    .case__study__full {
+      padding: var(--pd);
+      background: var(--color-gray10);
+      border-radius: var(--br2);
+      text-align: left;
+      align-items: flex-start;
+    }
+    .case__study__text--overview a,
+    .case__study__row__text a {
+      text-decoration: none;
+      transition: color 180ms ease;
+    }
+    .case__study__text--overview a:hover,
+    .case__study__text--overview a:focus-visible,
+    .case__study__row__text a:hover,
+    .case__study__row__text a:focus-visible { color: var(--color-gray50); }
+    @media (prefers-reduced-motion: reduce) {
+      .case__study__text--overview a,
+      .case__study__row__text a { transition: none; }
+    }
+    .case__study__full {
+      scroll-margin-top: calc(var(--project-header-height) + 8px);
+    }
+    .case__study__full[hidden] { display: none; }
+    .case__study__full h2 { color: var(--color-gray50); margin-bottom: var(--pd2); }
+    .case__study__full p + p { margin-top: 1em; }
+    .case__study__full-row {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+      gap: var(--pd2);
+      margin-top: var(--pd2);
+      align-items: stretch;
+    }
+    .case__study__full-row[hidden] { display: none; }
+    .case__study__full-row--logo-left {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    }
+    .case__study__full-row:not(:has(img)) { grid-template-columns: minmax(0, 1fr); }
+    @media (min-width: 769px) {
+      .case__study__full-row--half:not(:has(img)) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+    .case__study__full-logo {
+      position: relative;
+      overflow: hidden;
+      padding: 0;
+      aspect-ratio: var(--case-image-ratio, 1 / 1);
+      align-self: start;
+      background: #f5f5f0;
+    }
+    .case__study__full-logo img {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
 
     .case__study__gallery {
       display: grid;
@@ -572,6 +629,10 @@
         <div class="case__study__rows" id="case-rows-mid"></div>
         <div class="case__study__closer" id="case-closer"></div>
         <div class="case__study__rows" id="case-rows"></div>
+        <div class="case__study__full-row" id="case-full-row" hidden>
+          <section class="page__card case__study__full" id="case-full" tabindex="-1" hidden></section>
+          <figure class="page__card case__study__full-logo" id="case-full-logo" hidden></figure>
+        </div>
         <div class="case__study__credits" id="case-credits"></div>
       </div>
     </div>
@@ -606,6 +667,55 @@
     const videoEl = document.getElementById('case-video');
     const closerEl = document.getElementById('case-closer');
     const creditsEl = document.getElementById('case-credits');
+    const fullCaseEl = document.getElementById('case-full');
+    const fullCaseRowEl = document.getElementById('case-full-row');
+    const fullCaseLogoEl = document.getElementById('case-full-logo');
+
+    // Keep the cards side by side. Choose the closest height match possible
+    // without stretching the square logo or clipping the text.
+    function alignFullCaseCards() {
+      fullCaseRowEl.style.gridTemplateColumns = '';
+      const width = fullCaseRowEl.clientWidth;
+      if (fullCaseRowEl.hidden || fullCaseLogoEl.hidden || width <= 768) return;
+      const measure = fullCaseEl.cloneNode(true);
+      measure.removeAttribute('id');
+      measure.removeAttribute('tabindex');
+      Object.assign(measure.style, {
+        position: 'absolute', visibility: 'hidden', pointerEvents: 'none',
+        left: '-10000px', top: '0', height: 'auto',
+      });
+      measure.setAttribute('aria-hidden', 'true');
+      document.body.appendChild(measure);
+      const gap = parseFloat(getComputedStyle(fullCaseRowEl).columnGap);
+      const [imageWidth, imageHeight] = (fullCaseLogoEl.dataset.ratio || '1 / 1').split('/').map(Number);
+      const imageRatio = imageWidth / imageHeight;
+      let bestSide = Math.round(width / 3);
+      let bestDifference = Infinity;
+      for (let side = Math.ceil(width * 0.25); side <= width * 0.6; side += 4) {
+        measure.style.width = (width - gap - side) + 'px';
+        const difference = Math.max(0, measure.getBoundingClientRect().height - side / imageRatio);
+        if (difference < bestDifference) {
+          bestDifference = difference;
+          bestSide = side;
+        }
+        if (difference === 0) {
+          break;
+        }
+      }
+      fullCaseRowEl.style.gridTemplateColumns = fullCaseRowEl.classList.contains('case__study__full-row--logo-left')
+        ? `${bestSide}px minmax(0, 1fr)`
+        : `minmax(0, 1fr) ${bestSide}px`;
+      measure.remove();
+    }
+    let fullCaseWidth = 0;
+    const fullCaseObserver = new ResizeObserver(entries => {
+      const width = entries[0].contentRect.width;
+      if (width === fullCaseWidth) return;
+      fullCaseWidth = width;
+      alignFullCaseCards();
+    });
+    fullCaseObserver.observe(fullCaseRowEl);
+    document.fonts.ready.then(alignFullCaseCards);
 
     let current = -1;
     let slides = [];
@@ -735,6 +845,10 @@
         }
 
         items.forEach(item => {
+          if (item.fullCaseStudy) {
+            rowEl.appendChild(fullCaseEl);
+            return;
+          }
           const cell = document.createElement(item.text ? 'div' : 'figure');
           cell.className = 'page__card case__study__row__cell';
           const ratio = item.ratio || row.ratio;
@@ -745,7 +859,17 @@
             const h3 = document.createElement('h3');
             h3.textContent = item.heading || proj.title;
             const body = document.createElement('p');
-            body.textContent = item.text;
+            const parts = Array.isArray(item.text) ? item.text : [item.text];
+            parts.forEach(part => {
+              if (typeof part === 'string') {
+                body.append(part);
+              } else {
+                const link = document.createElement('a');
+                link.textContent = part.text;
+                link.href = part.url;
+                body.append(link);
+              }
+            });
             cell.append(h3, body);
           } else if (item.flash) {
             const imgs = [];
@@ -766,6 +890,10 @@
             img.src = item.image;
             img.alt = '';
             img.loading = 'lazy';
+            if (item.zoom) {
+              img.style.transform = `scale(${item.zoom})`;
+              img.style.transformOrigin = item.zoomOrigin || 'center';
+            }
             cell.appendChild(img);
           }
 
@@ -807,11 +935,57 @@
       // Text block
       textEl.textContent = '';
       const h2 = document.createElement('h2');
-      h2.textContent = proj.title;
+      h2.textContent = proj.overview ? 'Overview' : proj.title;
       const body = document.createElement('p');
       body.className = 'case__study__text__text display';
-      body.textContent = proj.intro || proj.description;
+      body.textContent = proj.overview || proj.intro || proj.description;
+      textEl.classList.toggle('case__study__text--overview', !!proj.overview);
+      if (proj.overview && proj.caseStudy?.length) {
+        const link = document.createElement('a');
+        link.href = '#' + proj.key + '-case-study';
+        link.textContent = 'Read full case study.';
+        link.addEventListener('click', event => {
+          if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+          event.preventDefault();
+          fullCaseEl.focus({ preventScroll: true });
+          fullCaseEl.scrollIntoView({ behavior: reducedMotion.matches ? 'instant' : 'smooth', block: 'start' });
+        });
+        body.append(' ', link);
+      }
       textEl.append(h2, body);
+
+      fullCaseEl.textContent = '';
+      fullCaseRowEl.prepend(fullCaseEl);
+      fullCaseRowEl.classList.toggle('case__study__full-row--logo-left', proj.caseStudyLogoPosition === 'left');
+      fullCaseRowEl.classList.toggle('case__study__full-row--half', !!proj.caseStudyHalfWidth);
+      if (proj.caseStudyLogoPosition === 'left') fullCaseRowEl.prepend(fullCaseLogoEl);
+      fullCaseEl.hidden = !proj.caseStudy?.length;
+      const inlineCaseStudy = (proj.rows || []).some(row =>
+        (Array.isArray(row) ? row : row.items).some(item => item.fullCaseStudy));
+      fullCaseRowEl.hidden = fullCaseEl.hidden || inlineCaseStudy;
+      fullCaseLogoEl.textContent = '';
+      fullCaseLogoEl.hidden = fullCaseEl.hidden || !!proj.hideCaseStudyLogo || !(proj.caseStudyImage || proj.icon);
+      fullCaseLogoEl.dataset.ratio = proj.caseStudyImageRatio || '1 / 1';
+      fullCaseLogoEl.style.setProperty('--case-image-ratio', fullCaseLogoEl.dataset.ratio);
+      if (!fullCaseLogoEl.hidden) {
+        const logo = document.createElement('img');
+        logo.src = proj.caseStudyImage || proj.icon;
+        logo.alt = proj.caseStudyImageAlt || proj.title + ' logo';
+        logo.loading = 'lazy';
+        fullCaseLogoEl.appendChild(logo);
+      }
+      fullCaseEl.id = proj.key + '-case-study';
+      if (proj.caseStudy?.length) {
+        const heading = document.createElement('h2');
+        heading.textContent = 'Full case study';
+        fullCaseEl.appendChild(heading);
+        proj.caseStudy.forEach(paragraph => {
+          const p = document.createElement('p');
+          p.textContent = paragraph;
+          fullCaseEl.appendChild(p);
+        });
+      }
+      alignFullCaseCards();
 
       // hideText drops the descriptor entirely, for a project that is only
       // pictures. textAtEnd moves it below the rows instead, for one that
@@ -1197,14 +1371,20 @@
 
     function followLocation() {
       if (transitioning) { pendingLocation = true; return; }
-      const i = D.projects.findIndex(p => '#' + p.key === location.hash);
-      if (i >= 0) enterProject(i, false);
+      const i = D.projects.findIndex(p => '#' + p.key === location.hash.replace(/-case-study$/, ''));
+      if (i >= 0) {
+        enterProject(i, false);
+        if (location.hash.endsWith('-case-study')) {
+          if (transitioning) pendingLocation = true;
+          else requestAnimationFrame(() => fullCaseEl.scrollIntoView({ block: 'start' }));
+        }
+      }
       else backToProjects(false);
     }
     window.addEventListener('popstate', followLocation);
     window.addEventListener('hashchange', followLocation);
 
-    const fromHash = D.projects.findIndex(p => '#' + p.key === location.hash);
+    const fromHash = D.projects.findIndex(p => '#' + p.key === location.hash.replace(/-case-study$/, ''));
     if (fromHash >= 0) {
       select(fromHash, false);
     } else startIntro();
@@ -1220,6 +1400,9 @@
       new Promise(resolve => setTimeout(resolve, 350)),
     ]).then(() => {
       wrapperEl.classList.remove('is-loading');
+      if (fromHash >= 0 && location.hash.endsWith('-case-study')) {
+        fullCaseEl.scrollIntoView({ block: 'start' });
+      }
       if (!reducedMotion.matches) {
         wrapperEl.animate([{ opacity: 0 }, { opacity: 1 }], {
           duration: 350,

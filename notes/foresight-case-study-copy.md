@@ -1,0 +1,25 @@
+# Foresight
+
+## Overview
+
+Foresight deploys AI agents to navigate product interfaces, test workflows, and surface failures before customers encounter them. We began with a broader vision for synthetic user simulation, then rebuilt around a need we heard more clearly: helping product teams keep testing at the pace they were shipping. Across product and brand, we focused on making autonomous work easy to direct, inspect, and act on. Read full case study.
+
+## Full case study
+
+Software was becoming faster to build than teams could confidently evaluate. We had experienced that gap ourselves: making product decisions with limited research capacity, then spending hours manually checking the flows we had just shipped. We built Foresight to bring feedback closer to the moment a team could still do something with it.
+
+Our initial vision centered on synthetic users: agents that could explore products and help teams anticipate how people might experience them. Customer conversations sharpened the opportunity. Teams wanted relief from repetitive testing, with results they could verify and use immediately. We rebuilt the system around agents that navigate live interfaces, click, scroll, and complete workflows. That shift gave the broader ambition a concrete starting point and changed what the product needed to communicate.
+
+We were designing for product managers, designers, and engineers whose responsibilities overlapped around a release. Smaller teams needed coverage without a dedicated testing function. Larger organizations faced coordination across environments, devices, and existing processes. Both needed to describe what mattered without becoming specialists in how an agent worked. Our entry points accommodated existing QA sheets, conversational instructions, and explicit steps, allowing different levels of detail around the same task. The aim was to preserve the team’s knowledge while reducing the work required to put it into motion.
+
+Once a test ran autonomously, the design problem became one of accountability. A successful result needed to be inspectable. We organized the experience into a summary, a step-by-step breakdown, and agent recordings, giving people progressively deeper ways to understand a run. The summary supports a quick assessment; individual steps expose what was tested and the expected outcome; recordings provide a way to examine the agent’s actual path. This structure lets a user investigate a surprising result without making every routine check equally demanding.
+
+The test history carries that context into the everyday workflow. Flow names lead each row, followed by the number of steps, device, environment, and result. A checkout test in staging and the same test in production may look similar, but they support different decisions. Keeping those conditions beside the outcome helps prevent a result from becoming detached from what it actually covers. Folders organized around checkout, onboarding, and navigation follow the way teams recognize their product, making repeated testing easier to manage.
+
+We also designed the handoff beyond the report. We built a Linear integration that carries failures and reproduction steps into the place where a team already coordinates fixes. Finding an issue is only part of the work; someone still needs enough context to investigate and resolve it. Connecting those stages shaped our ambition for Foresight as a continuous part of product development.
+
+The brand needed to make that technical capability feel clear and usable. We paired dark surfaces and a compact outlined mark with a vivid orange accent, giving Foresight a recognizable presence across the product, site, and pitch. Within the interface, the palette becomes quieter so status information can take priority. Rounded typography brings an approachable quality to the technical subject, while the marketing site grounds the promise in visible workflows: starting a test, inspecting steps, and replaying what happened. We wanted people to understand the work they could delegate before asking them to imagine the technology’s longer-term possibilities.
+
+That longer-term vision raised a distinction we continued to think through. Completing a workflow demonstrates something different from representing a customer. An agent can establish whether a path works without establishing how a particular person would interpret it. Our enterprise direction explored how customer data and internal knowledge could make simulations more specific. It also made clear that greater specificity would require validation against the people being represented, and a way for customers to understand the limits of each result.
+
+Early pilots converted into paying customers after we narrowed the product around repetitive testing. Building Foresight taught us how much of an AI product’s value depends on the relationship between what it does, what it shows, and what a customer can responsibly conclude. Our broader ambition remained, but we had found a practical foundation: useful work, visible evidence, and a clear next action.
