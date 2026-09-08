@@ -564,15 +564,14 @@
     }
     .intro__media:hover::after { opacity: 1; }
 
-    /* Two stacked layers cross-fade, both moving at once, rather than the
-       card blanking between projects. Timing taken from play.studio: 1.5s on
-       easeOutExpo, with the outgoing layer parked just above zero so it stays
-       composited and the next fade starts instantly. */
+    /* Fade the decoded incoming image over an opaque, stationary outgoing
+       image so the card never reveals its background between projects. */
     .intro__layer {
       position: absolute;
       inset: 0;
-      opacity: 0.001;
+      opacity: 0;
       transition: opacity 1.1s cubic-bezier(0.19, 1, 0.22, 1);
+      will-change: opacity;
     }
     .intro__layer.selected { opacity: 1; }
     @media (prefers-reduced-motion: reduce) {
@@ -655,7 +654,7 @@
     @property --start2 { syntax: '<color>'; inherits: true; initial-value: #343434; }
     @property --end2 { syntax: '<color>'; inherits: true; initial-value: #1c1c1c; }
   </style>
-  <script type="module" crossorigin src="/assets/design-osnyeOmc.js"></script>
+  <script type="module" crossorigin src="/assets/design-CmSwROWT.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
 </head>
 <body>
