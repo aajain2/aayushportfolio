@@ -596,13 +596,30 @@
     @media (max-width: 768px) {
       .wrapper:not(.is-intro) #hero {
         height: auto;
-        aspect-ratio: var(--hero-mobile-ratio, 1496 / 998);
+        aspect-ratio: auto;
       }
+      /* The visible image sets the card height, including portrait slides.
+         Desktop's fixed frames would otherwise leave letterboxing on phones. */
+      .intro__media,
+      .case__study__row__cell:not(.case__study__row__text),
+      .case__study__flash,
+      .case__study__full-logo { aspect-ratio: auto; }
+      .intro__layer.selected,
+      .hero__slide.selected,
+      .case__study__row__frame.selected,
+      .case__study__flash__frame.selected {
+        position: relative;
+        inset: auto;
+        display: block;
+      }
+      .intro__layer:not(.selected),
+      .hero__slide:not(.selected),
+      .case__study__row__frame:not(.selected),
+      .case__study__flash__frame:not(.selected) { display: none; }
       .hero__slide img {
         width: 100%;
-        height: 100%;
+        height: auto;
         margin: 0;
-        object-fit: contain;
       }
       .case__study__text { padding: 56px var(--pd); }
       .case__study__gallery,
@@ -618,6 +635,9 @@
       .case__study__video { aspect-ratio: auto; }
       .case__study__gallery__item img,
       .case__study__scroller img,
+      .case__study__row__cell img,
+      .case__study__flash__frame img,
+      .case__study__full-logo img,
       .case__study__video video {
         position: static;
         width: 100%;
@@ -625,8 +645,6 @@
         object-fit: contain;
       }
       .case__study__scroller.ready img { animation: none; }
-      .case__study__row__cell img,
-      .case__study__flash__frame img { object-fit: contain; }
     }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { transition-duration: 0s !important; }
@@ -635,7 +653,7 @@
     @property --start2 { syntax: '<color>'; inherits: true; initial-value: #343434; }
     @property --end2 { syntax: '<color>'; inherits: true; initial-value: #1c1c1c; }
   </style>
-  <script type="module" crossorigin src="/assets/design-CDKqO0qb.js"></script>
+  <script type="module" crossorigin src="/assets/design-osnyeOmc.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
 </head>
 <body>
