@@ -64,6 +64,11 @@ const DESIGN = {
   projects: [
     {
       key: 'arcade',
+      caseStudyImage: '/design/arcade-color.jpg',
+      caseStudyImageRatio: '1440 / 840',
+      caseStudyImageAlt: 'Arcade turns your thoughts into things.',
+      caseStudyLogoPosition: 'left',
+      caseStudyImageCentered: true,
       overview: "Arcade is the first AI physical product creation platform and marketplace, inviting people to “turn your thoughts into things.” I led design across product, brand, campaigns, and events to make that unfamiliar possibility approachable. The work connects AI with the warmth of handmade goods, helping shoppers discover their taste and giving artists new ways to bring theirs into the world.",
       caseStudy: [
         "Arcade is the first AI physical product creation platform and marketplace, built around a simple invitation: “turn your thoughts into things.” An idea can become a piece of jewelry, an object for the home, or a product someone else discovers and buys. Its ambition is to shape and lead this emerging category, defining how people move between imagination, creation, and commerce.",
@@ -101,7 +106,7 @@ const DESIGN = {
             {
               ratio: '1 / 1',
               heading: 'New York Consumer Launch',
-              text: "The guest list was part of the design. We brought journalists, artists, creatives, and interior designers together because this audience discovers new possibilities through people whose taste they trust. Guests submitted prompts beforehand and encountered their finished custom pieces at dinner, connecting an unfamiliar technology to something they could hold. Seeing one another's creations gave the conversation concrete starting points; afterward, guests wrote new prompts. The sequence was designed to let personal experience establish credibility and shared inspiration give people a reason to create again.",
+              text: "The guest list was part of the design. We brought journalists, artists, creatives, and interior designers together because this audience discovers new possibilities through people whose taste they trust. Guests submitted prompts beforehand and encountered their finished custom pieces at dinner, connecting an unfamiliar technology to something they could hold. Seeing one another's creations gave the conversation concrete starting points; afterward, guests wrote new prompts. The sequence was designed to let personal experience establish credibility and shared inspiration give people a reason to create again. And yes, those are real cauliflowers.",
             },
             { image: '/design/arcade-pov.jpg', ratio: '1000 / 1088' },
           ],
@@ -214,10 +219,6 @@ const DESIGN = {
             { image: '/design/arcade-cuff-card.svg', ratio: '1000 / 979' },
           ],
         },
-        // Closing line, full width.
-        [
-          { image: '/design/arcade-color.jpg', ratio: '1440 / 840' },
-        ],
       ],
       intro: '',
       credits: [],
@@ -360,6 +361,10 @@ const DESIGN = {
     },
     {
       key: 'circle',
+      caseStudyLink: {
+        text: 'See full hackathon project page here.',
+        url: 'https://devpost.com/software/circle-lhf970?_gl=1*14vun46*_gcl_au*MTIwMjUxODA4Ni4xNzg4NzMzNzMw*_ga*MTYxMDAxNzkyMy4xNzg4NzMzNzMw*_ga_0YHJK3Y10M*czE3ODg4MzY2MTckbzMkZzEkdDE3ODg4MzY2OTIkajYwJGwwJGgw',
+      },
       overview: "FigBuild 2026 Hackathon winner built using Figma Make. Circle is a speculative tool that helps elementary school teachers see the social patterns shaping participation and belonging. We built it to connect classroom observations, peer relationships, and group assignments to help teachers notice who may be drifting and decide what to try next.",
       hideCaseStudyLogo: true,
       caseStudyHalfWidth: true,

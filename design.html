@@ -307,6 +307,9 @@
       height: 100%;
       object-fit: contain;
     }
+    .case__study__full-row--center-image .case__study__full-logo {
+      align-self: center;
+    }
 
     .case__study__gallery {
       display: grid;
@@ -958,6 +961,7 @@
       fullCaseRowEl.prepend(fullCaseEl);
       fullCaseRowEl.classList.toggle('case__study__full-row--logo-left', proj.caseStudyLogoPosition === 'left');
       fullCaseRowEl.classList.toggle('case__study__full-row--half', !!proj.caseStudyHalfWidth);
+      fullCaseRowEl.classList.toggle('case__study__full-row--center-image', !!proj.caseStudyImageCentered);
       if (proj.caseStudyLogoPosition === 'left') fullCaseRowEl.prepend(fullCaseLogoEl);
       fullCaseEl.hidden = !proj.caseStudy?.length;
       const inlineCaseStudy = (proj.rows || []).some(row =>
@@ -984,6 +988,14 @@
           p.textContent = paragraph;
           fullCaseEl.appendChild(p);
         });
+        if (proj.caseStudyLink) {
+          const p = document.createElement('p');
+          const link = document.createElement('a');
+          link.textContent = proj.caseStudyLink.text;
+          link.href = proj.caseStudyLink.url;
+          p.appendChild(link);
+          fullCaseEl.appendChild(p);
+        }
       }
       alignFullCaseCards();
 
